@@ -19,15 +19,15 @@ export const userContext = createContext<authen>({
 
 const AuthProvider: React.FC<props> = ({children}) => {
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
-	const user = JSON.parse(localStorage.getItem("user") ?? "")
-	useEffect(() => {
-
-		if (user) {
-			setIsLoggedIn(true)
-		} else {
-			setIsLoggedIn(false)
-		}
-	}, []);
+	// const user = JSON.parse(localStorage.getItem("user") ?? "")
+	// useEffect(() => {
+	//
+	// 	if (user) {
+	// 		setIsLoggedIn(true)
+	// 	} else {
+	// 		setIsLoggedIn(false)
+	// 	}
+	// }, []);
 
 
 	return (
