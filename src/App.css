@@ -1,0 +1,32 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+.react-datepicker__tab-loop {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.ant-modal-footer {
+    display: flex;
+    justify-content: center;
+    padding-top: 30px !important;
+}
+
+.swal2-actions {
+    flex-direction: row-reverse;
+}
+
+.container-wrapper {
+    @apply w-full bg-white h-screen shadow-default
+}
+
+.flex-center {
+    @apply flex items-center justify-center
+}
+
+.flex-between {
+    @apply flex items-center justify-between
+}
