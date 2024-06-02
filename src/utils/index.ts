@@ -1,9 +1,16 @@
-import {Budget, HomeUser, Login, Register, Transaction, Wallet} from "../pages";
+import {Bill, Budget, HomeUser, Login, Register, Transaction, Wallet} from "../pages";
 import {IBudget, IDashBoard, ITransaction, IWallet} from "../assets";
 
 export function capitalizeFirstLetter(text: string) {
 	return text.charAt(0).toUpperCase() + text.slice(1);
 }
+
+export const enum typeAlert {
+	success = "success",
+	error = "error",
+	info = "info"
+}
+
 
 export interface route {
 	path: string,
@@ -49,9 +56,13 @@ export const routePath = {
 		name: "Wallet",
 		element: Wallet,
 		icons: IWallet
+	}, bill: {
+		path: "/bill",
+		name: "Bill",
+		element: Bill,
+		icons: IWallet
 	}
 }
-
 
 export const routePathArray = () => {
 

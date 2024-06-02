@@ -22,7 +22,7 @@ const Budget = () => {
 	return <UserLayout>
 		<BreakCrumb pageName={"Budget"}/>
 		<div className={`container-wrapper p-10`}>
-			<div className={`flex-center border-b-2 pb-5 mx-50`}>
+			<div className={`flex-center border-b-2 translate-x-[-10px] pb-5 mx-50`}>
 				<Button size={`large`}>Add budget</Button>
 			</div>
 			<div className={`flex-center mx-10 mt-10`}>

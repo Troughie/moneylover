@@ -5,3 +5,5 @@ export {default as HomeUser} from "./user/homepage";
 export {default as Budget} from "./user/budget";
 export {default as Transaction} from "./user/transaction";
 export {default as Wallet} from "./user/wallet";
+export {default as PageNotFound} from "./404";
+export {default as Bill} from "./user/bill";

@@ -1,54 +1,52 @@
 import UserLayout from "../../../layout/userLayout.tsx";
-import {BreakCrumb, WalletForm} from "../../../components";
+import {BreakCrumb, GoalForm, WalletForm} from "../../../components";
 import {Button} from "antd";
 import {useEffect, useState} from "react";
 import {ModalPopUp} from "../../../commons";
 import {FormProvider, useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup";
-import {walletSchema} from "../../../libs/schema.ts";
+import {goalSchema, walletSchema} from "../../../libs/schema.ts";
 import {wallet, walletsDumData} from "../model";
 import {IDelete} from "../../../assets";
 import cn from "../../../utils/cn";
 
 interface type {
 	name: string,
-	value: number
+	value: string
 }
 
 const typeWallets: type[] = [
 	{
 		name: "basic Wallet",
-		value: 1
-	},
-	{
-		name: "Linked wallet",
-		value: 2
-	},
-	{
-		name: "Credit wallet",
-		value: 3
+		value: "basic"
 	},
 	{
 		name: "Goal wallet",
-		value: 4
+		value: "goal"
 	}
 ]
 const Wallet = () => {
-	const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+	const [isModalBasicOpen, setIsModalBasicOpen] = useState<boolean>(false);
+	const [isModalGoalOpen, setIsModalGoalOpen] = useState<boolean>(false);
 	const [isWalletTypeOpen, setIsWalletTypeOpen] = useState<boolean>(false);
 	const [isWalletInfoOpen, setIsWalletInfoOpen] = useState<boolean>(false);
 	const [typeWallet, setTypeWallet] = useState<string>("")
-	const methods = useForm({defaultValues: {currency: "VND"}, resolver: yupResolver(walletSchema)})
+	const methods = useForm({mode: "onChange", defaultValues: {currency: "VND"}, resolver: yupResolver(walletSchema)})
+	const goalForm = useForm({mode: "onChange", defaultValues: {currency: "VND"}, resolver: yupResolver(goalSchema)})
 	const [wallets, setWallets] = useState<wallet[]>()
 	const [infoWallet, setInfoWallet] = useState<wallet>()
+
 	const handleOk = (data: any) => {
+		console.log(data)
+	};
+	const handleSubmitGoal = (data: any) => {
 		console.log(data)
 	};
 
 	const handleSelectTypeWallet = (type: string) => {
 		setTypeWallet(type)
+		type === "basic" ? setIsModalBasicOpen(!isModalBasicOpen) : setIsModalGoalOpen(!isModalGoalOpen)
 		setIsWalletTypeOpen(!isWalletTypeOpen)
-		setIsModalOpen(!isModalOpen)
 	}
 
 	const handleInfoWallet = (item: wallet) => {
@@ -57,13 +55,10 @@ const Wallet = () => {
 	}
 
 	const handleCancel = () => {
-		setIsModalOpen(false);
-	};
-	const handleCancelType = () => {
 		setIsWalletTypeOpen(false);
-	};
-	const handleCancelInfo = () => {
 		setIsWalletInfoOpen(false);
+		setIsModalBasicOpen(false);
+		setIsModalGoalOpen(false);
 	};
 
 	useEffect(() => {
@@ -90,7 +85,7 @@ const Wallet = () => {
 					<span>No wallet found.</span>
 				) : (
 					wallets?.map((el, i) => (
-						<div onClick={() => handleInfoWallet(el)}
+						<div key={el.value} onClick={() => handleInfoWallet(el)}
 							 className={cn(`grid mt-2 grid-cols-12 hover:scale-110 hover:font-semibold text-center duration-500 cursor-pointer py-4`, {"bg-blue-50": i % 2 === 0})}>
 							<span className={`col-span-1`}>{i}</span>
 							<span className={`col-span-3`}>{el.label}</span>
@@ -102,20 +97,32 @@ const Wallet = () => {
 				)}
 			</div>
 		</div>
-		<ModalPopUp isModalOpen={isWalletTypeOpen} handleCancel={handleCancelType} title={"Select wallet type"}>
+		<ModalPopUp isModalOpen={isWalletTypeOpen} handleCancel={handleCancel} title={"Select wallet type"}>
 			<div className={`grid grid-cols-2 gap-4`}>
 				{typeWallets.map((el) => (
 					<div key={el.name} className={`size-[150px] shadow-3 p-4 cursor-pointer`}
-						 onClick={() => handleSelectTypeWallet(el.name)}>{el.name}</div>
+						 onClick={() => handleSelectTypeWallet(el.value)}>{el.name}</div>
 				))}
 			</div>
 		</ModalPopUp>
-		<ModalPopUp isModalOpen={isWalletInfoOpen} handleOk={handleCancelInfo} handleCancel={handleCancelInfo} title={`Info wallet `}>
+		<ModalPopUp isModalOpen={isWalletInfoOpen} handleOk={handleCancel} handleCancel={handleCancel} title={`Info wallet `}>
 			<div className={`grid grid-cols-2 gap-4`}>
-				hello
+				<ul>
+					<li><span className={`font-semibold font-satoshi text-xl mr-2`}>Name:</span>{infoWallet?.value}</li>
+					<li><span className={`font-semibold font-satoshi text-xl mr-2`}>Type:</span>{infoWallet?.value}</li>
+					<li><span className={`font-semibold font-satoshi text-xl mr-2`}>Balance:</span>{infoWallet?.label}</li>
+					<li><span className={`font-semibold font-satoshi text-xl mr-2`}>Transaction count:</span>{infoWallet?.label}</li>
+				</ul>
 			</div>
 		</ModalPopUp>
-		<ModalPopUp isModalOpen={isModalOpen} handleOk={methods.handleSubmit(handleOk)} handleCancel={handleCancel} title={"Add transaction"}>
+		<ModalPopUp isModalOpen={isModalGoalOpen} handleOk={goalForm.handleSubmit(handleSubmitGoal)} handleCancel={handleCancel}
+					title={`Add transaction to ${typeWallet}`}>
+			<FormProvider {...goalForm}>
+				<GoalForm typeWallet={typeWallet}/>
+			</FormProvider>
+		</ModalPopUp>
+		<ModalPopUp isModalOpen={isModalBasicOpen} handleOk={methods.handleSubmit(handleOk)} handleCancel={handleCancel}
+					title={`Add transaction to ${typeWallet}`}>
 			<FormProvider {...methods}>
 				<WalletForm typeWallet={typeWallet}/>
 			</FormProvider>

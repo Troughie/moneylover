@@ -33,7 +33,6 @@ const Transaction = () => {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [wallets, setWallets] = useState<wallet[]>([])
 
-	const watchedValues = FilterMethods.watch();
 	const showModal = () => {
 		if (wallets.length === 0) {
 			setIsLoading(true)
@@ -82,12 +81,12 @@ const Transaction = () => {
 	return <UserLayout>
 		<BreakCrumb pageName={"transaction"}/>
 		<div className={`w-full bg-white h-screen shadow-default`}>
-			<form className={`px-4 md:px-10 lg:px-20 grid grid-cols-2 gap-4 md:grid-cols-5 pt-10 md:gap-6`}>
+			<form className={`px-4 md:px-10 lg:px-20 grid grid-cols-2 gap-4 lg:grid-cols-5 pt-10 md:gap-6`}>
 				<FormProvider {...FilterMethods}>
 					<FilterFormTransaction categories={categories} wallets={wallets}/>
 				</FormProvider>
 				<Button onClick={showModal}
-						className={`md:col-span-1 text-bodydark2 col-span-2 hover:scale-110 duration-500 flex-center gap-4`}>Add <img
+						className={`lg:col-span-1 text-bodydark2 col-span-2 hover:scale-110 duration-500 flex-center gap-4`}>Add <img
 					src={Plus} alt=""/></Button>
 			</form>
 			<TableTransaction data={dataDum} isLoading={isLoading}/>

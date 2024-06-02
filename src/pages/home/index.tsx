@@ -6,7 +6,6 @@ import {cardFeatures, cardFooter, cardHome} from "../../model/card";
 import {motion as m} from "framer-motion";
 import Aos from "aos";
 import "aos/dist/aos.css";
-import "./index.style.css";
 import {Link} from "react-router-dom";
 import {routePath} from "../../utils";
 
@@ -58,7 +57,7 @@ const Home = () => {
 				<div className="mx-10 mt-40">
 					<div className="h-auto ">
 						{cardHome?.map((el, index) => (
-							<div data-aos={`fade-${index % 2 ? "left" : "right"}`}>
+							<div key={el.tittle} data-aos={`fade-${index % 2 ? "left" : "right"}`}>
 								<Card
 									detail={el.detail}
 									img={el.img}
@@ -77,7 +76,7 @@ const Home = () => {
 						</h2>
 						<div className=" grid grid-cols-2 lg:grid-cols-3 gap-y-20">
 							{cardFeatures?.map((el) => (
-								<div data-aos="zoom-in-up">
+								<div key={el.img} data-aos="zoom-in-up">
 									<Feature
 										detail={el.detail}
 										img={el.img}
@@ -95,7 +94,7 @@ const Home = () => {
 						</h2>
 						<div className="grid-cols-1 md:grid-cols-3 grid gap-5  max-h-[575px] items-center ">
 							{cardFooter?.map((el) => (
-								<div data-aos="flip-left">
+								<div key={el.name} data-aos="flip-left">
 									<Comment key={el.name} comment={el.comment} name={el.name}/>
 								</div>
 							))}

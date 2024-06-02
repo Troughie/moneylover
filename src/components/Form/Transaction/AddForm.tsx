@@ -12,15 +12,17 @@ interface props {
 const AddFormTransaction: React.FC<props> = ({wallets, categories}) => {
 	return <>
 		<form className={`flex flex-col gap-4 mt-5`}>
-			<InputController name={"wallet"} render={({field}) => <SelectInput field={field} options={wallets} title={"Select wallet"}/>}/>
+			<InputController label={`Wallet`} name={"wallet"}
+							 render={({field}) => <SelectInput field={field} options={wallets} title={"Select wallet"}/>}/>
 
-			<InputController name={"category"} render={({field}) => <SelectInput field={field} options={categories} title={"Select categories"}/>}/>
+			<InputController label={`Category`} name={"category"}
+							 render={({field}) => <SelectInput field={field} options={categories} title={"Select categories"}/>}/>
 
-			<InputController name={"day"} render={({field}) => <DatePicker {...field}/>}/>
+			<InputController label={`Date`} name={"day"} render={({field}) => <DatePicker {...field}/>}/>
 
-			<InputController name={"amount"} render={({field}) => <Input defaultValue={0} placeholder="Amount" {...field}/>}/>
+			<InputController label={`Amount`} name={"amount"} render={({field}) => <Input defaultValue={0} placeholder="Amount" {...field}/>}/>
 
-			<InputController name={"note"} render={({field}) => <TextArea placeholder="Note" {...field}/>}/>
+			<InputController label={`Note`} name={"note"} render={({field}) => <TextArea placeholder="Note" {...field}/>}/>
 		</form>
 	</>
 }

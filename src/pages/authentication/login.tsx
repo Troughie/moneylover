@@ -7,9 +7,9 @@ import {yupResolver} from "@hookform/resolvers/yup";
 import {loginSchema} from "../../libs/schema.ts";
 import {motion as m} from "framer-motion";
 import {routePath} from "../../utils";
-import useRequest from "../../libs/useRequest.tsx";
+import useRequest from "../../libs/useRequest.ts";
 import {post} from "../../libs/api.ts";
-import {saveToken} from "../../utils/jwt.ts";
+import {saveToken, saveUser} from "../../utils/jwt.ts";
 
 interface account {
 	email: string
@@ -30,6 +30,7 @@ const Login: React.FC = () => {
 		onSuccess: (data) => {
 			if (data && data.success) {
 				saveToken(data?.data?.access_token)
+				saveUser(JSON.stringify(data?.data?.user))
 				navigate(routePath.dashboard.path)
 			}
 		},

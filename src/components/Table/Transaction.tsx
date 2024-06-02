@@ -8,7 +8,7 @@ interface props {
 	data: transaction[]
 }
 
-const FormTransaction: React.FC<props> = ({isLoading, data}) => {
+const TableTransaction: React.FC<props> = ({isLoading, data}) => {
 	return <>
 		<div className={`mt-10 px-4 md:px-20 font-satoshi `}>
 			<div className={`grid pb-5 grid-cols-12 border-b-bodydark2 border-b text-center`}>
@@ -37,4 +37,4 @@ const FormTransaction: React.FC<props> = ({isLoading, data}) => {
 	</>
 }
 
-export default FormTransaction
+export default TableTransaction
