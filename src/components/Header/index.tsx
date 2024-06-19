@@ -1,9 +1,9 @@
 import {Link} from "react-router-dom";
-import {Bars, Cancel} from "../../assets";
+import {Bars, Cancel} from "@/assets";
 import {useState} from "react";
 import {motion as m} from "framer-motion";
 import {twMerge} from "tailwind-merge";
-import {routePath} from "../../utils";
+import {routePath} from "@/utils";
 
 
 interface props {

@@ -1,5 +1,5 @@
 import {Link} from 'react-router-dom';
-import {capitalizeFirstLetter, routePath} from "../../utils";
+import {capitalizeFirstLetter, routePath} from "@/utils";
 
 interface BreadcrumbProps {
 	pageName: string;

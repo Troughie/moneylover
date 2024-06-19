@@ -1,9 +1,10 @@
 import "./App.css";
 import {Route, Routes} from "react-router-dom";
 import {route, routePath, routePathArray} from "./utils";
-import {Home, PageNotFound} from "./pages";
+import {Home, PageNotFound} from "./modules";
 import PrivateRoute from "./utils/PrivateRoute";
 import PublicRoute from "./utils/PublicRoute";
+import {WalletProvider} from "@/context/WalletContext.tsx";
 
 
 function App() {
@@ -26,9 +27,11 @@ function App() {
 			}/>
 			{routes.map((el) => (
 				<Route key={el.path} path={el.path} element={
-					<PrivateRoute>
-						<el.element/>
-					</PrivateRoute>
+					<WalletProvider>
+						<PrivateRoute>
+							<el.element/>
+						</PrivateRoute>
+					</WalletProvider>
 				}/>
 			))}
 			<Route path={`*`} element={<PageNotFound/>}/>

@@ -4,8 +4,10 @@ export {default as Cancel} from "./icons/Cancel Close Delete.svg";
 export {default as Calender} from "./icons/Calendar Interface Icon.svg";
 export {default as ArrUp} from "./icons/Arrow Up 337.svg";
 export {default as ArrDown} from "./icons/Arrow Down Icon.svg";
+export {default as ArrLeft} from "./icons/Arrow Left 335.svg";
 export {default as ArrRight} from "./icons/Arrow Right Icon.svg";
 export {default as Plus} from "./icons/Plus Circle Icon.svg";
+export {default as check} from "./icons/Accept Checklist Checkmark.svg";
 
 
 //icon user

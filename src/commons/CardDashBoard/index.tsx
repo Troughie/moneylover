@@ -1,7 +1,7 @@
-import {formatNumber} from "../../utils/Format";
 import React from "react";
 import {Button} from "antd";
 import {Link} from "react-router-dom";
+import {NumberFormatter} from "@/utils/Format";
 
 interface props {
 	img: string,
@@ -24,7 +24,7 @@ const CardDashBoard: React.FC<props> = ({amount, total, img, label, link}) => {
 				<p className={`text-xl font-bold`}>{label}</p>
 				<p className={`text-bodydark2 py-2`}>Total : {total}</p>
 				<p className={`text-xl text-body`}>Amount:<span
-					className={` line-clamp-1`}> {formatNumber(amount)}</span></p>
+					className={` line-clamp-1`}> {<NumberFormatter number={amount}/>}</span></p>
 			</div>
 
 		</div>
