@@ -1,7 +1,7 @@
 import {createContext, useContext, useMemo, useState} from "react";
-import {useQuery, useQueryClient} from "@tanstack/react-query";
+import {useQueries, useQueryClient} from "@tanstack/react-query";
 import {get, post} from "@/libs/api.ts";
-import {Category, ResponseData} from "@/model/interface.ts";
+import {Category} from "@/model/interface.ts";
 import {nameQueryKey} from "@/utils/nameQueryKey.ts";
 import {ModalPopUp} from "@/commons";
 import {FormProvider, useForm} from "react-hook-form";
@@ -15,6 +15,7 @@ interface props {
 	isFetching: boolean;
 	changeType: (el: string) => void
 	openModal: () => void
+	categoryAll: Category[]
 }
 
 interface propsChild {
@@ -38,6 +39,9 @@ export const CategoryProvider: React.FC<propsChild> = ({children}) => {
 	const fetchCategory = (key: any) => {
 		return get({url: "categories", params: {type: key.queryKey[1]}});
 	};
+	const fetchCateNoType = () => {
+		return get({url: "categories/all"});
+	};
 
 	const handleTypeChange = (type: string) => {
 		setType(type)
@@ -47,14 +51,24 @@ export const CategoryProvider: React.FC<propsChild> = ({children}) => {
 		setIsModalOpen(true)
 	}
 
-	const {data, isFetching} = useQuery<ResponseData>({
-		queryKey: [nameQueryKey.categories, type],
-		queryFn: fetchCategory,
+	const data = useQueries({
+		queries: [
+			{
+				queryKey: [nameQueryKey.categories, type],
+				queryFn: fetchCategory,
+			},
+			{
+				queryKey: [nameQueryKey.category],
+				queryFn: fetchCateNoType,
+			},
+		]
 	});
 
+	const isFetching = data[0]?.isFetching
 	// eslint-disable-next-line react-hooks/exhaustive-deps
-	const categoryData = data?.data ?? [];
+	const categoryData = data[0]?.data?.data ?? [];
 
+	const categoryAll = data[1]?.data?.data ?? []
 	const {mutate: createCategory} = useRequest({
 		mutationFn: (values: cateReq) => {
 			return post({
@@ -77,9 +91,10 @@ export const CategoryProvider: React.FC<propsChild> = ({children}) => {
 
 	const value: props = useMemo(() => ({
 		categories: categoryData,
-		isFetching,
+		isFetching: false,
 		changeType: handleTypeChange,
-		openModal: openModalCreate
+		openModal: openModalCreate,
+		categoryAll
 	}), [categoryData, isFetching]);
 
 	return (

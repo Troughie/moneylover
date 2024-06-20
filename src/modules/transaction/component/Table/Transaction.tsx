@@ -1,12 +1,15 @@
 import {Empty, Spin} from "antd";
 import {LoadingOutlined} from "@ant-design/icons";
-import {debt_loan_type, transactionResponse} from "@/model/interface.ts";
-import {NumberFormatter} from "@/utils/Format";
+import {debt_loan_type, transactionResponse, typeWallet} from "@/model/interface.ts";
 import React, {useState} from "react";
 import CardBottom from "@/modules/transaction/commons/CardBottom.tsx";
 import CardTop from "@/modules/transaction/commons/CardTop.tsx";
 import {ModalPopUp} from "@/commons";
 import TransitionChart from "@/modules/transaction/commons/Chart.tsx";
+import CardBalance from "@/modules/transaction/commons/CardBalane.tsx";
+import {useWalletStore} from "@/zustand/budget.ts";
+import CardGoalWalletProcess from "@/modules/transaction/commons/CardGoalWalletProcess.tsx";
+import cn from "@/utils/cn";
 
 interface props {
 	isLoading: boolean
@@ -22,6 +25,8 @@ enum typeCategory {
 }
 
 const TableTransaction: React.FC<props> = ({isLoading, openDetail, data, endBalance, openBalance}) => {
+
+	const {walletSelect} = useWalletStore()
 
 	const [isSelect, setIsSelect] = useState<number[]>([])
 	const [isOpenChart, setIsOpenChart] = useState<boolean>(false)
@@ -60,17 +65,12 @@ const TableTransaction: React.FC<props> = ({isLoading, openDetail, data, endBala
 	}, [] as transactionResponse[])
 
 	return <>
-		{data?.length > 0 && <div className={`py-4 px-6 shadow-3 md:w-2/5 mx-auto `}>
-            <p className={`flex-between`}>
-                <span className={`text-sm text-bodydark2`}>Opening balance</span>
-                <span><NumberFormatter number={openBalance}/></span>
-            </p>
-            <p className={`flex-between my-4`}>
-                <span className={`text-sm text-bodydark2`}>Ending balance</span>
-                <span><NumberFormatter number={endBalance}/></span>
-            </p>
-            <span className={`flex-center text-sm text-green-600 cursor-pointer`} onClick={() => setIsOpenChart(!isOpenChart)}>View report for this period</span>
-        </div>}
+		<div className={cn(`py-4 px-6 shadow-3 md:w-2/5 mx-auto `,
+			{"mt-10": walletSelect?.type === typeWallet.Goal, "hidden": walletSelect?.type === typeWallet.Basic && data.length === 0})}>
+			{walletSelect?.type != typeWallet.Goal ? <CardBalance endBalance={endBalance} openBalance={openBalance}/> : <CardGoalWalletProcess/>}
+
+			<span className={`flex-center text-sm text-green-600 cursor-pointer`} onClick={() => setIsOpenChart(!isOpenChart)}>View report for this period</span>
+		</div>
 
 		<div className={`mt-10 px-4 md:px-20 font-satoshi `}>
 			<div className={``}>

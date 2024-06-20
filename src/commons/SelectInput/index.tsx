@@ -1,5 +1,6 @@
 import {filterOptionSelect} from "@/utils";
 import {Select, Space} from "antd";
+import {CategoryNew, Categoryoptions} from "@/model/interface.ts";
 
 interface props {
 	field: any
@@ -12,7 +13,10 @@ interface props {
 
 const SelectInput: React.FC<props> = ({field, className, onChange, options, title, defaultValue}) => {
 	const getEmojiByValue = (value: any) => {
-		const option = options.find((opt: { value: any; }) => opt.value === value);
+		const option = options.find((opt: {
+			value: any;
+		}) => opt.value === value) || options.flatMap((opt: Categoryoptions) => opt.options).find((el: CategoryNew) => el.value === value)
+
 		return option ? option.emoji : "https://img.icons8.com/?size=100&id=13016&format=png&color=000000";
 	};
 
@@ -40,8 +44,8 @@ const SelectInput: React.FC<props> = ({field, className, onChange, options, titl
 				optionFilterProp="children"
 				filterOption={filterOptionSelect}
 				options={options}
-				optionRender={(option) => (
-					<Space>
+				optionRender={(option) => {
+					return <Space>
           <span role="img">
             <img
 				className="w-5 h-5 rounded-full"
@@ -51,7 +55,7 @@ const SelectInput: React.FC<props> = ({field, className, onChange, options, titl
           </span>
 						{option.label}
 					</Space>
-				)}
+				}}
 			/> : <Select
 				{...field}
 				className={className}
@@ -72,8 +76,8 @@ const SelectInput: React.FC<props> = ({field, className, onChange, options, titl
 				optionFilterProp="children"
 				filterOption={filterOptionSelect}
 				options={options}
-				optionRender={(option) => (
-					<Space>
+				optionRender={(option) => {
+					return <Space>
           <span role="img">
             <img
 				className="w-5 h-5 rounded-full"
@@ -83,7 +87,7 @@ const SelectInput: React.FC<props> = ({field, className, onChange, options, titl
           </span>
 						{option.label}
 					</Space>
-				)}
+				}}
 			/>
 	);
 }

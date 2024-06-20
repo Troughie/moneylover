@@ -13,7 +13,7 @@ import useRequest from "@/hooks/useRequest.ts";
 import {del, post} from "@/libs/api.ts";
 import {useQueryClient} from "@tanstack/react-query";
 import {useWallet} from "@/context/WalletContext.tsx";
-import {transactionRequest, transactionResponse} from "@/model/interface.ts";
+import {transactionRequest, transactionResponse, typeWallet} from "@/model/interface.ts";
 import useDataTransaction from "../function";
 import {FilterFormTransaction, FormTransaction, TableTransaction} from "../component";
 import FilterDate from "@/modules/transaction/component/FilterDate";
@@ -136,7 +136,7 @@ const Transaction = React.memo(() => {
 	useEffect(() => {
 		const subscription = FilterMethods.watch((value) => {
 				// @ts-ignore
-				setFilter(value)
+				setFilter(prev => ({...prev, category: value?.category?.split(".")[0]}))
 			}
 		)
 		return () => subscription.unsubscribe()
@@ -154,7 +154,7 @@ const Transaction = React.memo(() => {
 						className={`lg:col-span-1 text-bodydark2 hover:scale-110 duration-500 flex-center gap-4`}>Add new<img
 					src={Plus} alt=""/></Button>
 			</form>
-			<FilterDate setFilter={setFilter}/>
+			{walletSelect?.type === typeWallet.Basic && <FilterDate setFilter={setFilter}/>}
 			<TableTransaction openDetail={openTranDetail} endBalance={endBalance} openBalance={openBalance} data={transactionData}
 							  isLoading={isFetching}/>
 

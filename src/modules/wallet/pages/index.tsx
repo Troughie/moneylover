@@ -9,7 +9,7 @@ import {goalSchema, walletSchema} from "@/libs/schema.ts";
 import {useQueryClient} from "@tanstack/react-query";
 import {post} from "@/libs/api.ts";
 import useRequest from "@/hooks/useRequest.ts";
-import {walletProps} from "@/model/interface.ts";
+import {walletProps, typeWallet} from "@/model/interface.ts";
 import {GoalForm, TableWallet, WalletForm} from "../component";
 import useWalletManager from "../function";
 import {FormatValueInput} from "@/utils/Format/fortmat.value.input.ts";
@@ -21,14 +21,14 @@ interface type {
 	value: string
 }
 
-const typeWallets: type[] = [
+const WalletTypes: type[] = [
 	{
 		name: "basic Wallet",
-		value: "basic"
+		value: typeWallet.Basic
 	},
 	{
 		name: "Goal wallet",
-		value: "goal"
+		value: typeWallet.Goal
 	}
 ]
 const Wallet = React.memo(() => {
@@ -36,7 +36,7 @@ const Wallet = React.memo(() => {
 	const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 	const [isWalletTypeOpen, setIsWalletTypeOpen] = useState<boolean>(false);
 	const [isWalletInfoOpen, setIsWalletInfoOpen] = useState<boolean>(false);
-	const [typeWallet, setTypeWallet] = useState<string>("")
+	const [WalletType, setWalletType] = useState<string>("")
 	const [pageNumber, setPageNumber] = useState<number>(1)
 	const location = useLocation();
 	const isModalShow = location.state?.isModalOpen;
@@ -44,7 +44,7 @@ const Wallet = React.memo(() => {
 	const methods = useForm({mode: "onChange", defaultValues: {currency: "VND"}, resolver: yupResolver(walletSchema)})
 	const goalForm = useForm({
 		mode: "onChange",
-		defaultValues: {currency: "VND", target: 0, start: 0, targetDisplay: "0", startDisplay: "0"},
+		defaultValues: {currency: "VND"},
 		resolver: yupResolver(goalSchema)
 	})
 
@@ -100,7 +100,7 @@ const Wallet = React.memo(() => {
 
 
 	const handleSelectTypeWallet = (type: string) => {
-		setTypeWallet(type)
+		setWalletType(type)
 		setIsModalOpen(true)
 		setIsWalletTypeOpen(!isWalletTypeOpen)
 	}
@@ -139,7 +139,7 @@ const Wallet = React.memo(() => {
 		</div>
 		<ModalPopUp isModalOpen={isWalletTypeOpen} handleCancel={handleCancel} title={"Select wallet type"}>
 			<div className={`grid grid-cols-2 gap-4`}>
-				{typeWallets.map((el) => (
+				{WalletTypes.map((el) => (
 					<div onClick={() => handleSelectTypeWallet(el.value)} key={el.name} className={`size-[150px] shadow-3 p-4 cursor-pointer`}
 					>{el.name}</div>
 				))}
@@ -152,7 +152,7 @@ const Wallet = React.memo(() => {
 					<li className={`flex-between`}><span className={`infoWallet`}>Type:</span>{infoWallet?.type}</li>
 					<li className={`flex-between`}><span className={`infoWallet`}>Balance:</span>{<NumberFormatter number={infoWallet?.balance}/>}
 					</li>
-					{infoWallet?.type === "goal" &&
+					{infoWallet?.type === typeWallet.Goal &&
                         <>
                             <li className={`flex-between`}><span className={`infoWallet`}>Start amount:</span>{<NumberFormatter
 								number={infoWallet?.start}/>}</li>
@@ -165,10 +165,10 @@ const Wallet = React.memo(() => {
 		</ModalPopUp>
 		<ModalPopUp
 			isModalOpen={isModalOpen}
-			handleOk={typeWallet === "basic" ? methods.handleSubmit(handleOk) : goalForm.handleSubmit(handleSubmitGoal)}
+			handleOk={WalletType === typeWallet.Basic ? methods.handleSubmit(handleOk) : goalForm.handleSubmit(handleSubmitGoal)}
 			handleCancel={handleCancel}
-			title={`Add wallet to ${typeWallet}`}>
-			{typeWallet === "basic" ? (
+			title={`Add wallet to ${WalletType}`}>
+			{WalletType === typeWallet.Basic ? (
 				<FormProvider {...methods}>
 					<WalletForm/>
 				</FormProvider>

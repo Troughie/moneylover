@@ -12,10 +12,18 @@ export interface Category {
 	debt_loan_type: number;
 }
 
-interface CategoryNew {
-	value: string,
+export enum typeWallet {
+	Goal = "goal",
+	Basic = "basic"
+}
 
-	label: string;
+export interface Categoryoptions {
+	label: string,
+	title: string,
+	options: CategoryNew[]
+}
+
+export interface CategoryNew extends antdOptions {
 
 	emoji: string;
 
@@ -85,6 +93,7 @@ export interface pagination {
 	isLast: boolean
 }
 
+
 export const parseToNewCate = (categories: Category[]) => {
 	const newCate: CategoryNew[] = categories.map((e) => ({
 		value: `${e.id}.${e.categoryType}`,
@@ -93,6 +102,26 @@ export const parseToNewCate = (categories: Category[]) => {
 		type: e.categoryType,
 	}))
 	return newCate
+}
+
+export const parseToAllCate = (categories: Category[]) => {
+	return categories.reduce((result, cate) => {
+		const exitCateType = result.find((c) => c.title === cate.categoryType)
+
+		if (!exitCateType) {
+			result.push({
+				title: cate.categoryType,
+				label: cate.categoryType,
+				options: [{value: `${cate.id}.${cate.categoryType}`, label: cate.name, emoji: cate.categoryIcon, type: cate.categoryType}]
+			})
+		} else {
+			exitCateType.options.push(
+				{value: `${cate.id}.${cate.categoryType}`, label: cate.name, emoji: cate.categoryIcon, type: cate.categoryType}
+			)
+		}
+
+		return result
+	}, [] as Categoryoptions[])
 }
 
 
@@ -117,15 +146,15 @@ export interface walletProps {
 	start: number
 	target: number
 	main: boolean
+	end_date: Date
 }
 
-interface RenamedWalletProps {
+interface RenamedWalletProps extends antdOptions {
 	id: string
-	label: string;
-	value: string;
 	wallet_type: string;
 	balance: number;
 }
+
 
 export const parseNewWallet = (wallets: walletProps[]) => {
 	const newWallets: RenamedWalletProps[] = wallets.map((el) => ({

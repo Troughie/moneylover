@@ -8,6 +8,7 @@ export const nameQueryKey = {
 	budgets: "budgets",
 	wallet: "wallet",
 	categories: "categories",
+	category: "cateNoType",
 	budget_history: "budget_history",
 	bills: "bills",
 	icons: "icon"

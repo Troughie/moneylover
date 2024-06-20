@@ -76,10 +76,21 @@ const HeaderUser = React.memo(() => {
 
 
 	useEffect(() => {
+		const wallet = wallets.find(el => el.main)
+		const wc1 = wallets.find(el => el.id === walletSelect?.id)
 		if (!walletSelect) {
-			const wallet = wallets.find(el => el.main)
-			if (wallet)
+			if (wallet) {
 				addWallet(wallet)
+			}
+		}
+		if (wc1) {
+			// @ts-ignore
+			addWallet(wc1)
+			setWalletCurrent(wc1)
+		} else {
+			// @ts-ignore
+			addWallet(wallet)
+			setWalletCurrent(wallet)
 		}
 
 
@@ -104,8 +115,8 @@ const HeaderUser = React.memo(() => {
 			}}>
 				<img src="#" alt="" className={`w-10 h-10 rounded-full bg-black`}/>
 				<p>
-					<p>{walletCurrent?.name ?? walletSelect?.name}</p>
-					<span className={`font-bold font-satoshi`}>{<NumberFormatter number={walletCurrent?.balance ?? walletSelect?.balance}/>}</span>
+					<p>{walletCurrent?.name}</p>
+					<span className={`font-bold font-satoshi`}>{<NumberFormatter number={walletCurrent?.balance}/>}</span>
 				</p>
 			</div>
 			{popWallet && <FilterWallet chooseWallet={chooseWallet}/>}

@@ -18,16 +18,17 @@ const WalletForm = () => {
 							 render={({field}) => <SelectInput field={field} options={currency} title={"Select currency"}/>}/>
 
 
-			<InputController name={"balance"}
+			<InputController name={"balance"} defaultValue={0}
 							 render={({field}) => <Input hidden {...field} />}/>
-			<InputController label={`Start amount`} name={"start"}
+			<InputController label={`Start amount`} name={"start"} defaultValue={0}
 							 render={({field}) => <Input hidden {...field}/>}/>
-			<InputController name={"startDisplay"}
-							 render={({field}) => <Input   {...field} placeholder={"Enter starting amount"}/>}/>
+			<InputController name={"startDisplay"} defaultValue={0}
+							 render={({field}) => <Input defaultValue={0} {...field} placeholder={"Enter starting amount"}/>}/>
 
-			<InputController label={`Goal amount`} name={"target"}
-							 render={({field}) => <Input hidden {...field} placeholder={"Enter goal amount"}/>}/>
-			<InputController name={"targetDisplay"} render={({field}) => <Input  {...field} placeholder={"Enter goal amount"}/>}/>
+			<InputController label={`Goal amount`} name={"target"} defaultValue={0}
+							 render={({field}) => <Input defaultValue={0} hidden {...field} placeholder={"Enter goal amount"}/>}/>
+			<InputController name={"targetDisplay"} defaultValue={0}
+							 render={({field}) => <Input defaultValue={0} {...field} placeholder={"Enter goal amount"}/>}/>
 
 			<InputController name={"end_date"} render={({field}) => <DatePicker placeholder={`Ending date`} {...field}/>}/>
 

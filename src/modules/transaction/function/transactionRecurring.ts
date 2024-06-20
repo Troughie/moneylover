@@ -12,7 +12,6 @@ const useDataTransactionRecurring = () => {
 
 	if (data) {
 		const transactionData: transactionResponse[] = data?.data || []
-		console.log(transactionData)
 		return {transactionData, isFetching}
 	}
 	return {
