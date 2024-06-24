@@ -82,7 +82,7 @@ const TableTransaction: React.FC<props> = ({isLoading, openDetail, data, endBala
 								const category = data?.filter(el => el.date === header?.date)
 								return <div className={`flex relative w-full  flex-wrap gap-x-3`} key={i}>
 									<CardTop date={header?.date} isNegative={isNegative} amount={header?.amount}
-											 clickTransaction={clickTransaction} id={header.id} category={category}/>
+											 clickTransaction={clickTransaction} id={header.id} data={category}/>
 
 									<CardBottom isSelect={isSelect.includes(header?.id)} openDetail={openDetail} trans={category}/>
 								</div>
