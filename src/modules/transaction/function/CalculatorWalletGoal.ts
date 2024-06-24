@@ -13,7 +13,6 @@ const CalculatorWalletGoal = (wallet: walletProps | undefined): props => {
 
 		const totalLeft = wallet.target - wallet.balance;
 		const timeLeft = dayjs(wallet.end_date).diff(dayjs(), "days")
-		console.log(timeLeft)
 		const dayInMonth = dayjs().daysInMonth()
 		const isMonth = timeLeft > dayInMonth ? Math.floor(timeLeft / dayjs().daysInMonth()) : 0
 		const percent = 100 - (totalLeft / wallet.target * 100)

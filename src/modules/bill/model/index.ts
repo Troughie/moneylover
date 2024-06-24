@@ -16,4 +16,6 @@ export interface billResponse {
 	frequency: string;
 
 	every: number;
+
+	paid: boolean
 }

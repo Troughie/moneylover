@@ -9,6 +9,7 @@ const fetchBill = (): Promise<ResponseData> => {
 }
 
 const useBillData = () => {
+
 	const {data, isFetching} = useQuery({queryKey: [nameQueryKey.bills,], queryFn: fetchBill})
 
 	if (data) {

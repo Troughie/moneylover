@@ -14,7 +14,7 @@ import {GoalForm, TableWallet, WalletForm} from "../component";
 import useWalletManager from "../function";
 import {FormatValueInput} from "@/utils/Format/fortmat.value.input.ts";
 import {useLocation} from "react-router-dom";
-import {NumberFormatter} from "@/utils/Format";
+import WalletDetail from "@/modules/wallet/component/Table/WalletDetail.tsx";
 
 interface type {
 	name: string,
@@ -146,22 +146,8 @@ const Wallet = React.memo(() => {
 			</div>
 		</ModalPopUp>
 		<ModalPopUp isModalOpen={isWalletInfoOpen} handleOk={handleCancel} handleCancel={handleCancel} title={`Info wallet `}>
-			<div>
-				<ul className={`flex flex-col gap-2`}>
-					<li className={`flex-between`}><span className={`infoWallet`}>Name:</span>{infoWallet?.name}</li>
-					<li className={`flex-between`}><span className={`infoWallet`}>Type:</span>{infoWallet?.type}</li>
-					<li className={`flex-between`}><span className={`infoWallet`}>Balance:</span>{<NumberFormatter number={infoWallet?.balance}/>}
-					</li>
-					{infoWallet?.type === typeWallet.Goal &&
-                        <>
-                            <li className={`flex-between`}><span className={`infoWallet`}>Start amount:</span>{<NumberFormatter
-								number={infoWallet?.start}/>}</li>
-                            <li className={`flex-between`}><span className={`infoWallet`}>Goal balance:</span>{<NumberFormatter
-								number={infoWallet?.target}/>}</li>
-                        </>
-					}
-				</ul>
-			</div>
+			<WalletDetail infoWallet={infoWallet} isGoal={infoWallet?.type === typeWallet.Goal}/>
+
 		</ModalPopUp>
 		<ModalPopUp
 			isModalOpen={isModalOpen}
