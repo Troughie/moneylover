@@ -2,11 +2,13 @@ import cn from "@/utils/cn";
 import {NumberFormatter} from "@/utils/Format";
 import React from "react";
 import {debt_loan_type, transactionResponse} from "@/model/interface.ts";
+import {parseFullForm} from "@/utils/day.ts";
 
 interface props {
 	openDetail: (el: any) => void
 	trans: transactionResponse[]
 	isSelect: boolean
+	isRecurring?: boolean
 }
 
 enum typeCategory {
@@ -15,7 +17,7 @@ enum typeCategory {
 	Deb = "Debt_Loan"
 }
 
-const CardBottom: React.FC<props> = ({trans, isSelect, openDetail}) => {
+const CardBottom: React.FC<props> = ({trans, isRecurring, isSelect, openDetail}) => {
 	return <>
 		<div
 			className={cn(`flex flex-col w-full gap-6 my-3 max-h-0 transition-all duration-300 overflow-y-hidden ease-in-out shadow-default px-4 `,
@@ -33,6 +35,7 @@ const CardBottom: React.FC<props> = ({trans, isSelect, openDetail}) => {
 									{el.category.name}
 								</p>
 								<p className={`text-xs text-bodydark2`}>{el?.notes}</p>
+								{isRecurring && <span className={`text-xs text-bodydark2 mt-4`}>next {parseFullForm(el?.date).toString()}</span>}
 								<span
 									className={`text-xs text-bodydark2`}>{el.exclude ? "     This transaction is exclude from report" : ""}</span>
 							</div>
