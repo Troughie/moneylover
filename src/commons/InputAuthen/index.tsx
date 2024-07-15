@@ -22,7 +22,7 @@ const InputAuthen: React.FC<props> = ({name, type, placeholder, icons, label}) =
 					placeholder={placeholder}
 					className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none "
 				/>
-				<span className="absolute right-4 top-4">{icons}</span>
+				{!!icons && <span className="absolute right-4 top-4">{icons}</span>}
 			</div>}/>
 		</div>
 	</>

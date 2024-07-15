@@ -8,6 +8,7 @@ interface props {
 	nextBill?: number
 	isPaid?: boolean
 	dueDate?: boolean
+
 }
 
 const CardToDay = ({bills, nextBill, isPaid, dueDate}: props) => {

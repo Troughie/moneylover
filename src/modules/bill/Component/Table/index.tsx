@@ -6,6 +6,7 @@ import {NumberFormatter} from "@/utils/Format";
 import React, {useCallback} from "react";
 import CardToDay from "@/modules/bill/Common/CardToDay.tsx";
 import ClassifyBills from "@/modules/bill/function/ClassifyBills.ts";
+import cn from "@/utils/cn";
 
 const TableBill = React.memo(() => {
 	const {result, isFetching} = useBillData()
@@ -14,7 +15,8 @@ const TableBill = React.memo(() => {
 		return ClassifyBills(result?.bills)
 	}, [result?.bills])
 
-	return <div className={`container-wrapper-auto`}>
+
+	return <div className={cn(`container-wrapper`, {"h-auto": true})}>
 		{result?.bills?.length > 0 && <div className={`md:mx-40 p-4 shadow-3 mb-4`}>
             <p className={`text-xl font-bold`}>Remaining bills</p>
             <p className={`flex-between`}>
@@ -42,7 +44,9 @@ const TableBill = React.memo(() => {
 									{data.map((el) => {
 										const dueDay = dayjs(el.from_date).diff(el.date, "day");
 										return (
-											<CardToDay key={el.id} bills={el} nextBill={dueDay} isPaid={el.paid} dueDate={!!el.due_date}/>
+											<div key={el.id} className={`cursor-pointer`}>
+												<CardToDay key={el.id} bills={el} nextBill={dueDay} isPaid={el.paid} dueDate={!!el.due_date}/>
+											</div>
 										);
 									})}
 								</div>

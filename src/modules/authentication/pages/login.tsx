@@ -46,7 +46,7 @@ const Login: React.FC = () => {
 		<>
 			<LoadingComponent/>
 
-			<div className="rounded-sm border border-stroke bg-white shadow-default  mt-[200px]">
+			<div className="rounded-sm border border-stroke bg-white shadow-default mt-[200px]">
 				<div className="flex flex-wrap items-center">
 					<m.div
 						initial={{x: -1000, opacity: 0}}
@@ -90,7 +90,7 @@ const Login: React.FC = () => {
 									<div className="mt-6 text-center">
 										<p>
 											Don’t Remember password click here?{" "}
-											<Link to="/auth/signup" className="text-primary">
+											<Link to={routePath.forgot.path} className="text-primary">
 												Forgot
 											</Link>
 										</p>

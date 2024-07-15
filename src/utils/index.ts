@@ -1,4 +1,4 @@
-import {Bill, Budget, HomeUser, Login, RecurringTran, Register, Transaction, Wallet} from "@/modules";
+import {Bill, Budget, Forgot, HomeUser, Login, RecurringTran, Register, Transaction, Wallet} from "@/modules";
 import {IBudget, IDashBoard, ITransaction, IWallet} from "../assets";
 import dayjs from "dayjs";
 
@@ -26,6 +26,11 @@ export const routePath = {
 		path: "/login",
 		name: "Login",
 		element: Login,
+		icons: ""
+	}, forgot: {
+		path: "/forgot",
+		name: "Forgot",
+		element: Forgot,
 		icons: ""
 	},
 	register: {
@@ -76,7 +81,7 @@ export const routePathArray = () => {
 
 	const result: route[] = []
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	const {login, register, ...route} = routePath
+	const {login, register, forgot, ...route} = routePath
 	Object.entries(route).map(([, value]) => {
 		result.push(value)
 	})

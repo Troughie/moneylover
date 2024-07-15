@@ -10,7 +10,7 @@ import {WalletProvider} from "@/context/WalletContext.tsx";
 function App() {
 	const routes: route[] = routePathArray()
 
-	const {login, register} = routePath
+	const {login, register, forgot} = routePath
 
 	return (
 		<Routes>
@@ -23,6 +23,11 @@ function App() {
 			<Route path={register.path} element={
 				<PublicRoute>
 					<register.element/>
+				</PublicRoute>
+			}/>
+			<Route path={forgot.path} element={
+				<PublicRoute>
+					<forgot.element/>
 				</PublicRoute>
 			}/>
 			{routes.map((el) => (
