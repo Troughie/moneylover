@@ -145,9 +145,9 @@ const Wallet = React.memo(() => {
 				))}
 			</div>
 		</ModalPopUp>
-		<ModalPopUp isModalOpen={isWalletInfoOpen} handleOk={handleCancel} handleCancel={handleCancel} title={`Info wallet `}>
+		<ModalPopUp isModalOpen={isWalletInfoOpen} handleOk={handleCancel} showOke={false} showCancel={false} handleCancel={handleCancel}
+					title={`Info wallet `}>
 			<WalletDetail infoWallet={infoWallet} isGoal={infoWallet?.type === typeWallet.Goal}/>
-
 		</ModalPopUp>
 		<ModalPopUp
 			isModalOpen={isModalOpen}

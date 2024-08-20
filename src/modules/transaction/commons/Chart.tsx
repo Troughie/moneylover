@@ -2,8 +2,8 @@ import {ApexOptions} from "apexcharts";
 import React, {useEffect, useState} from "react";
 import ReactApexChart from "react-apexcharts";
 import {getCurrentWeek} from "@/utils";
-import {debt_loan_type, transactionResponse, typeCategory} from "@/model/interface.ts";
-import dayjs from "dayjs";
+import {transactionResponse} from "@/model/interface.ts";
+import {CalculateCategoriesChart, TranChartDate, TranChartPeriod} from "@/modules/transaction/function/CalculateToChart.ts";
 
 
 interface BarChartState {
@@ -14,14 +14,17 @@ interface BarChartState {
 }
 
 interface props {
-	tran: transactionResponse[]
+	tran: transactionResponse[] | undefined
+	type?: string
 }
 
-const TransitionChart: React.FC<props> = ({tran}) => {
+const TransitionChart: React.FC<props> = ({tran, type}) => {
 	const [categories, setCategories] = useState<string[]>([])
 	useEffect(() => {
-		setCategories(getCurrentWeek())
-	}, []);
+		const month = sessionStorage.getItem("currentMonth")
+		const year = sessionStorage.getItem("currentYear")
+		setCategories(type === "date" ? CalculateCategoriesChart(tran) : getCurrentWeek(month, year))
+	}, [tran]);
 
 	const options: ApexOptions = {
 		colors: ['#3C50E0', '#80CAEE', "#2e5b73"],
@@ -63,7 +66,6 @@ const TransitionChart: React.FC<props> = ({tran}) => {
 		dataLabels: {
 			enabled: false,
 		},
-
 		xaxis: {
 			categories: [...categories],
 		},
@@ -84,10 +86,6 @@ const TransitionChart: React.FC<props> = ({tran}) => {
 
 
 	useEffect(() => {
-		const now = dayjs();
-		const currentMonth = now.month(); // Tháng bắt đầu từ 0 (tháng 1 là 0)
-		const currentYear = now.year();
-
 		const result1: BarChartState = {
 			series: [
 				{
@@ -104,31 +102,7 @@ const TransitionChart: React.FC<props> = ({tran}) => {
 				}
 			]
 		}
-		categories.forEach((categoryRange, i) => {
-			const [start, end] = categoryRange.split(",").map(Number);
-			const startWeek = dayjs(new Date(currentYear, currentMonth, start));
-			const endWeek = dayjs(new Date(currentYear, currentMonth, end));
-
-			tran.forEach(obj => {
-				const objDate = dayjs(obj.date);
-				if (objDate.isAfter(startWeek) && objDate.isBefore(endWeek) || objDate.isSame(endWeek) || objDate.isSame(startWeek)) {
-					const amount = obj.amount;
-					const categoryType = obj.category.categoryType;
-					console.log(obj)
-					if (!obj.exclude) {
-						if (categoryType === typeCategory.Expense) {
-							result1.series[0].data[i] -= amount;
-						} else if (categoryType === typeCategory.Income) {
-							result1.series[1].data[i] += amount;
-						} else if (categoryType === typeCategory.Deb && obj.category.debt_loan_type === debt_loan_type.debt) {
-							result1.series[2].data[i] += amount
-						} else {
-							result1.series[2].data[i] -= amount
-						}
-					}
-				}
-			});
-		});
+		type != "date" ? TranChartPeriod(categories, tran, result1) : TranChartDate(categories, tran, result1)
 
 		setState(result1)
 	}, [tran, categories]);

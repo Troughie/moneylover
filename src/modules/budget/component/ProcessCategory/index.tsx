@@ -65,10 +65,10 @@ const ProcessCategory = () => {
 							  percent={detailBudget?.percent} isOver={detailBudget?.isOver}
 							  totalLeft={detailBudget?.totalLeft} deleteBudget={clickDeleteBudget} id={detailBudget?.id}/>
 		</ModalPopUp>
-		{budgetSelect?.category?.map((el) => {
+		{budgetSelect?.category?.map((el, i) => {
 			const tran = transactionSimilar.find((t) => t.category.id === el.id)
 			const {spentOver, percent, totalLeft, isOver} = CheckSpentOver(tran?.amount || 0, el?.amountBudget)
-			return <div key={el.id} className={`w-full flex-center`}
+			return <div key={i} className={`w-full flex-center`}
 						onClick={() => handleShowDetail(budgetSelect, el, tran?.amount, percent, totalLeft, isOver, el?.idBudget)}>
 				<CardCategory className={`w-[calc(100%+40px)] md:w-2/3 cursor-pointer`} img={tran?.category.categoryIcon || el.categoryIcon}
 							  name={tran?.category.name || el.name}

@@ -1,13 +1,13 @@
 import {Navigate, useLocation} from 'react-router-dom';
-import {routePath} from "../index.ts";
+import {routePath} from "@/utils";
+import {useUserStore} from "@/modules/authentication/store/user.ts";
 
 const PrivateRoute = (props: { children: React.ReactNode }): JSX.Element => {
 	const {children} = props;
-
-	const user = localStorage.getItem("user")
+	const {user} = useUserStore.getState()
 	const location = useLocation();
 
-	return user ? (
+	return user?.user ? (
 		<>{children}</>
 	) : (
 		<Navigate

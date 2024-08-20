@@ -23,6 +23,7 @@ interface props {
 
 const TableTransaction: React.FC<props> = ({isLoading, openDetail, data, endBalance, openBalance}) => {
 
+
 	const {walletSelect} = useWalletStore()
 
 	const [isSelect, setIsSelect] = useState<number[]>([])
@@ -51,7 +52,7 @@ const TableTransaction: React.FC<props> = ({isLoading, openDetail, data, endBala
 			<span className={`flex-center text-sm text-green-600 cursor-pointer`} onClick={() => setIsOpenChart(!isOpenChart)}>View report for this period</span>
 		</div>
 
-		<div className={`mt-10 px-4 md:px-20 font-satoshi `}>
+		<div className={`mt-10 px-4 md:px-20 font-satoshi w-2/3 mx-auto`}>
 			<div className={``}>
 				{isLoading ? <Spin className={`flex justify-center mt-5`} indicator={<LoadingOutlined style={{fontSize: 48}} spin/>}/> :
 					data.length === 0 ? <Empty className={`mt-20`}/> :
@@ -59,10 +60,9 @@ const TableTransaction: React.FC<props> = ({isLoading, openDetail, data, endBala
 							{resultData()?.map((header, i) => {
 								const isNegative = header?.amount < 0
 								const category = data?.filter(el => el.date === header?.date)
-								return <div className={`flex relative w-full  flex-wrap gap-x-3`} key={i}>
+								return <div className={`flex relative w-full flex-wrap gap-x-3`} key={i}>
 									<CardTop date={header?.date} isNegative={isNegative} amount={header?.amount}
 											 clickTransaction={clickTransaction} id={header.id} data={category}/>
-
 									<CardBottom isSelect={isSelect.includes(header?.id)} openDetail={openDetail} trans={category}/>
 								</div>
 							})}

@@ -1,7 +1,9 @@
-import {monthDates} from "@/modules/transaction/model";
-import React, {useEffect, useRef, useState} from "react";
+import {monthDates, timeTransaction} from "@/modules/transaction/model";
+import React, {useCallback, useEffect, useRef, useState} from "react";
 import cn from "@/utils/cn";
 import dayjs from "dayjs";
+import useHomePage from "@/modules/dashboard/function";
+import {Badge} from "antd";
 
 interface props {
 	setFilter: (data: any) => void
@@ -12,12 +14,34 @@ const FilterDate: React.FC<props> = ({setFilter}) => {
 	const [currentSelectDateFilter, setCurrentSelectDateFilter] = useState<string>(
 		`${new Date().getMonth() + 1}-${new Date().getFullYear()}`
 	)
+	const {transactions} = useHomePage()
 
-	const selectDate = (month: number, year: number, start: string, end: string) => {
+	const countTranOfMonth = useCallback((currentTime: timeTransaction | null) => {
+		return transactions.filter((el) => {
+			const dateToCheck = dayjs(el.date)
+			const currentDate = dayjs()
+			if (!currentTime) {
+				return null;
+			}
+			if (dateToCheck.year() === currentTime.year) {
+				if (dateToCheck.month() === +currentTime.month - 1 || dateToCheck.isAfter(currentDate) && !!currentTime) {
+					return el
+				}
+			}
+		})
+	}, [transactions])
+
+	const selectDate = (month: number, year: number, start: string, end: string | undefined) => {
 		setCurrentSelectDateFilter(month + "-" + year)
 		setFilter((prev: any) => ({...prev, start, end}))
 	}
 
+	const clickChangeTime = (isFuture: boolean, month: number, year: number, start: string, end: string | undefined) => {
+		sessionStorage.setItem("currentMonth", month.toString())
+		sessionStorage.setItem("currentYear", year.toString())
+		setIsFuture(isFuture)
+		selectDate(month, year, start, end)
+	}
 	const containerRef = useRef(null);
 	const selectedRef = useRef(null);
 
@@ -41,28 +65,28 @@ const FilterDate: React.FC<props> = ({setFilter}) => {
 
 	return <>
 		<div className={`flex-center sticky top-0`}>
-			<div ref={containerRef} className={`w-2/3 flex-center gap-2 my-10 overflow-x-scroll  border-x-bodydark border-x px-2`}>
+			<div ref={containerRef} className={`w-2/3 flex-center gap-2 my-10 overflow-x-scroll  border-x-bodydark border-x p-3`}>
 				{monthDates?.map((el) => {
 					const timeTran = `${el.month}-${el.year}`
 					const isSelected = currentSelectDateFilter === timeTran;
-					return <div key={el?.index} onClick={() => {
-						setIsFuture(false)
-						selectDate(el.month, el.year, el.start, el.end)
-					}
-					} ref={isSelected ? selectedRef : null}
-								className={`py-2 text-nowrap px-4 cursor-pointer 
+					return <Badge count={countTranOfMonth(el).length}>
+						<div key={el?.index} onClick={() =>
+							clickChangeTime(false, el.month, el.year, el.start, el.end)
+						} ref={isSelected ? selectedRef : null}
+							 className={`py-2 text-nowrap px-4 cursor-pointer 
 						${isSelected && !isFuture ? " border-b border-b-bodydark2" : ""}`}>
-						{checkMonth(el.month, el.year) === 1 ? "THIS MONTH" : checkMonth(el.month, el.year) === 2 ? "LAST MONTH" : `${el?.month}/${el?.year}`}
-					</div>
+							{checkMonth(el.month, el.year) === 1 ? "THIS MONTH" : checkMonth(el.month, el.year) === 2 ? "LAST MONTH" : `${el?.month}/${el?.year}`}
+						</div>
+					</Badge>
 				})}
-				<div onClick={() => {
-					setIsFuture(true)
-					setCurrentSelectDateFilter(`${new Date().getMonth() + 2}-${new Date().getFullYear()}`)
-					setFilter((prev: any) => ({...prev, start: dayjs().add(1, "day").toISOString().split('T')[0], end: undefined}))
-				}}
-					 className={cn(`py-2 text-nowrap px-4 cursor-pointer `, {" border-b border-b-bodydark2": isFuture})}>
-					FUTURE
-				</div>
+				<Badge count={countTranOfMonth(null).length}>
+					<div onClick={() =>
+						clickChangeTime(true, new Date().getMonth() + 2, new Date().getFullYear(), dayjs().add(1, "day").toISOString().split('T')[0], undefined)
+					}
+						 className={cn(`py-2 text-nowrap px-4 cursor-pointer `, {" border-b border-b-bodydark2": isFuture})}>
+						FUTURE
+					</div>
+				</Badge>
 			</div>
 		</div>
 	</>

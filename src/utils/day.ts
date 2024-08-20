@@ -4,6 +4,7 @@ import {dateFormat} from "@/utils/index.ts";
 import isoWeek from 'dayjs/plugin/isoWeek';
 import quarterOfYear from 'dayjs/plugin/quarterOfYear';
 import weekday from "dayjs/plugin/weekday";
+import {createdAt} from "@/modules/chat/function/chats.ts";
 
 dayjs.extend(weekday);
 dayjs.extend(isoWeek)
@@ -26,6 +27,32 @@ export const firstNLastNextMonth = () => {
 		start: firstDayOfNextMonth
 	}
 }
+
+const convertTimeStampToDate = (createdAt: createdAt) => {
+	return new Date((createdAt?.seconds + createdAt?.nanoseconds * 10 ** -9) * 1000)
+}
+
+export const timeSendMess = (createdAt: createdAt) => {
+	const timeSend = convertTimeStampToDate(createdAt)
+	return `${timeSend.getHours()}:${timeSend.getMinutes()}`
+}
+
+export const calculateElapsedTime = (createdAt: createdAt) => {
+	const createdAtDate = convertTimeStampToDate(createdAt)
+	const now = new Date();
+	const elapsedTimeInMs = now.getTime() - createdAtDate?.getTime();
+
+	const seconds = Math.floor(elapsedTimeInMs / 1000);
+	const minutes = Math.floor(seconds / 60);
+	const hours = Math.floor(minutes / 60);
+	const days = Math.floor(hours / 24);
+
+	if (days > 0) return `${days}d`;
+	if (hours > 0) return `${hours}h`;
+	if (minutes > 0) return `${minutes}m`;
+	return `${seconds}s`;
+};
+
 export const getCurrentOneWeek = () => {
 	const dayFormat = "DD/MM"
 	const now = dayjs();
@@ -35,32 +62,20 @@ export const getCurrentOneWeek = () => {
 	const startOfCurrentWeek = now.startOf('isoWeek');
 	const endOfCurrentWeek = now.endOf('isoWeek');
 
-	const startOfNextWeek = startOfCurrentWeek.add(1, 'week');
-	const endOfNextWeek = endOfCurrentWeek.add(1, 'week');
-
-
 	const firstDayOfCurrentMonth = dayjs(new Date(currentYear, currentMonth, 1));
 	const lastDayOfCurrentMonth = dayjs(new Date(currentYear, currentMonth + 1, 0));
 
-	const firstDayOfNextMonth = firstDayOfCurrentMonth.add(1, "month")
-	const lastDayOfNextMonth = lastDayOfCurrentMonth.add(1, "month")
 	const result: antdOptions[] = [
 		{
 			value: `${startOfCurrentWeek.format(dateFormat)}-${endOfCurrentWeek.format(dateFormat)}-This week`,
 			label: `This week (${startOfCurrentWeek.format(dayFormat)}-${endOfCurrentWeek.format(dayFormat)})`,
 		},
-		// {
-		// 	value: `${startOfNextWeek.format(dateFormat)}-${endOfNextWeek.format(dateFormat)}-Next week`,
 		// 	label: `Next week (${startOfNextWeek.format(dayFormat)}-${endOfNextWeek.format(dayFormat)})`,
 		// },
 		{
 			value: `${firstDayOfCurrentMonth.format(dateFormat)}-${lastDayOfCurrentMonth.format(dateFormat)}-This month`,
 			label: `This month (${firstDayOfCurrentMonth.format(dayFormat)}-${lastDayOfCurrentMonth.format(dayFormat)})`
 		},
-		// {
-		// 	value: `${firstDayOfNextMonth.format(dateFormat)}-${lastDayOfNextMonth.format(dateFormat)}-Next month`,
-		// 	label: `Next month (${firstDayOfNextMonth.format(dayFormat)}-${lastDayOfNextMonth.format(dayFormat)})`
-		// },
 		{
 			value: "1",
 			label: "Custom"
@@ -70,6 +85,7 @@ export const getCurrentOneWeek = () => {
 	return result
 
 }
+
 
 export const dayInWeek = () => {
 	const startOfWeek = dayjs().startOf('week');

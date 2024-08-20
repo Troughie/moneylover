@@ -3,9 +3,11 @@ import axios, {
 	AxiosResponse,
 	InternalAxiosRequestConfig,
 } from "axios";
-import {delToken, getRefreshToken, getToken} from "../utils/jwt.ts";
+import {delToken} from "../utils/jwt.ts";
 import {jwtDecode} from "jwt-decode";
 import dayjs from "dayjs";
+import {useUserStore} from "@/modules/authentication/store/user.ts";
+
 
 const baseURL = `${import.meta.env.VITE_URL_SERVER}`;
 const instance = axios.create({
@@ -19,9 +21,9 @@ instance.interceptors.request.use(
 	async function (
 		config: InternalAxiosRequestConfig<any>
 	): Promise<InternalAxiosRequestConfig<any>> {
-		const token = getToken();
-
-		const refreshToken = getRefreshToken();
+		const {user} = useUserStore.getState();
+		const token = user?.accessToken
+		const refreshToken = user?.refreshToken
 		if (token) {
 			const result = jwtDecode(token);
 			const isExpired = dayjs.unix(result?.exp ?? 0).diff(dayjs()) < 1;
@@ -29,7 +31,6 @@ instance.interceptors.request.use(
 				config.headers["Authorization"] = "Bearer " + token;
 				return config;
 			}
-
 			axios
 				.post(`${baseURL}auth/refreshToken`, {
 					refreshToken: refreshToken,
@@ -40,6 +41,7 @@ instance.interceptors.request.use(
 				})
 				.catch((err) => {
 					if (err.response.status === 401 || err.response.status === 403) {
+						console.log("unauthorized")
 						delToken();
 						window.location.href = "/login";
 					}

@@ -8,11 +8,12 @@ interface props {
 	title?: string
 	showCancel?: boolean
 	showOke?: boolean
+	className?: string
 }
 
-const ModalPopUp: React.FC<props> = ({isModalOpen, showOke = true, showCancel = true, handleCancel, handleOk, children, title}) => {
+const ModalPopUp: React.FC<props> = ({className, isModalOpen, showOke = true, showCancel = true, handleCancel, handleOk, children, title}) => {
 	return <>
-		<Modal title={title} open={isModalOpen} onOk={handleOk} onCancel={handleCancel} footer={(_, {OkBtn, CancelBtn}) => (
+		<Modal className={className} title={title} open={isModalOpen} onOk={handleOk} onCancel={handleCancel} footer={(_, {OkBtn, CancelBtn}) => (
 			<div className={`flex-center gap-5`}>
 				{showCancel && <CancelBtn/>}
 				{showOke && <OkBtn/>}

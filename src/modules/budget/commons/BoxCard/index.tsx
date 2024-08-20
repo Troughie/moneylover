@@ -7,7 +7,7 @@ interface props {
 	topText?: number | string | undefined
 	className?: string
 	isDay?: boolean
-	endDate?: Date | undefined
+	endDate?: string | undefined
 }
 
 const BoxBottomProcess = ({bottomText, topText, className, isDay, endDate}: props) => {

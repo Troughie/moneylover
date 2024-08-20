@@ -18,6 +18,10 @@ export default {
         extend: {
             colors: {
                 primary1: "#F4F7FE",
+                primary2: "#418AFF",
+                header_chat: "#F8F9FF",
+                nav: "#F8F9FF",
+                main: "#edf3fb",
                 current: "currentColor",
                 transparent: "transparent",
                 white: "#FFFFFF",
@@ -30,10 +34,7 @@ export default {
                 primary: "#3C50E0",
                 secondary: "#80CAEE",
                 stroke: "#E2E8F0",
-                gray: "#EFF4FB",
                 graydark: "#333A48",
-                "gray-2": "#F7F9FC",
-                "gray-3": "#FAFAFA",
                 whiten: "#F1F5F9",
                 whiter: "#F5F7FD",
                 boxdark: "#24303F",
@@ -242,6 +243,10 @@ export default {
                     "0%, 100%": {transform: "rotate(360deg)"},
                     "50%": {transform: "rotate(0deg)"},
                 },
+                wiggle: {
+                    '0%, 100%': {transform: 'rotate(-9deg)'},
+                    '50%': {transform: 'rotate(9deg)'},
+                }
             },
             animation: {
                 "ping-once": "ping 5s cubic-bezier(0, 0, 0.2, 1)",
@@ -249,6 +254,7 @@ export default {
                 "spin-1.5": "spin 1.5s linear infinite",
                 "spin-2": "spin 2s linear infinite",
                 "spin-3": "spin 3s linear infinite",
+                wiggle: "wiggle 1s linear infinite"
             },
         },
     },

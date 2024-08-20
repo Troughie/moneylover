@@ -23,9 +23,8 @@ const SliderBudget = () => {
 		<div className={`flex-center gap-5`}>
 			<div className={`items-center gap-4 md:mx-10 overflow-x-hidden`}>
 				<Tabs
-					type={'card'}
 					onChange={(e) => handleChange(+e)}
-					className={`w-full`}
+					className={`w-full `}
 					defaultActiveKey={position.toString()}
 					items={budgets.map((_, i) => {
 						const time = `${formatDate(_.period_start).toString()}-${formatDate(_.period_end).toString()}`

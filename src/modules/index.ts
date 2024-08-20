@@ -13,5 +13,6 @@ export const RecurringTran = withSup(lazy(() => import("./transaction/pages/Recu
 const Wallet = withSup(lazy(() => import("./wallet/pages")))
 const PageNotFound = withSup(lazy(() => import("./404")))
 const Bill = withSup(lazy(() => import("./bill/pages")))
+const Chat = withSup(lazy(() => import("./chat/pages")))
 
-export {Home, HomeUser, Login, Bill, Wallet, PageNotFound, Register, Transaction, Budget, Forgot}
+export {Home, HomeUser, Login, Bill, Wallet, PageNotFound, Register, Transaction, Budget, Forgot, Chat}

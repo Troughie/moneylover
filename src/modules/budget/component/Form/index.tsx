@@ -14,6 +14,7 @@ const optionsTypCate = [
 	{label: 'Deb', value: 'Debt_Loan'},
 ];
 const BudgetForm = () => {
+	const custom: string = "custom"
 	const [optionsTimeBudget] = useState<antdOptions[]>(() => getCurrentOneWeek())
 	const [typeCate, setTypeCate] = useState<string>("Expense");
 
@@ -54,13 +55,12 @@ const BudgetForm = () => {
 		setTypeCate(value);
 	};
 	useEffect(() => {
-		if (rangeTime != "1") {
+		if (rangeTime != custom) {
 			const date = rangeTime.split("-")
 			setStart(cusDayjs(date[0]))
 			setEnd(cusDayjs(date[1]))
 			setName(date[2])
 		} else {
-			console.log("heheh")
 			// @ts-ignore
 			setName(undefined)
 			// @ts-ignore
@@ -103,12 +103,12 @@ const BudgetForm = () => {
 
 			<InputController name={"amountDisplay"} render={({field}) => <Input defaultValue={0} placeholder="Amount" {...field}/>}/>
 
-			<InputController label={`Start date`} isReset={true} className={cn({"hidden": rangeTime != "1"})} value={start}
+			<InputController label={`Start date`} isReset={true} className={cn({"hidden": rangeTime != custom})} value={start}
 							 name={"period_start"}
-							 render={({field}) => <DatePicker className={cn({"hidden-date-picker": rangeTime != "1"})} hidden  {...field}/>}/>
+							 render={({field}) => <DatePicker className={cn({"hidden-date-picker": rangeTime != custom})} hidden  {...field}/>}/>
 
-			<InputController label={`End date`} isReset={true} className={cn({"hidden": rangeTime != "1"})} value={end} name={"period_end"}
-							 render={({field}) => <DatePicker className={cn({"hidden-date-picker": rangeTime != "1"})} {...field}/>}/>
+			<InputController label={`End date`} isReset={true} className={cn({"hidden": rangeTime != custom})} value={end} name={"period_end"}
+							 render={({field}) => <DatePicker className={cn({"hidden-date-picker": rangeTime != custom})} {...field}/>}/>
 
 			<InputController label={`Repeat the budget`} name={"repeat_bud"} render={({field}) => <Switch className={`w-10`} {...field} />}/>
 			<InputController name={"name"} isReset={true} value={name} render={({field}) => <Input hidden placeholder="Amount" {...field}/>}/>

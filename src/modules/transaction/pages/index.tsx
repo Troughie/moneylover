@@ -9,11 +9,8 @@ import {useNavigate} from "react-router-dom";
 import {FormProvider, useForm} from "react-hook-form";
 import {transactionSchema} from "@/libs/schema.ts";
 import {yupResolver} from "@hookform/resolvers/yup";
-import useRequest from "@/hooks/useRequest.ts";
-import {del, post} from "@/libs/api.ts";
-import {useQueryClient} from "@tanstack/react-query";
 import {useWallet} from "@/context/WalletContext.tsx";
-import {transactionRequest, transactionResponse, typeWallet} from "@/model/interface.ts";
+import {transactionResponse, typeWallet} from "@/model/interface.ts";
 import useDataTransaction from "../function";
 import {FilterFormTransaction, FormTransaction, TableTransaction} from "../component";
 import FilterDate from "@/modules/transaction/component/FilterDate";
@@ -21,16 +18,14 @@ import BalanceInMonth from "@/modules/transaction/function/balanceInMonth.ts";
 import {filter} from "@/modules/transaction/model";
 import {FormatValueInput} from "@/utils/Format/fortmat.value.input.ts";
 import {useWalletStore} from "@/zustand/budget.ts";
-import {nameQueryKey} from "@/utils/nameQueryKey.ts";
 import {showModalNoWallet} from "@/utils/showModalNoWallet.tsx";
 import TranDetail from "@/modules/transaction/commons/TranDetail.tsx";
-import {convertToCurrentDate} from "@/utils/day.ts";
+import useMutateTransaction from "@/modules/transaction/function/postMutateTransaction.ts";
 
 
 const Transaction = React.memo(() => {
 	const {walletSelect} = useWalletStore()
 
-	const queryClient = useQueryClient()
 	const navigate = useNavigate()
 
 	const methods = useForm({
@@ -75,52 +70,9 @@ const Transaction = React.memo(() => {
 		setIsModalDetailOpen(true)
 	}
 
-	const {mutate: createTransaction} = useRequest({
-		mutationFn: (values: transactionRequest) => {
-			return post({
-				url: "transaction/add",
-				data: values
-			})
-		},
-
-		onSuccess: () => {
-			// @ts-ignore
-			queryClient.invalidateQueries([nameQueryKey.transactions, nameQueryKey.wallet])
-			handleCancel()
-			methods.reset({amount: 0, amountDisplay: "0", category: undefined, date: undefined, notes: "", exclude: false})
-		}
-	})
-
-	const {mutate: deleteTransaction} = useRequest({
-		mutationFn: (values: string | undefined) => {
-			return del({
-				url: `transaction/delete/${values}`,
-			})
-		},
-
-		onSuccess: () => {
-			// @ts-ignore
-			queryClient.invalidateQueries([nameQueryKey.transactions, nameQueryKey.wallet])
-			handleCancel()
-		}
-	})
-
-	const clickDelete = (id: string | undefined) => {
-		deleteTransaction(id)
-		setIsModalDetailOpen(false)
-	}
-
 
 	const amount = methods.watch("amountDisplay")
 
-
-	const handleOk = (data: any) => {
-		const {category, date} = data
-		const type = category.split(".")[1]
-		const category_id = category.split(".")[0]
-		const result: transactionRequest = {...data, type: type, category: category_id, date: convertToCurrentDate(date)}
-		createTransaction(result)
-	};
 
 	useEffect(() => {
 		FormatValueInput(amount, methods.setValue, walletSelect?.currency)
@@ -130,6 +82,8 @@ const Transaction = React.memo(() => {
 	const handleCancel = () => {
 		setIsModalOpen(false);
 	};
+
+	const {handleOk, deleteTran} = useMutateTransaction({handleCancel, methods, setIsModalDetailOpen})
 
 	const {endBalance, openBalance} = BalanceInMonth(filter);
 
@@ -164,8 +118,9 @@ const Transaction = React.memo(() => {
 				</FormProvider>
 			</ModalPopUp>
 
+
 			<ModalPopUp isModalOpen={isModalDetailOpen} showOke={false} handleCancel={() => setIsModalDetailOpen(false)} title={""}>
-				<TranDetail tranDetail={transactionDetail} clickDelete={clickDelete}/>
+				<TranDetail tranDetail={transactionDetail} clickDelete={deleteTran}/>
 			</ModalPopUp>
 
 		</div>

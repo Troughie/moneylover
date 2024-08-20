@@ -15,6 +15,9 @@ export {default as ITransaction} from "./icons/Wallet icon.svg";
 export {default as IBudget} from "./icons/Savings Money Icon.svg";
 export {default as IDashBoard} from "./icons/Dashboard Icon.svg";
 export {default as IWallet} from "./icons/Piggy Bank Icon.svg";
+export {default as IUser} from "./icons/User icon.svg";
+export {default as IBell} from "./icons/Bell Alt Icon.svg";
+export {default as IPen} from "./icons/Pencil icon.svg";
 
 export {default as IShopping} from "./icons/Shopping Card Icon.svg";
 export {default as IFood} from "./icons/Food Dish Icon.svg";

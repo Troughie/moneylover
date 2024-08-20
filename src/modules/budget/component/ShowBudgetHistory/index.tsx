@@ -94,6 +94,7 @@ const BudgetHistory: React.FC<props> = ({isFetch}) => {
 
 			try {
 				const responses = await Promise.all(requests);
+				// @ts-ignore
 				setBudgetHistory(responses);
 			} catch (error) {
 				console.error("Error fetching transactions:", error);

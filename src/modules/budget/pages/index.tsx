@@ -77,8 +77,7 @@ const Budget = () => {
 			</div>
 			<div className={`absolute top-[10px] right-[10px]`}><Button className={` md:text-lg text-xs`} onClick={() => setIsHistory(!isHistory)}
 																		size={`large`}>History
-				budget
-				complete</Button></div>
+				budget</Button></div>
 			{budgets?.length > 0 ?
 				<>
 					<SliderBudget/>

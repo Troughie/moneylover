@@ -8,7 +8,7 @@ import {mergeBudgetSimilar} from "@/modules/budget/function/handleBudget.ts";
 import {useBudgetStore} from "@/modules/budget/store";
 
 export const fetchBudgets = (key: any): Promise<ResponseData> => {
-
+	console.log(key.queryKey)
 	return get({url: "budgets", params: {wallet: key.queryKey[1], type: key.queryKey[2]}})
 }
 

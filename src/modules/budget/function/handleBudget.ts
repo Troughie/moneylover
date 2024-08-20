@@ -3,7 +3,6 @@ import {swalAlert} from "@/hooks/swalAlert.ts";
 import {typeAlert} from "@/utils";
 import {BudgetRequest, BudgetResponse, BudgetSimilar} from "@/modules/budget/interface";
 import {MutateOptions} from "@tanstack/react-query";
-import {convertToCurrentDate} from "@/utils/day.ts";
 
 export const handleSubmitBudget = (data: any, budgets: BudgetSimilar[], createBudget: (variables: any, options?: (MutateOptions<unknown, unknown, any, unknown> | undefined)) => void) => {
 	const start = dayjs(data?.period_start);
@@ -17,10 +16,8 @@ export const handleSubmitBudget = (data: any, budgets: BudgetSimilar[], createBu
 		return;
 	}
 
-	const {category, period_start, period_end, wallet} = data;
+	const {category, wallet} = data;
 	const categoryId = category.split(".")[0];
-	const periodStart = convertToCurrentDate(period_start)
-	const periodEnd = convertToCurrentDate(period_end);
 
 	const existBudget = budgets.find((el) =>
 		end.isSame(dayjs(el.period_end)) &&
@@ -33,8 +30,8 @@ export const handleSubmitBudget = (data: any, budgets: BudgetSimilar[], createBu
 		...data,
 		category: categoryId,
 		id: existBudget?.id,
-		period_end: periodEnd,
-		period_start: periodStart,
+		period_start: start.format("YYYY-MM-DD"),
+		period_end: end.format("YYYY-MM-DD")
 	};
 
 	if (existBudget) {

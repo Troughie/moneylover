@@ -81,9 +81,9 @@ export const budgetSchema = yup.object().shape({
 
 
 export const passwordSchema = yup.object().shape({
-	oldPass: yup.string().required("Old password is required").min(6, 'Password must be at least 6 characters'),
-	newPass: yup.string().required("New password is required").min(6, 'Password must be at least 6 characters'),
-	firmPass: yup.string().required("Confirm password is required").min(6, 'Password must be at least 6 characters')
+	oldPassword: yup.string().required("Old password is required").min(6, 'Password must be at least 6 characters'),
+	newPassword: yup.string().required("New password is required").min(6, 'Password must be at least 6 characters'),
+	confirmPassword: yup.string().required("Confirm password is required").min(6, 'Password must be at least 6 characters')
 })
 
 

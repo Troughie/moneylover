@@ -53,3 +53,13 @@
 .infoWallet {
     @apply font-semibold font-satoshi text-lg
 }
+
+.scrollbar-chat::-webkit-scrollbar-thumb {
+
+}
+
+/*.ant-float-btn {*/
+/*    !*bottom: -50px !important;*!*/
+/*    width: 75px !important;*/
+/*    height: 75px !important;*/
+/*}*/

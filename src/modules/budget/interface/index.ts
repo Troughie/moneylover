@@ -3,9 +3,9 @@ import {Category} from "@/model/interface.ts";
 interface baseBudget {
 	id: string;
 	amount: number;
-	period_start: Date;
+	period_start: string;
 
-	period_end: Date;
+	period_end: string;
 
 	repeat: boolean;
 	wallet: string

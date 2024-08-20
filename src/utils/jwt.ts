@@ -13,6 +13,7 @@ export const saveUser = (user: string) => {
 export const getToken = () => {
 	return localStorage.getItem("accessToken") || ""
 }
+
 export const getRefreshToken = () => {
 	return localStorage.getItem("refreshToken")
 }

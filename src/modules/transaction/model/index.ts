@@ -1,4 +1,4 @@
-interface timeTransaction {
+export interface timeTransaction {
 	month: number
 	year: number
 	start: string,

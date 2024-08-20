@@ -1,5 +1,19 @@
 import {countTotal} from "@/modules/dashboard/interface";
 
+export interface changePassword {
+	email: string
+	oldPassword: string
+	newPassword: string
+	confirmPassword: string
+}
+
+export interface User {
+	id: string,
+	username: string
+	email: string
+	_enable: boolean
+}
+
 export interface Category {
 	id: string,
 
@@ -39,7 +53,7 @@ export enum typeCategory {
 interface baseTran {
 	amount: number;
 	notes: string;
-	date: Date;
+	date: string;
 
 }
 
@@ -146,6 +160,7 @@ export interface walletProps {
 	start: number
 	target: number
 	main: boolean
+	manager: User[]
 	end_date: Date
 }
 

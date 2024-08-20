@@ -65,6 +65,7 @@ const CreateCateForm = () => {
 				label="Icon"
 				name="icon"
 				defaultValue={selectIcon}
+				value={selectIcon}
 				render={({field}) => (
 					<div onClick={() => setShowIcon(!showIcon)}>
 						{selectIcon ?

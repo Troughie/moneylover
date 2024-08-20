@@ -5,30 +5,30 @@ import {CardDashBoard} from "@/commons";
 import {routePath} from "@/utils";
 import useHomePage from "../function";
 import {BarChart} from "../component";
-import {useWallet} from "@/context/WalletContext.tsx";
-import {useEffect, useMemo, useState} from "react";
-import {convertMoney, NumberFormatter} from "@/utils/Format";
+// import {useWallet} from "@/context/WalletContext.tsx";
+import {useCallback, useEffect, useMemo, useState} from "react";
 import {typeCategory} from "@/model/interface.ts";
-import {useWalletCurrency} from "@/hooks/currency.ts";
+import dayjs from "dayjs";
+// import {useWalletCurrency} from "@/hooks/currency.ts";
 
 const DashBoard = () => {
 	const {budgets, transactions} = useHomePage()
-	const {wallets} = useWallet()
-	const currency = useWalletCurrency();
-	const [totalWallet, setTotalWallet] = useState<number>(0);
+	// const {wallets} = useWallet()
+	// const currency = useWalletCurrency();
+	// const [totalWallet, setTotalWallet] = useState<number>(0);
 	const [totalTran, setTotalTran] = useState<number>(0);
 
 
-	useEffect(() => {
-		const calculateTotalWallet = async () => {
-			const promises = wallets.map(wallet => convertMoney(wallet.balance, wallet.currency, currency));
-			const results = await Promise.all(promises);
-			const total = results.reduce((acc, curr) => acc + curr, 0);
-			setTotalWallet(total);
-		};
-
-		calculateTotalWallet();
-	}, [wallets, currency]);
+	// useEffect(() => {
+	// 	const calculateTotalWallet = async () => {
+	// 		const promises = wallets.map(wallet => convertMoney(wallet.balance, wallet.currency, currency));
+	// 		const results = await Promise.all(promises);
+	// 		const total = results.reduce((acc, curr) => acc + curr, 0);
+	// 		setTotalWallet(total);
+	// 	};
+	//
+	// 	calculateTotalWallet();
+	// }, [wallets, currency]);
 
 
 	const totalBudget = useMemo(() => budgets?.reduce((curr, total) => curr + total.amount, 0), [budgets])
@@ -45,6 +45,10 @@ const DashBoard = () => {
 		setTotalTran(result)
 	}, [transactions]);
 
+	const countTotalTranOfMonth = useCallback(() => {
+		return transactions.filter((el) => dayjs(el.date).isBefore(dayjs()) && dayjs(el.date).month() === dayjs().month())
+	}, [transactions])
+
 
 	return <UserLayout>
 		<BreakCrumb pageName={""}/>
@@ -53,8 +57,10 @@ const DashBoard = () => {
 				<div
 					className={`shadow-4 bg-white rounded-2xl md:col-span-6 py-8  xl:col-span-8 flex flex-col-reverse md:flex-row items-center justify-between px-6`}>
 					<div className={`flex flex-col gap-5`}><span
-						className={`text-3xl font-semibold`}>Welcome back </span><span
-						className={`text-xl font-normal text-bodydark2`}>Total amount of you is {<NumberFormatter number={totalWallet}/>}</span>
+						className={`text-3xl font-semibold`}>Welcome back </span>
+						<span
+							className={`text-2xl text-bodydark2`}>Total transaction in {dayjs().format("MMMM")} is <span
+							className={`font-bold text-2xl text-black`}>{countTotalTranOfMonth().length}</span> </span>
 					</div>
 					<img src={Saving} alt="" className={`w-40 h-40`}/>
 				</div>

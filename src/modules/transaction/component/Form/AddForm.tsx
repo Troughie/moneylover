@@ -24,7 +24,7 @@ const optionsTypCate = [
 
 const AddFormTransaction = React.memo(() => {
 
-	const [value4, setValue4] = useState<string>("Expense");
+	const [valueCategory, setValueCategory] = useState<string>("Expense");
 
 	const [resetValue, setResetValue] = useState<string | undefined>(undefined)
 
@@ -40,10 +40,10 @@ const AddFormTransaction = React.memo(() => {
 
 	const {walletSelect} = useWalletStore()
 
-	const onChange4 = ({target: {value}}: RadioChangeEvent) => {
+	const onChangeCategory = ({target: {value}}: RadioChangeEvent) => {
 		setResetValue(undefined)
 		changeType(value)
-		setValue4(value);
+		setValueCategory(value);
 		setExclude(value === typeCategory.Deb)
 	};
 
@@ -64,12 +64,12 @@ const AddFormTransaction = React.memo(() => {
 									 {...field}
 									 defaultValue={"Expense"}
 									 options={walletSelect?.type === typeWallet.Goal ? optionsTypCateGoal : optionsTypCate}
-									 onChange={onChange4}
-									 value={value4}
+									 onChange={onChangeCategory}
+									 value={valueCategory}
 									 optionType="button"
 									 buttonStyle="solid"
 								 />
-								 <Button className={`border-none shadow-none`} onClick={openModal}>Create new</Button>
+								 <Button className={`border-b-2 shadow-none`} onClick={openModal}>Create new category</Button>
 							 </div>
 							 }/>
 
@@ -92,7 +92,9 @@ const AddFormTransaction = React.memo(() => {
 			<InputController label={`Note`} defaultValue={''} name={"notes"} render={({field}) => <TextArea placeholder="Note" {...field}/>}/>
 
 			<InputController label={`Exclude to report`} name={"exclude"} defaultValue={false}
-							 render={({field}) => <Switch onClick={() => setExclude(!exclude)} checked={exclude} className={`w-10`} {...field} />}/>
+							 render={({field}) => <Switch onClick={() => setExclude(!exclude)} checked={exclude}
+														  className={`w-10`} {...field} />}/>
+
 		</form>
 	</>
 })

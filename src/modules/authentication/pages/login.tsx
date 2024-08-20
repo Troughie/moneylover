@@ -9,18 +9,25 @@ import {motion as m} from "framer-motion";
 import {routePath} from "@/utils";
 import useRequest from "@/hooks/useRequest.ts";
 import {post} from "@/libs/api.ts";
-import {saveRefreshToken, saveToken, saveUser} from "@/utils/jwt.ts";
 import LoadingComponent from "@/components/Loading";
+import {useUserStore} from "@/modules/authentication/store/user.ts";
+import {User} from "@/model/interface.ts";
 
 interface account {
 	email: string
 	password: string
 }
 
+interface UserProps {
+	user: User
+	refreshToken: string
+	accessToken: string
+}
+
 const Login: React.FC = () => {
 	const navigate = useNavigate()
 	const methods = useForm({mode: "onChange", resolver: yupResolver(authSchema)})
-
+	const {saveUser} = useUserStore()
 	const {mutate: login} = useRequest({
 		mutationFn: (values: account) => {
 			return post({
@@ -30,9 +37,12 @@ const Login: React.FC = () => {
 		},
 		onSuccess: (data) => {
 			if (data && data.success) {
-				saveToken(data?.data?.access_token)
-				saveRefreshToken(data?.data?.refresh_token)
-				saveUser(JSON.stringify(data?.data?.user))
+				const user: UserProps = {
+					user: data?.data?.user,
+					refreshToken: data?.data?.access_token,
+					accessToken: data?.data?.refresh_token
+				}
+				saveUser(user)
 				navigate(routePath.dashboard.path)
 			}
 		},
@@ -43,9 +53,8 @@ const Login: React.FC = () => {
 	}
 
 	return (
-		<>
+		<div>
 			<LoadingComponent/>
-
 			<div className="rounded-sm border border-stroke bg-white shadow-default mt-[200px]">
 				<div className="flex flex-wrap items-center">
 					<m.div
@@ -101,7 +110,7 @@ const Login: React.FC = () => {
 					</m.div>
 				</div>
 			</div>
-		</>
+		</div>
 	);
 };
 

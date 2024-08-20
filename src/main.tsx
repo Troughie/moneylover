@@ -10,12 +10,12 @@ const queryClient = new QueryClient();
 ReactDOM.createRoot(document.getElementById("root")!).render(
 	<QueryClientProvider client={queryClient}>
 		<LoadingProvider>
-			<Router>
-				<CategoryProvider>
+			<CategoryProvider>
+				<Router>
 					<ToastContainer limit={3}/>
 					<App/>
-				</CategoryProvider>
-			</Router>
+				</Router>
+			</CategoryProvider>
 		</LoadingProvider>
 	</QueryClientProvider>
 );
