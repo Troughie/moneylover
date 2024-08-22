@@ -55,6 +55,7 @@ export default {
                 danger: "#D34053",
                 warning: "#FFA70B",
             },
+
             fontSize: {
                 "title-xxl": ["44px", "55px"],
                 "title-xl": ["36px", "45px"],
@@ -210,6 +211,7 @@ export default {
             },
             backgroundImage: {
                 video: "url('../images/video/video.png')",
+                buttonPlus: "linear-gradient(to bottom, #4C4C4C, #808080, #CCCCCC)"
             },
             content: {
                 "icon-copy": 'url("../images/icon/icon-copy-alt.svg")',

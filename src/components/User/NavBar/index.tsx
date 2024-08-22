@@ -1,6 +1,8 @@
 import {ArrRight} from "@/assets";
 import {Link, useLocation} from "react-router-dom";
 import {routePathArray} from "@/utils";
+import {motion as m} from "framer-motion";
+import cn from "@/utils/cn";
 
 
 const NavBar = () => {
@@ -15,25 +17,26 @@ const NavBar = () => {
 		return routeCurrent === path
 	}
 	return <>
-		<div className={`w-1/5 h-screen hidden lg:block`}>
-			<div className={`bg-white px-8 py-12 rounded-2xl`}>
-				<h1 className={`md:text-3xl text-nowrap text-bodydark2 font-satoshi`}>Money lover</h1>
+		<m.div
+			className={`w-1/5 bg-main h-screen px-4 hidden lg:block`}>
+			<div className={`px-8  py-12 rounded-2xl`}>
+				<h1 className={`md:text-4xl text-nowrap text-black font-satoshi`}>Money lover</h1>
 			</div>
-			<ul className={`px-4 mt-[50px] h-screen bg-white rounded-2xl`}>
+			<ul className={`px-4 mt-[50px] rounded-2xl`}>
 				{navItem.map((el) => (
 					<Link to={el.path} key={el.name}
-						  className={`${handleActiveNav(el.path) ? " border-r-2 border-r-bodydark2 font-bold text-black-2 scale-110" : "text-bodydark2 font-normal"} group cursor-pointer flex items-center py-5 px-4 duration-1000 mx-1 my-8 justify-between  gap-2`}>
-						<img src={el.icons} alt=""
-							 style={handleActiveNav(el.path) ? {filter: 'invert(1)'} : {}}
-							 className={` w-6 h-6 object-contain`}/>
-						<span>{el.name}</span>
+						  className={`${handleActiveNav(el.path) ? " border-r-2 border-r-bodydark2 font-bold text-white scale-110 ring-2 ring-blue-400 bg-blue-500" : "text-bodydark2 font-normal"} group  rounded-lg cursor-pointer flex items-center py-5 px-4 duration-1000 mx-1 my-8 justify-between  gap-2`}>
+						<span>
+						<el.icons color={handleActiveNav(el.path) ? "#fff" : "#000"} width={"40px"} height={"40px"}/>
+						</span>
+						<span className={cn("")}>{el.name}</span>
 						<div className={`w-7`}>
 							<img src={ArrRight} alt="" className={` w-3 h-3 group-hover:w-4 group-hover:h-4 transition`}/>
 						</div>
 					</Link>
 				))}
 			</ul>
-		</div>
+		</m.div>
 	</>
 }
 

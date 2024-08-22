@@ -24,12 +24,12 @@
 }
 
 .container-wrapper {
-    @apply w-full bg-white h-screen shadow-default
+    @apply w-full bg-white h-screen shadow-default rounded-xl
 }
 
 
 .container-wrapper-auto {
-    @apply w-full bg-white h-auto shadow-default
+    @apply w-full bg-white h-auto shadow-default rounded-xl
 }
 
 
@@ -45,6 +45,7 @@
 .flex-between {
     @apply flex items-center justify-between
 }
+
 
 .hidden-date-picker {
     display: none;

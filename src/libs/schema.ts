@@ -55,6 +55,17 @@ export const authSchema = yup.object().shape({
 	password: yup.string().required("Password is required").min(6, "Password must be at least 6 characters")
 })
 
+export const authRegisterSchema = yup.object().shape({
+	email: yup
+		.string()
+		.required('Email is required')
+		.min(6, 'Email must be at least 6 characters')
+		.max(60, 'Email must not exceed 60 characters')
+		.matches(PATTERN_VALID_EMAIL, 'Email is not valid! ex:xxxxx@xxxx.xxx'),
+	password: yup.string().required("Password is required").min(6, "Password must be at least 6 characters"),
+	username: yup.string().required("Username is required")
+})
+
 export const budgetSchema = yup.object().shape({
 	wallet: yup.string().required("Wallet is required"),
 	category: yup.string().required('Select one category'),

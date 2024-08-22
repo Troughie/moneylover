@@ -4,7 +4,7 @@ import {Link} from "react-router-dom";
 import {NumberFormatter} from "@/utils/Format";
 
 interface props {
-	img: string,
+	img: React.ReactElement,
 	label: string
 	total: number,
 	amount: number
@@ -16,7 +16,7 @@ const CardDashBoard: React.FC<props> = ({amount, total, img, label, link}) => {
 		<div className={` p-5 flex flex-col justify-around h-full`}>
 			<div className={`flex justify-between items-center `}>
 				<div className={` rounded-full`}>
-					<img src={img} alt="" className={`w-10 h-10`} style={{filter: 'invert(1)'}}/>
+					{img}
 				</div>
 				<Link to={link}><Button type="text" className={`text-bodydark2 hover:scale-105`}>Detail</Button></Link>
 			</div>

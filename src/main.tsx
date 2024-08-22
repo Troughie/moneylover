@@ -9,6 +9,7 @@ import {CategoryProvider} from "@/context/CategoryContext.tsx";
 const queryClient = new QueryClient();
 ReactDOM.createRoot(document.getElementById("root")!).render(
 	<QueryClientProvider client={queryClient}>
+
 		<LoadingProvider>
 			<CategoryProvider>
 				<Router>

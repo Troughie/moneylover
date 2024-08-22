@@ -64,17 +64,18 @@ const FilterDate: React.FC<props> = ({setFilter}) => {
 	}
 
 	return <>
-		<div className={`flex-center sticky top-0`}>
-			<div ref={containerRef} className={`w-2/3 flex-center gap-2 my-10 overflow-x-scroll  border-x-bodydark border-x p-3`}>
+		<div className={`flex-center sticky top-0 `}>
+			<div ref={containerRef}
+				 className={`w-2/3 flex-center gap-2 my-10 py-8 overflow-x-scroll  border-x-bodydark border-x p-3`}>
 				{monthDates?.map((el) => {
 					const timeTran = `${el.month}-${el.year}`
 					const isSelected = currentSelectDateFilter === timeTran;
-					return <Badge count={countTranOfMonth(el).length}>
-						<div key={el?.index} onClick={() =>
+					return <Badge key={el?.index} count={countTranOfMonth(el).length}>
+						<div onClick={() =>
 							clickChangeTime(false, el.month, el.year, el.start, el.end)
 						} ref={isSelected ? selectedRef : null}
-							 className={`py-2 text-nowrap px-4 cursor-pointer 
-						${isSelected && !isFuture ? " border-b border-b-bodydark2" : ""}`}>
+							 className={`py-2 text-nowrap px-4 cursor-pointer mx-2
+						${isSelected && !isFuture ? " border-b-2 bg-gray-200 py-2 px-4 rounded-lg border-b-bodydark2" : ""}`}>
 							{checkMonth(el.month, el.year) === 1 ? "THIS MONTH" : checkMonth(el.month, el.year) === 2 ? "LAST MONTH" : `${el?.month}/${el?.year}`}
 						</div>
 					</Badge>
@@ -83,7 +84,7 @@ const FilterDate: React.FC<props> = ({setFilter}) => {
 					<div onClick={() =>
 						clickChangeTime(true, new Date().getMonth() + 2, new Date().getFullYear(), dayjs().add(1, "day").toISOString().split('T')[0], undefined)
 					}
-						 className={cn(`py-2 text-nowrap px-4 cursor-pointer `, {" border-b border-b-bodydark2": isFuture})}>
+						 className={cn(`py-2 text-nowrap px-4 cursor-pointer `, {" border-b bg-gray-200 py-2 px-4 rounded-lg border-b-bodydark2": isFuture})}>
 						FUTURE
 					</div>
 				</Badge>

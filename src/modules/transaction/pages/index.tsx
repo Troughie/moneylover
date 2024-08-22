@@ -3,7 +3,6 @@ import {BreakCrumb} from "@/components"
 import {Plus} from "@/assets";
 import React, {useCallback, useEffect, useState} from "react";
 import {Button} from "antd";
-
 import {ModalPopUp} from "@/commons";
 import {useNavigate} from "react-router-dom";
 import {FormProvider, useForm} from "react-hook-form";
@@ -99,14 +98,14 @@ const Transaction = React.memo(() => {
 
 	return <UserLayout>
 		<BreakCrumb pageName={"transaction"}/>
-		<div className={`w-full bg-white h-auto shadow-default pb-20`}>
-			<form className={`px-4 md:px-10 lg:px-20 md:flex-between flex-center pt-10 gap-6`}>
+		<div className={`container-wrapper-auto relative p-10`}>
+			<form className={`px-4 md:px-10 border-b border-b-bodydark2 py-8 mx-40 lg:px-20 md:flex-between flex-center pt-10 gap-6`}>
 				<FormProvider {...FilterMethods}>
 					<FilterFormTransaction/>
 				</FormProvider>
 				<Button onClick={showModal}
-						className={`lg:col-span-1 text-bodydark2 hover:scale-110 duration-500 flex-center gap-4`}>Add new<img
-					src={Plus} alt=""/></Button>
+						className={`lg:col-span-1 text-bodydark2 ring-red-400 ring-1 hover:ring-2 hover:ring-blue-500 hover:scale-110 duration-500 flex-center gap-4`}>Add
+					new<Plus/></Button>
 			</form>
 			{walletSelect?.type === typeWallet.Basic && <FilterDate setFilter={setFilter}/>}
 			<TableTransaction openDetail={openTranDetail} endBalance={endBalance} openBalance={openBalance} data={transactionData}

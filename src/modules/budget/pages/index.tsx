@@ -71,7 +71,7 @@ const Budget = () => {
 	};
 	return <UserLayout>
 		<BreakCrumb pageName={"Budget"}/>
-		<div className={`container-wrapper-auto relative p-10`}>
+		<div className={`container-wrapper relative p-10`}>
 			<div className={`flex-center border-b-2 mt-20 md:mt-0 translate-x-[10px] pb-5 mb-10 md:mx-50`}>
 				<Button onClick={() => showModal()} size={`large`}>Add budget</Button>
 			</div>

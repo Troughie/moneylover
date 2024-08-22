@@ -6,22 +6,22 @@ export {default as ArrUp} from "./icons/Arrow Up 337.svg";
 export {default as ArrDown} from "./icons/Arrow Down Icon.svg";
 export {default as ArrLeft} from "./icons/Arrow Left 335.svg";
 export {default as ArrRight} from "./icons/Arrow Right Icon.svg";
-export {default as Plus} from "./icons/Plus Circle Icon.svg";
+export {default as Plus} from "./icons/Plus Circle Icon.tsx";
 export {default as check} from "./icons/Accept Checklist Checkmark.svg";
 
 
 //icon user
-export {default as ITransaction} from "./icons/Wallet icon.svg";
-export {default as IBudget} from "./icons/Savings Money Icon.svg";
-export {default as IDashBoard} from "./icons/Dashboard Icon.svg";
-export {default as IWallet} from "./icons/Piggy Bank Icon.svg";
-export {default as IUser} from "./icons/User icon.svg";
-export {default as IBell} from "./icons/Bell Alt Icon.svg";
+export {default as ITransaction} from "./icons/Wallet icon.tsx";
+export {default as IBudget} from "./icons/Savings Money Icon.tsx";
+export {default as IDashBoard} from "./icons/Dashboard Icon.tsx";
+export {default as IWallet} from "./icons/PiggyIcon.tsx";
+export {default as IUser} from "./icons/User icon.tsx";
+export {default as IBell} from "./icons/Bell Alt Icon.tsx";
 export {default as IPen} from "./icons/Pencil icon.svg";
 
 export {default as IShopping} from "./icons/Shopping Card Icon.svg";
 export {default as IFood} from "./icons/Food Dish Icon.svg";
-export {default as IBill} from "./icons/Bill List Icon.svg";
+export {default as IBill} from "./icons/Bill List Icon.tsx";
 export {default as ITransport} from "./icons/Transportation icon.svg";
 export {default as IDelete} from "./icons/Recycle Bin Icon.svg";
 

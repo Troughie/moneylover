@@ -6,7 +6,7 @@ interface props {
 	type: string
 	placeholder: string
 	label: string
-	icons: any
+	icons?: JSX.Element
 }
 
 const InputAuthen: React.FC<props> = ({name, type, placeholder, icons, label}) => {

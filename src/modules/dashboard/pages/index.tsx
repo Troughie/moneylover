@@ -65,11 +65,15 @@ const DashBoard = () => {
 					<img src={Saving} alt="" className={`w-40 h-40`}/>
 				</div>
 				<div className={`shadow-4 bg-white rounded-2xl md:col-span-3 xl:col-span-2`}>
-					<CardDashBoard link={routePath.transaction.path} label={`Transaction`} img={ITransaction} amount={totalTran}
+					<CardDashBoard link={routePath.transaction.path} label={`Transaction`}
+								   img={<ITransaction color={"#000"} width={"40"} height={40}/>}
+								   amount={totalTran}
 								   total={transactions.length}/>
 				</div>
 				<div className={`shadow-4 bg-white rounded-2xl md:col-span-3 xl:col-span-2`}>
-					<CardDashBoard link={routePath.budget.path} label={`Budget`} img={IBudget} amount={totalBudget} total={budgets?.length}/>
+					<CardDashBoard link={routePath.budget.path} label={`Budget`} img={<IBudget color={"#000"} width={40} height={40}/>}
+								   amount={totalBudget}
+								   total={budgets?.length}/>
 				</div>
 			</div>
 			<div className={`row-span-2 h-2/3 gap-6 grid md:grid-cols-1`}>

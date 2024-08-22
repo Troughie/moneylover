@@ -20,10 +20,11 @@ const SliderBudget = () => {
 
 
 	return <>
-		<div className={`flex-center gap-5`}>
-			<div className={`items-center gap-4 md:mx-10 overflow-x-hidden`}>
+		<div className={`flex-center gap-5 bg-header_chat w-2/3 mx-auto rounded-lg`}>
+			<div className={`items-center gap-4 pt-4 md:mx-10 overflow-x-hidden`}>
 				<Tabs
 					onChange={(e) => handleChange(+e)}
+					type={"card"}
 					className={`w-full `}
 					defaultActiveKey={position.toString()}
 					items={budgets.map((_, i) => {
@@ -34,7 +35,6 @@ const SliderBudget = () => {
 						};
 					})}
 				/>
-
 			</div>
 		</div>
 	</>

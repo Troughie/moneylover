@@ -149,6 +149,7 @@ const Wallet = React.memo(() => {
 					title={`Info wallet `}>
 			<WalletDetail infoWallet={infoWallet} isGoal={infoWallet?.type === typeWallet.Goal}/>
 		</ModalPopUp>
+
 		<ModalPopUp
 			isModalOpen={isModalOpen}
 			handleOk={WalletType === typeWallet.Basic ? methods.handleSubmit(handleOk) : goalForm.handleSubmit(handleSubmitGoal)}

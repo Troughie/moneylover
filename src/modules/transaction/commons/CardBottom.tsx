@@ -26,7 +26,7 @@ const CardBottom: React.FC<props> = ({trans, isRecurring, isSelect, openDetail})
 	}, [trans]);
 	return <>
 		<div
-			className={cn(`grid grid-cols-${limitGridCol} w-full gap-6 my-3 max-h-0 transition-all duration-300 overflow-y-hidden ease-in-out shadow-default px-4 `,
+			className={cn(`grid grid-cols-${limitGridCol} lg:max-w-[700px] w-full mx-auto gap-6 my-3 max-h-0 transition-all duration-300 overflow-y-hidden ease-in-out shadow-default px-4 `,
 				{"max-h-[9999px] overflow-y-scroll": isSelect})}>
 			{trans?.map((el, i) => {
 				const isExpense = el?.category?.categoryType === typeCategory.Expense || el?.category.debt_loan_type === debt_loan_type.loan
@@ -38,13 +38,13 @@ const CardBottom: React.FC<props> = ({trans, isRecurring, isSelect, openDetail})
 							<div className={`flex gap-4 items-center`}>
 								<img src={el.category.categoryIcon} alt="" className={`w-10 h-10 rounded-full`}/>
 								<div>
-									<p>
+									<p className={`text-lg font-bold `}>
 										{el.category.name}
 									</p>
 									<p className={`text-xs text-bodydark2`}>{el?.notes}</p>
 									{isRecurring && <span className={`text-xs text-bodydark2 mt-4`}>next {parseFullForm(el?.date).toString()}</span>}
 									<span
-										className={`text-xs text-bodydark2`}>{el.exclude ? "     This transaction is exclude from report" : ""}</span>
+										className={`text-xs text-bodydark2`}>{el.exclude ? "This transaction is exclude from report" : ""}</span>
 								</div>
 							</div>
 							<div className={cn(`text-black text-sm`, {"text-red-700": isExpense})}>

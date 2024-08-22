@@ -2,6 +2,7 @@ import {Bill, Budget, Forgot, HomeUser, Login, RecurringTran, Register, Transact
 import {IBudget, IDashBoard, ITransaction, IWallet} from "../assets";
 import dayjs from "dayjs";
 import {ProgressProps} from "antd";
+import {IconProps} from "@/model/interface.ts";
 
 export function capitalizeFirstLetter(text: string) {
 	return text.charAt(0).toUpperCase() + text.slice(1);
@@ -24,7 +25,7 @@ export interface route {
 	path: string,
 	name: string,
 	element: () => JSX.Element
-	icons: string
+	icons: React.FC<IconProps>
 }
 
 export const routePath = {
@@ -32,18 +33,18 @@ export const routePath = {
 		path: "/login",
 		name: "Login",
 		element: Login,
-		icons: ""
+		icons: null
 	}, forgot: {
 		path: "/forgot",
 		name: "Forgot",
 		element: Forgot,
-		icons: ""
+		icons: null
 	},
 	register: {
 		path: "/register",
 		name: "Register",
 		element: Register,
-		icons: ""
+		icons: null
 	}
 	, dashboard: {
 		path: "/dashboard",

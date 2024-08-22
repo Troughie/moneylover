@@ -78,8 +78,7 @@ const RecurringTransaction = () => {
 		<div className={`w-full bg-white container-wrapper h-auto shadow-default pb-20`}>
 			<div className={`flex-center pt-20 pb-4 border-b border-b-bodydark2 mx-50`}>
 				<Button onClick={showModal}
-						className={`lg:col-span-1 text-bodydark2 hover:scale-110 duration-500 flex-center gap-4`}>Add new<img
-					src={Plus} alt=""/></Button>
+						className={`lg:col-span-1 text-bodydark2 hover:scale-110 duration-500 flex-center gap-4`}>Add new<Plus/> </Button>
 			</div>
 			<TableTransactionRecurring data={transactionData} isLoading={isFetching}/>
 			<ModalPopUp isModalOpen={isRepeatForm} handleOk={methods.handleSubmit(handleOk)} handleCancel={handleCancel} title={"Add transaction"}>

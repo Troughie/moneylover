@@ -1,10 +1,10 @@
 import {motion as m} from "framer-motion";
-import {Lock, Logo, Person} from "@/assets";
+import {IUser, Lock, Logo, Person} from "@/assets";
 import {FormProvider, useForm} from "react-hook-form";
 import {InputAuthentication} from "@/commons";
 import {Link, useNavigate} from "react-router-dom";
 import {yupResolver} from "@hookform/resolvers/yup";
-import {authSchema} from "@/libs/schema.ts";
+import {authRegisterSchema} from "@/libs/schema.ts";
 import {routePath} from "@/utils";
 import useRequest from "@/hooks/useRequest.ts";
 import {post} from "@/libs/api.ts";
@@ -17,7 +17,7 @@ interface account {
 
 const Register = () => {
 	const navigate = useNavigate()
-	const methods = useForm({mode: "onChange", resolver: yupResolver(authSchema)})
+	const methods = useForm({mode: "onChange", resolver: yupResolver(authRegisterSchema)})
 
 	const {mutate: register} = useRequest({
 		mutationFn: (values: account) => {
@@ -50,6 +50,9 @@ const Register = () => {
 						</h2>
 						<FormProvider {...methods}>
 							<form onSubmit={methods.handleSubmit(handleOnSubmit)}>
+								<InputAuthentication name={"username"} type={"text"} placeholder={"Enter your username"} icons={<IUser/>}
+													 label={"Username"}/>
+
 								<InputAuthentication name={"email"} type={"email"} placeholder={"Enter your email"} icons={<Person/>}
 													 label={"Email"}/>
 

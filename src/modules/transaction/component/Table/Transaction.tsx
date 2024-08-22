@@ -52,7 +52,7 @@ const TableTransaction: React.FC<props> = ({isLoading, openDetail, data, endBala
 			<span className={`flex-center text-sm text-green-600 cursor-pointer`} onClick={() => setIsOpenChart(!isOpenChart)}>View report for this period</span>
 		</div>
 
-		<div className={`mt-10 px-4 md:px-20 font-satoshi w-2/3 mx-auto`}>
+		<div className={`mt-10 px-4 md:px-20 font-satoshi md:w-5/5 lg:w-3/3 mx-auto`}>
 			<div className={``}>
 				{isLoading ? <Spin className={`flex justify-center mt-5`} indicator={<LoadingOutlined style={{fontSize: 48}} spin/>}/> :
 					data.length === 0 ? <Empty className={`mt-20`}/> :

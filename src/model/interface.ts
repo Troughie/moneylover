@@ -1,5 +1,11 @@
 import {countTotal} from "@/modules/dashboard/interface";
 
+export interface IconProps {
+	width?: string | number;
+	height?: string | number;
+	color?: string;
+}
+
 export interface changePassword {
 	email: string
 	oldPassword: string

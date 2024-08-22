@@ -5,6 +5,7 @@ import LoadingComponent from "@/components/Loading";
 import FloatButtonAction from "@/components/FloatButtonAction";
 import {Chat} from "@/modules";
 import {chatOpenStore} from "@/modules/chat/store/chatStore.ts";
+import {motion as m} from "framer-motion";
 
 const UserLayout: React.FC<{ children: ReactNode }> = ({children}) => {
 	const {setIsOpenChat, isOpenChat} = chatOpenStore()
@@ -19,12 +20,17 @@ const UserLayout: React.FC<{ children: ReactNode }> = ({children}) => {
                 ></div>
                 <Chat/>
             </>}
+
 			<NavBar/>
 			<div className={`relative flex flex-col w-full overflow-y-auto overflow-x-hidden`}>
 				<HeaderUser/>
-				<div className={`mx-auto max-w-screen-2xl h-screen w-full p-4`}>
+				<m.div
+					initial={{opacity: 0.1}}
+					animate={{opacity: 2}}
+					transition={{duration: 2}}
+					className={`mx-auto max-w-screen-2xl w-full p-4`}>
 					{children}
-				</div>
+				</m.div>
 			</div>
 		</div>
 	</>

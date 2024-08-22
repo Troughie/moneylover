@@ -16,6 +16,7 @@ import {nameQueryKey} from "@/utils/nameQueryKey.ts";
 import useRequest from "@/hooks/useRequest.ts";
 import {post} from "@/libs/api.ts";
 import {routePath} from "@/utils";
+import {motion as m} from "framer-motion";
 
 interface props {
 	user_id: string
@@ -132,7 +133,7 @@ const HeaderUser = React.memo(() => {
 
 
 	return <>
-		<div
+		<m.div
 			className={`flex justify-between sticky top-0 z-50 right-0 bg-white mx-4 rounded-2xl items-center p-6 shadow-3 mt-4`}>
 			<div className={`flex gap-4 cursor-pointer`} onClick={() => {
 				setPopWallet(!popWallet)
@@ -150,9 +151,11 @@ const HeaderUser = React.memo(() => {
 					<img src={Calender} alt=""/>
 					<span className={`absolute bottom-0 left-[5%]`}>{currentDay}</span>
 				</div>
-				<img className={`cursor-pointer hover:animate-wiggle`} onClick={() => setNotifications(!notifications)} src={IBell} alt=""/>
+				<div className={`cursor-pointer hover:animate-wiggle`} onClick={() => setNotifications(!notifications)}>
+					<IBell/>
+				</div>
 				<p onClick={() => setToggleName(!toggleName)} className={`cursor-pointer font-satoshi text-xl font-medium flex-between gap-2`}>
-					<img className={``} src={IUser} alt=""/><span>{user ?? "No name"}</span>
+					<IUser/><span>{user ?? "No name"}</span>
 				</p>
 			</div>
 			{toggleName &&
@@ -167,7 +170,7 @@ const HeaderUser = React.memo(() => {
                     </div>
                 </>
 			}
-		</div>
+		</m.div>
 		<ModalPopUp isModalOpen={isModalOpen} handleOk={method.handleSubmit(handleOk)} handleCancel={handleCancel} title={`Change password`}>
 			<FormProvider {...method}>
 				<ResetPassword/>
