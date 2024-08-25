@@ -18,14 +18,14 @@ const NavBar = () => {
 	}
 	return <>
 		<m.div
-			className={`w-1/5 bg-white h-screen px-4 hidden lg:block`}>
+			className={`w-1/5 bg-white h-screen hidden lg:block`}>
 			<div className={`px-8  py-12 rounded-2xl`}>
 				<h1 className={`md:text-4xl text-nowrap text-black font-satoshi`}>Money lover</h1>
 			</div>
-			<ul className={`px-4 mt-[50px] rounded-2xl`}>
+			<ul className={`px-2 mt-[50px] rounded-2xl`}>
 				{navItem.map((el) => (
 					<Link to={el.path} key={el.name}
-						  className={cn(` "text-Text hover:scale-105 font-normal group rounded-lg cursor-pointer flex items-center py-5 px-4 duration-1000 mx-1 my-8 justify-between gap-2`
+						  className={cn(` "text-Text hover:scale-105 font-normal group rounded-lg cursor-pointer flex items-center py-5 px-4 duration-200 mx-1 my-8 justify-between gap-2`
 							  , {
 								  "text-white font-bold  bg-Primary": handleActiveNav(el.path),
 								  "hover:bg-gray-200": !handleActiveNav(el.path)

@@ -2,6 +2,7 @@ import {pagination, paginationRequest, ResponseData, walletProps} from "@/model/
 import {get} from "@/libs/api.ts";
 import {useEffect, useState} from "react";
 import {useQuery} from "@tanstack/react-query";
+import {nameQueryKey} from "@/utils/nameQueryKey.ts";
 
 interface walletProp {
 	wallets: walletProps[];
@@ -31,7 +32,7 @@ const useWalletManager = (): walletProp => {
 
 
 	const {data, isFetching} = useQuery({
-		queryKey: ["wallets", paginationParam],
+		queryKey: [nameQueryKey.wallets, paginationParam],
 		queryFn: fetchWallet,
 	});
 	const updatePagination = (newParams: Partial<paginationRequest>) => {

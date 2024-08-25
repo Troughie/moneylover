@@ -2,7 +2,6 @@ import React, {useEffect, useState} from "react";
 import {FilterWallet, ModalPopUp, Notifications} from "@/commons";
 import {Calender, IBell, ICopy, IUser} from "@/assets";
 import {useLocation, useNavigate} from "react-router-dom";
-import {delToken} from "@/utils/jwt.ts";
 import ResetPassword from "@/modules/dashboard/component/form/reset.tsx";
 import {FormProvider, useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup";
@@ -39,6 +38,7 @@ const HeaderUser: React.FC<props> = ({walletsOpen, isWalletOpen, isNotificationO
 	const [currentDay, setCurrentDay] = useState<number>(0)
 	const [btnType, setBtnType] = useState<string>(statusNoti.All)
 	const {user} = useUserStore.getState().user
+	const {removeUser} = useUserStore()
 	const [email, setEmail] = useState<string>("")
 	const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
 	const [toggleName, setToggleName] = useState<boolean>(false)
@@ -92,7 +92,7 @@ const HeaderUser: React.FC<props> = ({walletsOpen, isWalletOpen, isNotificationO
 	}
 
 	const logout = (path: string = "/") => {
-		delToken()
+		removeUser()
 		navigate(path)
 	}
 

@@ -37,7 +37,7 @@ const usePostWalletMutate = () => {
 		},
 		onSuccess: () => {
 			// @ts-ignore
-			queryClient.invalidateQueries([nameQueryKey.wallet])
+			queryClient.invalidateQueries([nameQueryKey.wallet, nameQueryKey.wallets])
 		}
 	})
 
@@ -50,7 +50,7 @@ const usePostWalletMutate = () => {
 		},
 		onSuccess: () => {
 			// @ts-ignore
-			queryClient.invalidateQueries([nameQueryKey.wallet])
+			queryClient.invalidateQueries([nameQueryKey.wallet, nameQueryKey.wallets])
 		}
 	})
 
@@ -62,7 +62,7 @@ const usePostWalletMutate = () => {
 		},
 		onSuccess: () => {
 			// @ts-ignore
-			queryClient.invalidateQueries([nameQueryKey.wallet])
+			queryClient.invalidateQueries([nameQueryKey.wallet, nameQueryKey.wallets])
 		}
 	})
 
@@ -76,7 +76,7 @@ const usePostWalletMutate = () => {
 		},
 		onSuccess: () => {
 			// @ts-ignore
-			queryClient.invalidateQueries([nameQueryKey.wallet])
+			queryClient.invalidateQueries([nameQueryKey.wallet, nameQueryKey.wallets])
 		}
 	})
 

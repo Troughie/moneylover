@@ -221,11 +221,12 @@ export const removeMemberFromGroup = async (groupId: string, member: User) => {
 				console.log("Member is not in the group", groupId);
 				return;
 			}
+			const updatedMembers = groupData.members.filter((m: User) => m.id !== member.id);
 
 			// Remove memberId from the members array
 			let objectRef = {
 				membersId: arrayRemove(member.id),
-				members: arrayRemove(member),
+				members: updatedMembers,
 				unreadCount: {...groupData.unreadCount}
 			};
 			delete objectRef.unreadCount[member.id]; // Remove unreadCount for the member being removed

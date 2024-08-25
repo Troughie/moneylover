@@ -20,6 +20,7 @@ import {useWalletStore} from "@/zustand/budget.ts";
 import {showModalNoWallet} from "@/utils/showModalNoWallet.tsx";
 import TranDetail from "@/modules/transaction/commons/TranDetail.tsx";
 import useMutateTransaction from "@/modules/transaction/function/postMutateTransaction.ts";
+import dayjs from "dayjs";
 
 
 const Transaction = React.memo(() => {
@@ -89,7 +90,7 @@ const Transaction = React.memo(() => {
 	useEffect(() => {
 		const subscription = FilterMethods.watch((value) => {
 				// @ts-ignore
-				setFilter(prev => ({...prev, category: value?.category?.split(".")[0]}))
+				setFilter(prev => ({...prev, category: value?.category?.split(".")[0], start: dayjs(value?.date).format("YYYY-MM-DD")}))
 			}
 		)
 		return () => subscription.unsubscribe()

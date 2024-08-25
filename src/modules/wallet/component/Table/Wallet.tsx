@@ -9,6 +9,7 @@ import usePostWalletMutate from "@/modules/wallet/function/postMutate.ts";
 import {createGroupChat} from "@/modules/chat/function/chats.ts";
 import {useUserStore} from "@/modules/authentication/store/user.ts";
 import ListManager from "@/modules/wallet/component/Table/ListManager.tsx";
+import {useChatStore} from "@/modules/chat/store/chatStore.ts";
 
 interface props {
 	wallets: walletProps[],
@@ -19,7 +20,7 @@ interface props {
 const TableWallet: React.FC<props> = ({handleClick, wallets, isFetching}) => {
 
 	const [wallet, setWallet] = useState<walletProps>()
-
+	const {fetchGroups} = useChatStore()
 	const {user} = useUserStore.getState().user
 	const {getUserWithCode, userFound, onChangeWalletMain, valueInput, addManager, setValueInput} = usePostWalletMutate()
 	const [manager, setManager] = useState<boolean>(false)
@@ -40,6 +41,7 @@ const TableWallet: React.FC<props> = ({handleClick, wallets, isFetching}) => {
 			const users: User[] = [user, userFound]
 			if (wallet) {
 				await addManager(createGroupChat(wallet.id, memberName.join(","), users), userFound, wallet.id)
+				await fetchGroups()
 			}
 		}
 	}
@@ -97,9 +99,10 @@ const TableWallet: React.FC<props> = ({handleClick, wallets, isFetching}) => {
 		</div>
 		<ModalPopUp width={900} isModalOpen={manager} showOke={false} showCancel={false} handleCancel={handleOpenManager}
 					title={`List manager`}>
-			<>
-				<ListManager addManager={handleAddManager} userFound={userFound} wallet={wallet} getUserWithCode={getUserWithCode}
-							 valueInput={valueInput}/>
+			<>{wallet &&
+                <ListManager wallets={wallets} addManager={handleAddManager} userFound={userFound} wallet={wallet} getUserWithCode={getUserWithCode}
+                             valueInput={valueInput}/>
+			}
 			</>
 		</ModalPopUp>
 	</>

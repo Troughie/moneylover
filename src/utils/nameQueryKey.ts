@@ -7,6 +7,7 @@ export const nameQueryKey = {
 	budget: "budget",
 	budgets: "budgets",
 	wallet: "wallet",
+	wallets: "wallets",
 	categories: "categories",
 	category: "cateNoType",
 	budget_history: "budget_history",

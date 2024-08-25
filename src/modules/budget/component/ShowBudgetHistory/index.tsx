@@ -58,6 +58,7 @@ const BudgetHistory: React.FC<props> = ({isFetch}) => {
 
 		return categoryIds.join(",");
 	}, [budgetSimilar]);
+	
 	useEffect(() => {
 		if (!data) return;
 		const fetchTransactions = async () => {

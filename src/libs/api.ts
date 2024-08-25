@@ -3,7 +3,6 @@ import axios, {
 	AxiosResponse,
 	InternalAxiosRequestConfig,
 } from "axios";
-import {delToken} from "../utils/jwt.ts";
 import {jwtDecode} from "jwt-decode";
 import dayjs from "dayjs";
 import {useUserStore} from "@/modules/authentication/store/user.ts";
@@ -21,7 +20,7 @@ instance.interceptors.request.use(
 	async function (
 		config: InternalAxiosRequestConfig<any>
 	): Promise<InternalAxiosRequestConfig<any>> {
-		const {user} = useUserStore.getState();
+		const {user, removeUser} = useUserStore.getState();
 		const token = user?.accessToken
 		const refreshToken = user?.refreshToken
 		if (token) {
@@ -42,7 +41,7 @@ instance.interceptors.request.use(
 				.catch((err) => {
 					if (err.response.status === 401 || err.response.status === 403) {
 						console.log("unauthorized")
-						delToken();
+						removeUser()
 						window.location.href = "/login";
 					}
 				});

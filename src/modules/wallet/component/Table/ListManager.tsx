@@ -1,21 +1,29 @@
-import {User, walletProps} from "@/model/interface.ts";
+import {Manager, User, walletProps} from "@/model/interface.ts";
 import {Empty, Input} from "antd";
 import useDebounce from "@/hooks/useDebounce.tsx";
 import CardFound from "@/modules/wallet/common/cardFound.tsx";
 import CardManager from "@/modules/wallet/common/cardManager.tsx";
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {useUserStore} from "@/modules/authentication/store/user.ts";
 
 interface props {
 	valueInput?: string
 	userFound: User | undefined
 	addManager: () => void
-	wallet?: walletProps
+	wallet: walletProps
+	wallets: walletProps[]
 	getUserWithCode: (code: React.ChangeEvent<HTMLInputElement>) => void
 }
 
-const ListManager: React.FC<props> = ({addManager, valueInput, getUserWithCode, userFound, wallet}) => {
+const ListManager: React.FC<props> = ({addManager, valueInput, wallets, getUserWithCode, userFound, wallet}) => {
 	const {user} = useUserStore.getState().user
+	const [managers, setManagers] = useState<Manager[]>([])
+
+	useEffect(() => {
+		const result = wallets.find((e) => e.id === wallet.id)
+		if (result)
+			setManagers(result.managers)
+	}, [wallets]);
 
 	const isOwner = () => {
 		return wallet?.managers.filter((e) => e.user.id === user.id)
@@ -39,8 +47,8 @@ const ListManager: React.FC<props> = ({addManager, valueInput, getUserWithCode, 
                 </>
 			}
 		</div>
-		{wallet?.managers.map((el) =>
-			<CardManager key={el.user.id} manager={el} wallet={wallet} isOwner={isOwner()?.length == 0}/>
+		{managers?.map((el) =>
+			<CardManager key={el?.user?.id} manager={el} wallet={wallet} isOwner={isOwner()?.length == 0}/>
 		)}
 	</>
 }
