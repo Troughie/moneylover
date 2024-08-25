@@ -19,7 +19,7 @@ const ChangeNameGroup = ({nameGroup, cancel, groupId}: props) => {
 
 	const rename = async () => {
 		await renameGroup(groupId, textInput)
-		fetchGroups()
+		await fetchGroups()
 		cancel()
 	}
 
@@ -32,7 +32,11 @@ const ChangeNameGroup = ({nameGroup, cancel, groupId}: props) => {
 					<label className={``}>Chat name</label>
 					<span>{textInput?.length || 0}/100</span>
 				</div>
-				<Input value={textInput} className={`py-6 px-2 font-bold text-xl focus:ring-2 focus:ring-blue-400`} onChange={changeInput}/>
+				<Input onKeyDown={async (e) => {
+					if (e.key == "Enter") {
+						await rename()
+					}
+				}} value={textInput} className={`py-6 px-2 font-bold text-xl focus:ring-2 focus:ring-blue-400`} onChange={changeInput}/>
 			</div>
 			<div className={`flex justify-end gap-4 text-lg`}>
 				<button onClick={cancel} className={`text-blue-400  py-2 px-6 rounded-lg hover:bg-gray-300 font-semibold`}>Cancel</button>

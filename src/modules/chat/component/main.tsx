@@ -3,14 +3,10 @@ import useMessage from "@/modules/chat/common/message.tsx";
 import {Group, MergeMessage, sendMessageToGroup} from "@/modules/chat/function/chats.ts";
 import {useUserStore} from "@/modules/authentication/store/user.ts";
 import Search from "@/modules/chat/common/search.tsx";
-import MsgBox from "@/modules/chat/common/msg.tsx";
-import {IPen} from "@/assets";
 import ChangeNameGroup from "@/modules/chat/common/changeNameGroup.tsx";
 import {useChatStore} from "@/modules/chat/store/chatStore.ts";
-import LoadingSpin from "@/components/Loading/loading.tsx";
 import {similarTime} from "@/utils/day.ts";
-import cn from "@/utils/cn";
-import dayjs from "dayjs";
+import ShowChat from "@/modules/chat/common/showChat.tsx";
 
 interface props {
 	group: Group
@@ -18,11 +14,10 @@ interface props {
 
 const Main = ({group}: props) => {
 	const [newMessage, setNewMessage] = useState<string>('');
-	const [isOpenChangeName, setIsOpenChangeName] = useState<boolean>(false)
 	const [sortMessages, setSortMessages] = useState<MergeMessage[]>([])
-	const {messages, hasMoreMessages, isLoading, fetchMessage} = useMessage(group.id);
+	const {messages, isLoading, fetchMessage} = useMessage(group.id);
 	const {user} = useUserStore.getState().user;
-	const {fetchGroups} = useChatStore()
+	const {fetchGroups, isChangeNameOpen, setIsChangeNameOpen, setIsMediaOpen, setIsInformationOpen} = useChatStore()
 	const messageContainerRef = useRef<HTMLDivElement>(null);
 
 	const handleScroll = async () => {
@@ -68,64 +63,30 @@ const Main = ({group}: props) => {
 		setSortMessages(mergeMessSameTime)
 	}, [messages]);
 
-	useEffect(() => {
-		// Scroll to the bottom of the message container whenever messages change
-		if (messageContainerRef.current) {
-			messageContainerRef.current.scrollTop = messageContainerRef.current.scrollHeight + 10;
-		}
-	}, [group]);
-
 	const handleSendMessage = async (file: File[]) => {
-		if (newMessage.trim()) {
-			await sendMessageToGroup(group.id, user, newMessage, file);
-			await fetchGroups()
-			setNewMessage(''); // Clear input after sending
-		}
+		await sendMessageToGroup(group.id, user, newMessage, file);
+		await fetchGroups()
+		setNewMessage(''); // Clear input after sending
 	};
 
+	const handleClickCloseRight = () => {
+		setIsMediaOpen(false)
+		setIsInformationOpen(false)
+	}
 
 	return <>
-		<div className={`h-full relative`}>
+		<div onClick={handleClickCloseRight} className={`h-full relative`}>
 			<div className={`h-full`}>
-				<div ref={messageContainerRef}
-					 className={`flex flex-col px-4 pb-6 relative bg-main overflow-y-auto h-full max-h-[76vh] scrollbar-chat scroll-smooth`}>
-					{group && hasMoreMessages &&
-                        <div className={`mx-auto flex flex-col items-center`}>
-                            <span className={`font-bold text-lg mt-2`}>{group?.name ?? ""}</span>
-                            <span className={`mt-2 text-md text-bodydark font-satoshi`}>{group?.create} create this group</span>
-                            <div className={`flex flex-col items-center`}>
-                                <IPen func={() => setIsOpenChangeName(!isOpenChangeName)}
-                                      className={`rounded-full p-2 cursor-pointer bg-gray-300 mt-1`}/>
-                                <span>Name</span>
-                            </div>
-                        </div>
-					}
-					{isLoading && <LoadingSpin/>}
-					<div className={`h-full flex flex-col gap-6`}>
-						{sortMessages.map((msg, i) => {
-							const isYour = msg?.sender?.id === user?.id
-							return <div key={i}>
-								<span className={`w-full flex-center my-8 text-bodydark2`}>{dayjs(msg.timer).format("D MM, YYYY, h:mm A")}</span>
-								<span className={cn(`text-bodydark2 ml-8`, {"hidden": isYour})}>{msg.sender.username}</span>
-								{msg.message.map((item, index) => {
-									const lastMessPerson = msg.message.length - 1 === index
-									const firstMessPerson = index === 0
-									return <MsgBox key={item.id} msg={item} isYour={isYour} lastMessagePerson={lastMessPerson}
-												   firstMessPerson={firstMessPerson}/>
-								})}
-							</div>
-						})}
-					</div>
-				</div>
+				<ShowChat messageContainerRef={messageContainerRef} sortMessages={sortMessages} isLoading={isLoading}/>
 				<Search handleSendMessage={handleSendMessage} setNewMessage={setNewMessage} message={newMessage}/>
 			</div>
 		</div>
-		{isOpenChangeName && <>
+		{isChangeNameOpen && <>
             <div
-                onClick={() => setIsOpenChangeName(!isOpenChangeName)}
+                onClick={() => setIsChangeNameOpen(!isChangeNameOpen)}
                 className="fixed left-0 top-0 z-999 h-full w-full bg-black opacity-60"
             ></div>
-            <ChangeNameGroup nameGroup={group?.name} cancel={() => setIsOpenChangeName(!isOpenChangeName)}
+            <ChangeNameGroup nameGroup={group?.name} cancel={() => setIsChangeNameOpen(!isChangeNameOpen)}
                              groupId={group.id}/>
         </>}
 	</>

@@ -40,12 +40,10 @@ const Header: React.FC<props> = ({className}) => {
 		>
 			<div
 				className="block md:hidden">
-				<img
-					src={showNav ? Cancel : Bars}
-					alt=""
-					onClick={() => setShowNav(!showNav)}
-					className={`size-10 z-30 absolute top-[30px] right-[20px] transition-transform duration-300 cursor-pointer ease-in-out hover:scale-125`}
-				/>
+				<div onClick={() => setShowNav(!showNav)}
+					 className={`size-10 z-30 absolute top-[30px] right-[20px] transition-transform duration-300 cursor-pointer ease-in-out hover:scale-125`}>
+					{showNav ? <Cancel/> : <Bars/>}
+				</div>
 			</div>
 			<m.div
 				initial={{y: -100}}

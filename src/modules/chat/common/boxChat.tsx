@@ -1,6 +1,6 @@
 import cn from "@/utils/cn";
 import {Group, Message} from "@/modules/chat/function/chats.ts";
-import {useEffect, useState} from "react";
+import {useCallback, useEffect, useState} from "react";
 import {collection, onSnapshot, orderBy, query} from "firebase/firestore";
 import {db} from "@/libs/firebase.ts";
 import {calculateElapsedTime} from "@/utils/day.ts";
@@ -40,6 +40,26 @@ const BoxChat: React.FC<props> = ({isSelect, group}) => {
 
 	const classNameNoneMess = messageLast?.text ? "" : "py-2";
 
+	const showMessageLast = useCallback(() => {
+
+		if (messageLast?.sender?.id != user?.id) {
+			if (!messageLast?.text && messageLast?.files) {
+				return `${messageLast?.sender.username} send a photo`
+			} else if (messageLast?.text) {
+				return `${messageLast?.sender.username} : ${messageLast?.text}`
+			} else {
+				return "Say hello in a new group"
+			}
+		} else {
+			if (!messageLast?.text && messageLast?.files) {
+				return `You send a photo`
+			} else if (messageLast?.text) {
+				return messageLast?.text
+			} else {
+				return "Say hello in a new group"
+			}
+		}
+	}, [messageLast])
 
 	return <>
 		<div
@@ -48,7 +68,7 @@ const BoxChat: React.FC<props> = ({isSelect, group}) => {
 				"hover:bg-gray-300": !isSelect
 			})}>
 			<img src="#" alt="" className={`size-10 rounded-full bg-black m-2`}/>
-			<div className={`flex flex-col py-4 px-2 w-full`}>
+			<div className={` flex-col py-4 px-2 w-full hidden lg:flex`}>
 				<div className={cn(`flex-between text-black items-start`)}>
 					<span className={cn(`text-2xl font-bold line-clamp-1`)}>{group?.name}</span>
 					<p className={cn(`text-sm font-thin relative`)}>{messageLast?.time || timeCreateGroup}
@@ -56,11 +76,8 @@ const BoxChat: React.FC<props> = ({isSelect, group}) => {
 				</div>
 				<div className={cn(`text-bodydark2 text-sm flex-between gap-1 my-1`)}>
 					<div className={`flex gap-2`}>
-						{messageLast?.sender?.id === user?.id && <span className={``}>
-						You
-					</span>}
 						<span
-							className={`line-clamp-1`}>{messageLast?.text ?? group?.create + " create this group"}
+							className={`line-clamp-1`}>{showMessageLast()}
 						</span>
 					</div>
 					{group.unreadCount[user?.id] > 0 &&

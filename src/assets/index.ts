@@ -1,6 +1,6 @@
 //icons
-export {default as Bars} from "./icons/Bars vector icon.svg";
-export {default as Cancel} from "./icons/Cancel Close Delete.svg";
+export {default as Bars} from "./icons/BarsIcon.tsx";
+export {default as Cancel} from "./icons/CancelIcon.tsx";
 export {default as Calender} from "./icons/Calendar Interface Icon.svg";
 export {default as ArrUp} from "./icons/Arrow Up 337.svg";
 export {default as ArrDown} from "./icons/Arrow Down Icon.svg";
@@ -8,6 +8,7 @@ export {default as ArrLeft} from "./icons/Arrow Left 335.svg";
 export {default as ArrRight} from "./icons/Arrow Right Icon.svg";
 export {default as Plus} from "./icons/Plus Circle Icon.tsx";
 export {default as Check} from "./icons/check.tsx";
+export {default as IPrev} from "./icons/PrevIcon.tsx";
 
 
 //icon user
@@ -21,6 +22,7 @@ export {default as IPen} from "./icons/PencilIcon.tsx";
 export {default as ICopy} from "./icons/CopyIcon.tsx";
 export {default as IDelete} from "./icons/DeleteIcon.tsx";
 export {default as IImage} from "./icons/imageIcon.tsx";
+export {default as IInformation} from "./icons/InformationIcon.tsx";
 
 export {default as IShopping} from "./icons/Shopping Card Icon.svg";
 export {default as IFood} from "./icons/Food Dish Icon.svg";

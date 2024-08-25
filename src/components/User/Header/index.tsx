@@ -174,9 +174,13 @@ const HeaderUser: React.FC<props> = ({walletsOpen, isWalletOpen, isNotificationO
 					<span className={`absolute bottom-0 left-[5%]`}>{currentDay}</span>
 				</div>
 				<Badge count={result.filter((e) => e.unread).length}>
-					<div className={`cursor-pointer hover:animate-wiggle`} onClick={() => notificationsOpen(!isNotificationOpen)}>
+					<m.div
+						initial={{transform: "rotate(-9deg)"}}
+						animate={{transform: "rotate(0)"}}
+						transition={{duration: 0.4}}
+						className={`cursor-pointer hover:animate-wiggle`} onClick={() => notificationsOpen(!isNotificationOpen)}>
 						<IBell/>
-					</div>
+					</m.div>
 				</Badge>
 				<p onClick={() => setToggleName(!toggleName)} className={`cursor-pointer font-satoshi text-xl font-medium flex-between gap-2`}>
 					<IUser/><span>{user?.username ?? "No name"}</span>

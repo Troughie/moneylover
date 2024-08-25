@@ -5,19 +5,16 @@ import {useUserStore} from "@/modules/authentication/store/user.ts";
 interface GroupState {
 	groups: Group[];
 	fetchGroups: () => Promise<void>;
-}
-
-interface handleChatOpen {
 	isOpenChat: boolean
 	setIsOpenChat: (open: boolean) => void
+	isChangeNameOpen: boolean
+	setIsChangeNameOpen: (open: boolean) => void
+	isInformationOpen: boolean
+	setIsInformationOpen: (open: boolean) => void
+	isMediaOpen: boolean
+	setIsMediaOpen: (open: boolean) => void
 }
 
-export const chatOpenStore = create<handleChatOpen>(set => ({
-	isOpenChat: false,
-	setIsOpenChat: (open: boolean) => {
-		set({isOpenChat: open});
-	},
-}));
 
 export const useChatStore = create<GroupState>(set => {
 	return ({
@@ -41,6 +38,22 @@ export const useChatStore = create<GroupState>(set => {
 				return +latestMessageTimeB - +latestMessageTimeA;
 			});
 			set({groups: sortedGroups});
+		},
+		isOpenChat: false,
+		setIsOpenChat: (open: boolean) => {
+			set({isOpenChat: open});
+		},
+		isChangeNameOpen: false,
+		setIsChangeNameOpen: (open: boolean) => {
+			set({isChangeNameOpen: open});
+		},
+		isInformationOpen: false,
+		setIsInformationOpen: (open: boolean) => {
+			set({isInformationOpen: open});
+		},
+		isMediaOpen: false,
+		setIsMediaOpen: (open: boolean) => {
+			set({isMediaOpen: open});
 		},
 	});
 });

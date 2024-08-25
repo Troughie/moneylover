@@ -53,7 +53,7 @@ const CardManager: React.FC<props> = ({manager, wallet, isOwner}) => {
 						}
 
 						removeManager(data)
-						await removeMemberFromGroup(wallet?.id, manager.user.id, manager.user.username)
+						await removeMemberFromGroup(wallet?.id, manager.user)
 					}
 				}
 			})

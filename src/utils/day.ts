@@ -28,7 +28,8 @@ export const firstNLastNextMonth = () => {
 	}
 }
 
-const convertTimeStampToDate = (createdAt: createdAt) => {
+
+export const convertTimeStampToDate = (createdAt: createdAt) => {
 	return new Date((createdAt?.seconds + createdAt?.nanoseconds * 10 ** -9) * 1000)
 }
 

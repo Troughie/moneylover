@@ -15,7 +15,7 @@ import {
 	updateDoc,
 	where
 } from 'firebase/firestore';
-import {getDownloadURL, ref, uploadBytes} from 'firebase/storage';
+import {getDownloadURL, ref, StorageReference, uploadBytes, listAll} from 'firebase/storage';
 import {v4 as uuidv4} from 'uuid';
 import {User} from "@/model/interface.ts";
 
@@ -31,10 +31,16 @@ export interface Group {
 	createdAt: createdAt;
 	name: string;
 	changeName: boolean
-	members: string[];
-	create: string;
+	members: TimeAddUser[];
+	membersId: string[]
+	creator: string;
 	membersName: string[]
 	unreadCount: { [userId: string]: number };
+}
+
+interface TimeAddUser {
+	user: User
+	createdAd: createdAt
 }
 
 export interface Message {
@@ -56,31 +62,39 @@ export interface MergeMessage {
 
 type groupsProps = Group[];
 
-export const createGroupChat = async (groupId: string, groupName: string, userIds: string[], memberName: string[]) => {
+export const createGroupChat = async (groupId: string, groupName: string, users: User[]) => {
 	try {
 		const groupRef = doc(db, 'groups', groupId);
 		const groupSnapshot = await getDoc(groupRef);
-		const create = memberName[0]
-		const newMember: string = userIds[1]
-		const newMemberName: string = memberName[1]
+		const userAndTime = users.reduce((result, curr) => {
+			// @ts-ignore
+			result.push({user: curr, createdAd: new Date()})
+			return result
+		}, [] as TimeAddUser[])
+
+
+		const creator = users[0].id
+		const newMember = userAndTime[1]
 
 		if (groupSnapshot.exists()) {
 			console.log('Group chat already exists with ID:', groupId);
-			await addMemberToGroup(groupId, newMember, newMemberName)
+			await addMemberToGroup(groupId, newMember)
 			return;
 		}
+		const membersId = users.map((e) => e.id)
 
-		const unreadCount = userIds.reduce((acc, userId) => {
-			acc[userId] = 0;
+		const unreadCount = users.reduce((acc, userId) => {
+			acc[userId.id] = 0;
 			return acc;
 		}, {} as { [key: string]: number });
 
+
 		const groupMess = {
 			name: groupName,
-			members: userIds,
-			membersName: memberName,
+			members: userAndTime,
 			changeName: false,
-			create,
+			membersId,
+			creator,
 			unreadCount,
 			createdAt: serverTimestamp(),
 		}
@@ -91,6 +105,24 @@ export const createGroupChat = async (groupId: string, groupName: string, userId
 		console.error('Error creating group chat:', error);
 	}
 };
+
+export const getAllMediaOfGroup = async (groupId: string) => {
+	const folderRef = ref(storage, `groups/${groupId}/files`);
+	try {
+		// List all items (files) in the directory
+		const result = await listAll(folderRef);
+
+		// Retrieve download URLs for each file
+		return await Promise.all(
+			result.items.map(async (itemRef: StorageReference) => {
+				return await getDownloadURL(itemRef);
+			})
+		);
+	} catch (error) {
+		console.error('Error fetching file URLs:', error);
+		return [];
+	}
+}
 
 export const renameGroup = async (groupId: string, groupName: string | undefined) => {
 	const groupRef = doc(db, 'groups', groupId);
@@ -106,7 +138,7 @@ export const renameGroup = async (groupId: string, groupName: string | undefined
 
 export const getUserGroups = async (userId: string): Promise<groupsProps | undefined> => {
 	try {
-		const groupsQuery = query(collection(db, 'groups'), where('members', 'array-contains', userId));
+		const groupsQuery = query(collection(db, 'groups'), where('membersId', 'array-contains', userId));
 		const querySnapshot = await getDocs(groupsQuery);
 		return querySnapshot.docs.map(doc => {
 			const data = doc.data() as Group;
@@ -121,6 +153,10 @@ export const getUserGroups = async (userId: string): Promise<groupsProps | undef
 	}
 };
 
+// export const clearGroup = async (groupId: string): Promise<void> => {
+//
+// }
+
 export const getLatestMessageForGroup = async (groupId: string): Promise<Message | null> => {
 	const messagesQuery = query(collection(db, `groups/${groupId}/messages`), orderBy('createdAt', 'desc'), limit(1));
 
@@ -131,23 +167,24 @@ export const getLatestMessageForGroup = async (groupId: string): Promise<Message
 	return latestMessage || null;
 };
 
-export const addMemberToGroup = async (groupId: string, newMemberId: string, newMemberName: string) => {
+export const addMemberToGroup = async (groupId: string, newMember: TimeAddUser) => {
 	try {
 		const groupRef = doc(db, 'groups', groupId);
 
 		// Get the current group document
 		const groupDoc = await getDoc(groupRef);
 		if (groupDoc.exists()) {
-			if (groupDoc.data()?.members.includes(newMemberId)) {
+			if (groupDoc.data()?.membersId.includes(newMember.user.id)) {
 				console.log("Member has already in group!!!", groupId)
 				return;
 			}
 
 			let objectRef = {
-				members: arrayUnion(newMemberId),
+				members: arrayUnion(newMember),
+				membersId: arrayUnion(newMember.user.id),
 				unreadCount: {
 					...groupDoc.data().unreadCount,  // Copy current unreadCount
-					[newMemberId]: 0  // Set unreadCount for the new member
+					[newMember.user.id]: 0  // Set unreadCount for the new member
 				}
 			};
 
@@ -155,7 +192,7 @@ export const addMemberToGroup = async (groupId: string, newMemberId: string, new
 
 			// Update group name by appending the new member's name
 			if (!groupDoc.data().changeName) {
-				const updatedGroupName = `${groupName},${newMemberName}`;
+				const updatedGroupName = `${groupName},${newMember.user.username}`;
 				// @ts-ignore
 				objectRef = {...objectRef, name: updatedGroupName};
 			}
@@ -172,7 +209,7 @@ export const addMemberToGroup = async (groupId: string, newMemberId: string, new
 	}
 };
 
-export const removeMemberFromGroup = async (groupId: string, memberId: string, memberName: string) => {
+export const removeMemberFromGroup = async (groupId: string, member: User) => {
 	try {
 		const groupRef = doc(db, 'groups', groupId);
 
@@ -180,21 +217,22 @@ export const removeMemberFromGroup = async (groupId: string, memberId: string, m
 		const groupDoc = await getDoc(groupRef);
 		if (groupDoc.exists()) {
 			const groupData = groupDoc.data();
-			if (!groupData?.members.includes(memberId)) {
+			if (!groupData?.membersId.includes(member.id)) {
 				console.log("Member is not in the group", groupId);
 				return;
 			}
 
 			// Remove memberId from the members array
 			let objectRef = {
-				members: arrayRemove(memberId),
+				membersId: arrayRemove(member.id),
+				members: arrayRemove(member),
 				unreadCount: {...groupData.unreadCount}
 			};
-			delete objectRef.unreadCount[memberId]; // Remove unreadCount for the member being removed
+			delete objectRef.unreadCount[member.id]; // Remove unreadCount for the member being removed
 
 			// Update group name by removing the member's name
 			if (!groupData.changeName) {
-				const updatedGroupName = groupData.name.split(',').filter((name: string) => name !== memberName).join(',');
+				const updatedGroupName = groupData.name.split(',').filter((name: string) => name !== member.username).join(',');
 				// @ts-ignore
 				objectRef = {...objectRef, name: updatedGroupName};
 			}
@@ -212,7 +250,7 @@ export const removeMemberFromGroup = async (groupId: string, memberId: string, m
 };
 
 
-export const sendMessageToGroup = async (groupId: string, senderId: User, message: string, files: File[] = []) => {
+export const sendMessageToGroup = async (groupId: string, senderId: User, message: string = "", files: File[] = []) => {
 	try {
 		let fileUrls: string[] = [];
 
@@ -245,6 +283,8 @@ export const sendMessageToGroup = async (groupId: string, senderId: User, messag
 			const unreadCountUpdates = Object.keys(groupData.unreadCount).reduce((acc, userId) => {
 				if (userId !== senderId.id) {
 					acc[`unreadCount.${userId}`] = groupData.unreadCount[userId] + 1;
+				} else if (userId === senderId.id && acc[`unreadCount.${senderId.id}`] > 0) {
+					acc[`unreadCount.${senderId.id}`] = 0
 				}
 				return acc;
 			}, {} as { [key: string]: number });

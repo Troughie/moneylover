@@ -13,7 +13,7 @@ interface props {
 
 const NavLeft = ({groups, setId, id}: props) => {
 	const {user} = useUserStore.getState().user
-	const {fetchGroups} = useChatStore()
+	const {fetchGroups, setIsMediaOpen, setIsInformationOpen} = useChatStore()
 	const [groupss, setGroupss] = useState<Group[]>([])
 	const [valueSearch, setValueSearch] = useState<string>()
 	useEffect(() => {
@@ -30,6 +30,8 @@ const NavLeft = ({groups, setId, id}: props) => {
 			setValueSearch("")
 		}
 		setId(el.id)
+		setIsInformationOpen(false)
+		setIsMediaOpen(false)
 	}
 
 	const searchGroup = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -40,8 +42,8 @@ const NavLeft = ({groups, setId, id}: props) => {
 
 
 	return <>
-		<div className={`w-2/5 pl-4 min-w-[300px] bg-nav flex flex-col gap-4 pr-2`}>
-			<span className={`px-2 pt-8 pb-4 font-bold text-2xl`}>Chats</span>
+		<div className={` w-40 lg:w-2/5 pl-4  bg-nav flex flex-col gap-4 pr-2`}>
+			<span className={`px-2 pt-8 pb-4 font-bold text-sm md:text-2xl`}>Chats</span>
 			<input type="search"
 				   value={valueSearch}
 				   onChange={useDebounce(searchGroup, 1000)}

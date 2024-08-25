@@ -4,7 +4,7 @@ import NavBar from "@/components/User/NavBar";
 import LoadingComponent from "@/components/Loading";
 import FloatButtonAction from "@/components/FloatButtonAction";
 import {Chat} from "@/modules";
-import {chatOpenStore, useChatStore} from "@/modules/chat/store/chatStore.ts";
+import {useChatStore} from "@/modules/chat/store/chatStore.ts";
 import {motion as m} from "framer-motion";
 import {FormProvider, useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup";
@@ -24,13 +24,12 @@ interface CateReq {
 }
 
 const UserLayout: React.FC<{ children: ReactNode }> = ({children}) => {
-	const {setIsOpenChat, isOpenChat} = chatOpenStore()
 	const {user} = useUserStore.getState().user
 	const [walletOpen, setWalletOpen] = useState<boolean>(false)
 	const [notification, setNotification] = useState<boolean>(false)
 	const Methods = useForm({mode: "onChange", resolver: yupResolver(categorySchema)});
 	const {setOpenModal, openModal} = openCategoryForm()
-	const {groups, fetchGroups} = useChatStore()
+	const {groups, fetchGroups, setIsOpenChat, isOpenChat} = useChatStore()
 
 	const cancelModal = () => {
 		setWalletOpen(false)
@@ -71,7 +70,7 @@ const UserLayout: React.FC<{ children: ReactNode }> = ({children}) => {
 			{isOpenChat && <>
                 <div
                     onClick={() => setIsOpenChat(!isOpenChat)}
-                    className="fixed left-0 top-0 z-999 h-full w-full bg-black opacity-50"
+                    className="fixed left-0 top-0 z-9 h-full w-full bg-black opacity-50"
                 ></div>
                 <Chat/>
             </>}

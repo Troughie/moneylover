@@ -6,11 +6,15 @@ import {Group} from "@/modules/chat/function/chats.ts";
 import {useChatStore} from "@/modules/chat/store/chatStore.ts";
 import {LoadingOutlined} from "@ant-design/icons";
 import {Spin} from "antd";
+import InformationRight from "@/modules/chat/component/informationRight.tsx";
+import Media from "@/modules/chat/component/Media.tsx";
+import {AnimatePresence} from "framer-motion";
+
 
 const Chat = () => {
 	const [group, setGroup] = useState<Group>();
 	const [id, setId] = useState<string>("")
-	const {groups} = useChatStore()
+	const {groups, isInformationOpen, isMediaOpen} = useChatStore()
 	useEffect(() => {
 		const result = groups.find((el) => el.id === id);
 		if (result) {
@@ -25,13 +29,17 @@ const Chat = () => {
 
 
 	return <>
-		<div className={`h-[90vh] rounded-lg mt-10 w-[80%] left-[50%] z-9999 translate-x-[-50%] absolute bg-white flex`}>
+		<div className={`h-[90vh] rounded-lg mt-10 w-[80%] left-[50%] z-99 translate-x-[-50%] absolute bg-white flex`}>
 			<NavLeft groups={groups} setId={setId} id={id}/>
 			<div className={`flex flex-col w-full relative`}>
 				<Header name={group?.name}/>
 				{group ? <Main group={group}/> : <Spin className={`flex justify-center  items-center `}
 													   indicator={<LoadingOutlined style={{fontSize: 50}} spin/>}/>}
 			</div>
+			<AnimatePresence>
+				{isInformationOpen && <InformationRight group={group}/>}
+				{isMediaOpen && group && <Media group={group}/>}
+			</AnimatePresence>
 		</div>
 	</>
 }

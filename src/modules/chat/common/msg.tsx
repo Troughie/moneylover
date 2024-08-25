@@ -7,21 +7,24 @@ interface props {
 	isYour: boolean
 	lastMessagePerson: boolean
 	firstMessPerson: boolean
+	lengthMsg: number
 }
 
-const MsgBox = ({msg, isYour, lastMessagePerson, firstMessPerson}: props) => {
+const MsgBox = ({msg, isYour, lastMessagePerson, firstMessPerson, lengthMsg}: props) => {
 	return <>
 		<div>
 			<div className={cn(`flex items-end h-full`, {"justify-end items-start": isYour})}>
 				<div className={`flex flex-col h-full space-y-2 text-xs max-w-xs mx-2 order-2 items-start`}>
-					<div className={cn(`relative flex flex-col gap-1`)}>
-						<div className={`inline-block pl-6`}>
-							{msg.files.length > 0 && <>
-								{msg.files.map((e) => (
-									<img src={e} alt="" className={`object-contain rounded-lg`}/>
-								))}
-                            </>}
-						</div>
+					<div className={cn(`relative flex flex-col gap-2`)}>
+						{msg.files.length > 0 &&
+                            <div className={`flex flex-col py-1 pl-6 gap-2`}>
+								{msg.files.length > 0 && <>
+									{msg.files.map((e) => (
+										<img src={e} alt="" className={`object-fill w-full h-full rounded-lg`}/>
+									))}
+                                </>}
+                            </div>
+						}
 						<div className={cn(`flex items-end group`, {" justify-end": isYour})}>
 							<div className={cn(`flex justify-end items-end h-full`, {"hidden": isYour || !lastMessagePerson})}>
 								<img src="#" alt="" className={cn(`size-6 rounded-full order-1`, {"flex": isYour})}/>
@@ -31,12 +34,13 @@ const MsgBox = ({msg, isYour, lastMessagePerson, firstMessPerson}: props) => {
 									className={cn(`p-4 rounded-full inline-block text-sm bg-gray-200 text-black`,
 										{
 											"bg-blue-500 text-white": isYour,
-											"rounded-tr-sm": isYour && lastMessagePerson,
-											"rounded-br-sm": isYour && firstMessPerson,
+											"rounded-tr-sm": isYour && lastMessagePerson && lengthMsg > 1,
+											"rounded-br-sm": (isYour && firstMessPerson && lengthMsg > 1) || (isYour && lengthMsg === 1),
 											"rounded-e-[190rem]": isYour && !lastMessagePerson && !firstMessPerson,
 											"rounded-s-[190rem]": !isYour && !lastMessagePerson && !firstMessPerson,
-											"rounded-bl-sm": !isYour && firstMessPerson,
-											"rounded-tl-sm": !isYour && lastMessagePerson
+											"rounded-bl-sm": !isYour && firstMessPerson && lengthMsg > 1,
+											"rounded-tl-sm": !isYour && lastMessagePerson && lengthMsg > 1,
+											"hidden": !msg.text
 										}
 									)}>
 							{msg?.text}

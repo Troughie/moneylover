@@ -3,7 +3,7 @@ import {LoadingOutlined} from "@ant-design/icons";
 import cn from "@/utils/cn";
 import React, {useState} from "react";
 import {NumberFormatter} from "@/utils/Format";
-import {walletProps} from "@/model/interface.ts";
+import {User, walletProps} from "@/model/interface.ts";
 import {ModalPopUp} from "@/commons";
 import usePostWalletMutate from "@/modules/wallet/function/postMutate.ts";
 import {createGroupChat} from "@/modules/chat/function/chats.ts";
@@ -36,9 +36,11 @@ const TableWallet: React.FC<props> = ({handleClick, wallets, isFetching}) => {
 
 	const handleAddManager = async () => {
 		const memberName: string[] = [`${user?.username}`, `${userFound?.username}`]
-		const userIds: string[] = [`${user?.id}`, `${userFound?.id}`]
-		if (wallet) {
-			await addManager(createGroupChat(wallet.id, memberName.join(","), userIds, memberName), userFound, wallet.id)
+		if (userFound) {
+			const users: User[] = [user, userFound]
+			if (wallet) {
+				await addManager(createGroupChat(wallet.id, memberName.join(","), users), userFound, wallet.id)
+			}
 		}
 	}
 
