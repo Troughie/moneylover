@@ -1,15 +1,14 @@
-import {Button, Empty, Input, Spin, Switch} from "antd";
+import {Button, Empty, Spin, Switch} from "antd";
 import {LoadingOutlined} from "@ant-design/icons";
 import cn from "@/utils/cn";
 import React, {useState} from "react";
 import {NumberFormatter} from "@/utils/Format";
 import {walletProps} from "@/model/interface.ts";
-import useRequest from "@/hooks/useRequest.ts";
-import {post} from "@/libs/api.ts";
-import {useQueryClient} from "@tanstack/react-query";
-import {nameQueryKey} from "@/utils/nameQueryKey.ts";
 import {ModalPopUp} from "@/commons";
-import CardManager from "@/modules/wallet/common/cardManager.tsx";
+import usePostWalletMutate from "@/modules/wallet/function/postMutate.ts";
+import {createGroupChat} from "@/modules/chat/function/chats.ts";
+import {useUserStore} from "@/modules/authentication/store/user.ts";
+import ListManager from "@/modules/wallet/component/Table/ListManager.tsx";
 
 interface props {
 	wallets: walletProps[],
@@ -19,32 +18,44 @@ interface props {
 
 const TableWallet: React.FC<props> = ({handleClick, wallets, isFetching}) => {
 
-	const queryClient = useQueryClient()
+	const [wallet, setWallet] = useState<walletProps>()
+
+	const {user} = useUserStore.getState().user
+	const {getUserWithCode, userFound, onChangeWalletMain, valueInput, addManager, setValueInput} = usePostWalletMutate()
 	const [manager, setManager] = useState<boolean>(false)
 
 	const handleOpenManager = () => {
 		setManager(!manager)
+		setValueInput(undefined)
 	}
 
-	const handleOkManager = () => {
-
+	const handleOkManager = (wallet: walletProps) => {
+		setManager(!manager)
+		setWallet(wallet)
 	}
 
-	const {mutate: changeMainWallet} = useRequest({
-		mutationFn: (value) => {
-			return post({
-				url: `wallet/changeMain/${value}`,
-			})
-		},
-		onSuccess: () => {
-			// @ts-ignore
-			queryClient.invalidateQueries([nameQueryKey.wallet])
+	const handleAddManager = async () => {
+		const memberName: string[] = [`${user?.username}`, `${userFound?.username}`]
+		const userIds: string[] = [`${user?.id}`, `${userFound?.id}`]
+		if (wallet) {
+			await addManager(createGroupChat(wallet.id, memberName.join(","), userIds, memberName), userFound, wallet.id)
 		}
-	})
+	}
 
-	const onChangeWalletMain = (id: string | undefined) => {
-		changeMainWallet(id)
-	};
+
+	const isOwnerWallet = (wallet: walletProps) => {
+		const isManager = wallet.managers.filter((e) => e.user.id === user.id)
+		if (isManager.length === 0) {
+			return <Switch className={`w-1/2`} disabled={wallet?.main} checkedChildren={`Main wallet`}
+						   onClick={() => onChangeWalletMain(wallet.id)}
+						   checked={wallet?.main}
+						   unCheckedChildren=""/>
+		} else {
+			return <span className={`font-bold text-sm`}>Staff</span>
+		}
+	}
+
+
 	return <>
 		<div className={`text-center`}>
 			<p className={`my-5 text-2xl font-bold  text-nowrap`}>List wallet</p>
@@ -72,11 +83,8 @@ const TableWallet: React.FC<props> = ({handleClick, wallets, isFetching}) => {
 									<span className={`col-span-3`}>{<NumberFormatter number={el.balance}/>}</span>
 								</div>
 								<span className={cn(`col-span-1 flex-center `)}>{
-									<Switch className={`w-1/2`} disabled={el?.main} checkedChildren={`Main wallet`}
-											onClick={() => onChangeWalletMain(el.id)}
-											checked={el?.main}
-											unCheckedChildren=""/>}</span>
-								<div onClick={handleOpenManager} className={`col-span-1 items-center text-center flex `}>
+									isOwnerWallet(el)}</span>
+								<div onClick={() => handleOkManager(el)} className={`col-span-1 items-center text-center flex `}>
 									<Button>Manager</Button>
 								</div>
 							</div>
@@ -85,16 +93,11 @@ const TableWallet: React.FC<props> = ({handleClick, wallets, isFetching}) => {
 					</>
 				)}
 		</div>
-		<ModalPopUp width={800} isModalOpen={manager} handleOk={handleOkManager} showOke={false} showCancel={false} handleCancel={handleOpenManager}
+		<ModalPopUp width={900} isModalOpen={manager} showOke={false} showCancel={false} handleCancel={handleOpenManager}
 					title={`List manager`}>
 			<>
-				<div className={`flex items-center gap-6`}>
-					<strong className={`py-2 px-4 text-lg border border-bodydark2 bg-bodydark2 text-white rounded-lg`}>Total manager: <span
-						className={`text-sm font-thin`}>10</span></strong>
-					<Input className={`w-1/3`} type={`text`} placeholder={"Enter code manager to add"}/>
-					<Button type={`primary`} className={``}>Add more...</Button>
-				</div>
-				<CardManager/>
+				<ListManager addManager={handleAddManager} userFound={userFound} wallet={wallet} getUserWithCode={getUserWithCode}
+							 valueInput={valueInput}/>
 			</>
 		</ModalPopUp>
 	</>

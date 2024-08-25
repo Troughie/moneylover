@@ -121,7 +121,7 @@ const BudgetHistory: React.FC<props> = ({isFetch}) => {
 						className="w-full"
 						start={budget.start}
 						end={budget.end}
-						showDate={true}
+						showDate={false}
 						img={e.categoryIcon}
 						name={e.name}
 						amount={budget.amount}

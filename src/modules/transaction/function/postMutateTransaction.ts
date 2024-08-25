@@ -9,9 +9,11 @@ interface props {
 	handleCancel: () => void
 	methods: any
 	setIsModalDetailOpen: (a: boolean) => void
+	walletId: string | undefined
 }
 
-const useMutateTransaction = ({handleCancel, methods, setIsModalDetailOpen}: props) => {
+
+const useMutateTransaction = ({handleCancel, methods, setIsModalDetailOpen, walletId}: props) => {
 	const queryClient = useQueryClient()
 
 	const handleOk = (data: any) => {
@@ -42,18 +44,19 @@ const useMutateTransaction = ({handleCancel, methods, setIsModalDetailOpen}: pro
 		mutationFn: (values: string | undefined) => {
 			return del({
 				url: `transaction/delete/${values}`,
+				data: walletId
 			})
 		},
 
 		onSuccess: () => {
 			// @ts-ignore
 			queryClient.invalidateQueries([nameQueryKey.transactions, nameQueryKey.wallet])
+			setIsModalDetailOpen(false)
 			handleCancel()
 		}
 	})
 	const deleteTran = (id: string | undefined) => {
 		deleteTransaction(id)
-		setIsModalDetailOpen(false)
 	}
 
 	return {

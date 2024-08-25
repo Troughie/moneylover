@@ -55,6 +55,19 @@
     @apply font-semibold font-satoshi text-lg
 }
 
+.card_show:after {
+    position: absolute;
+    content: "";
+    width: 0;
+    height: 0;
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+    border-bottom: 25px solid rgb(107 114 128);
+    top: -17px;
+    left: 2px;
+
+}
+
 .scrollbar-chat::-webkit-scrollbar-thumb {
 
 }

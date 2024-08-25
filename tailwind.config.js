@@ -22,8 +22,6 @@ export default {
                 header_chat: "#F8F9FF",
                 nav: "#F8F9FF",
                 main: "#edf3fb",
-                current: "currentColor",
-                transparent: "transparent",
                 white: "#FFFFFF",
                 black: "#1C2434",
                 "black-2": "#010101",
@@ -34,26 +32,14 @@ export default {
                 primary: "#3C50E0",
                 secondary: "#80CAEE",
                 stroke: "#E2E8F0",
-                graydark: "#333A48",
-                whiten: "#F1F5F9",
-                whiter: "#F5F7FD",
-                boxdark: "#24303F",
-                "boxdark-2": "#1A222C",
-                strokedark: "#2E3A47",
-                "form-strokedark": "#3d4d60",
-                "form-input": "#1d2a39",
-                "meta-1": "#DC3545",
-                "meta-2": "#EFF2F7",
-                "meta-3": "#10B981",
-                "meta-4": "#313D4A",
-                "meta-5": "#259AE6",
-                "meta-6": "#FFBA00",
-                "meta-7": "#FF6766",
-                "meta-8": "#F0950C",
-                "meta-9": "#E5E7EB",
                 success: "#219653",
-                danger: "#D34053",
+                danger: "#FC4445",
                 warning: "#FFA70B",
+                Primary: "#5BC0EB",
+                Secondary: "#FDE74C",
+                Accent: "#FC4445",
+                Background: "#F4F4F9",
+                Text: "#2D3142"
             },
 
             fontSize: {
@@ -211,7 +197,21 @@ export default {
             },
             backgroundImage: {
                 video: "url('../images/video/video.png')",
-                buttonPlus: "linear-gradient(to bottom, #4C4C4C, #808080, #CCCCCC)"
+                buttonPlus: "linear-gradient(to bottom, #4C4C4C, #808080, #CCCCCC)",
+                mainLinear: "linear-gradient(\n" +
+                    "  180deg,\n" +
+                    "  hsl(240deg 100% 20%) 0%,\n" +
+                    "  hsl(243deg 55% 36%) 10%,\n" +
+                    "  hsl(244deg 50% 46%) 20%,\n" +
+                    "  hsl(244deg 56% 54%) 30%,\n" +
+                    "  hsl(244deg 72% 61%) 40%,\n" +
+                    "  hsl(244deg 92% 67%) 50%,\n" +
+                    "  hsl(244deg 86% 75%) 60%,\n" +
+                    "  hsl(244deg 78% 81%) 70%,\n" +
+                    "  hsl(245deg 65% 85%) 80%,\n" +
+                    "  hsl(247deg 44% 90%) 90%,\n" +
+                    "  hsl(0deg 6% 94%) 100%\n" +
+                    ");"
             },
             content: {
                 "icon-copy": 'url("../images/icon/icon-copy-alt.svg")',

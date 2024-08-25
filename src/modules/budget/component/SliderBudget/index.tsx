@@ -25,7 +25,7 @@ const SliderBudget = () => {
 				<Tabs
 					onChange={(e) => handleChange(+e)}
 					type={"card"}
-					className={`w-full `}
+					className={`w-full`}
 					defaultActiveKey={position.toString()}
 					items={budgets.map((_, i) => {
 						const time = `${formatDate(_.period_start).toString()}-${formatDate(_.period_end).toString()}`

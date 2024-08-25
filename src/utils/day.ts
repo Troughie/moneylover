@@ -34,11 +34,25 @@ const convertTimeStampToDate = (createdAt: createdAt) => {
 
 export const timeSendMess = (createdAt: createdAt) => {
 	const timeSend = convertTimeStampToDate(createdAt)
-	return `${timeSend.getHours()}:${timeSend.getMinutes()}`
+	return {time: `${timeSend.getHours()}:${timeSend.getMinutes()}`, timer: timeSend}
 }
 
-export const calculateElapsedTime = (createdAt: createdAt) => {
-	const createdAtDate = convertTimeStampToDate(createdAt)
+
+export const similarTime = (firstTime: Date, secondTime: Date) => {
+	const fTime = dayjs(firstTime)
+	const sTime = dayjs(secondTime)
+	const diffInMinutes = fTime.diff(sTime, 'minute');
+	return Math.abs(diffInMinutes) <= 10
+}
+
+export const calculateElapsedTime = (createdAt: createdAt | string) => {
+	let createdAtDate: Date
+	if (typeof createdAt === "string") {
+		createdAtDate = new Date(createdAt)
+	} else {
+		createdAtDate = convertTimeStampToDate(createdAt)
+	}
+
 	const now = new Date();
 	const elapsedTimeInMs = now.getTime() - createdAtDate?.getTime();
 
@@ -50,7 +64,7 @@ export const calculateElapsedTime = (createdAt: createdAt) => {
 	if (days > 0) return `${days}d`;
 	if (hours > 0) return `${hours}h`;
 	if (minutes > 0) return `${minutes}m`;
-	return `${seconds}s`;
+	return `${seconds < 0 ? 0 : seconds}s`;
 };
 
 export const getCurrentOneWeek = () => {
@@ -127,6 +141,29 @@ export const parseFullForm = (date: Date | string | undefined) => {
 	} else {
 		return "Today  ,   " + dayjs(date).format("DD-MM-YYYY")
 	}
+}
+
+export const getCurrentWeek = (monthStorage: string | null, yearStorage: string | null) => {
+	const now = dayjs();
+	const currentMonth = !monthStorage ? now.month() : parseInt(monthStorage) - 1; // Tháng bắt đầu từ 0 (tháng 1 là 0)
+	const currentYear = !yearStorage ? now.year() : parseInt(yearStorage);
+
+	const firstDayOfMonth = dayjs(new Date(currentYear, currentMonth, 1));
+	const lastDayOfMonth = firstDayOfMonth.endOf('month');
+	const daysOfWeekInMonth: string[] = [];
+	let currentDay = firstDayOfMonth;
+	let firstDayOfWeek = currentDay.date();
+	while (currentDay.isBefore(monthStorage ? lastDayOfMonth : now) || currentDay.isSame(monthStorage ? lastDayOfMonth : now, 'day')) {
+		const dayOfWeekIndex = currentDay.date();
+		const dayOfWeekIndex2 = currentDay.day();
+		if (dayOfWeekIndex2 === 0) {
+			daysOfWeekInMonth.push(`${firstDayOfWeek},${dayOfWeekIndex}`)
+			firstDayOfWeek = dayOfWeekIndex + 1
+		}
+
+		currentDay = currentDay.add(1, 'day');
+	}
+	return daysOfWeekInMonth
 }
 
 export const convertToCurrentDate = (date: Date | string) => dayjs(new Date().setDate(new Date(date).getDate()))

@@ -37,7 +37,7 @@ const ChangeNameGroup = ({nameGroup, cancel, groupId}: props) => {
 			<div className={`flex justify-end gap-4 text-lg`}>
 				<button onClick={cancel} className={`text-blue-400  py-2 px-6 rounded-lg hover:bg-gray-300 font-semibold`}>Cancel</button>
 				<button onClick={rename} className={`py-2 px-6 rounded-lg bg-blue-500 text-white disabled:bg-gray-400 disabled:text-bodydark1`}
-						disabled={textInput?.trim() === nameGroup?.trim()}>Save
+						disabled={textInput?.trim() === nameGroup?.trim() || !textInput?.trim()}>Save
 				</button>
 			</div>
 		</div>

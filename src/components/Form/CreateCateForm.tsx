@@ -5,7 +5,7 @@ import {get} from "@/libs/api.ts";
 import {useQuery} from "@tanstack/react-query";
 import {nameQueryKey} from "@/utils/nameQueryKey.ts";
 import {ResponseData} from "@/model/interface.ts";
-import {check} from "@/assets";
+import {Check} from "@/assets";
 
 const optionsTypCate = [
 	{label: 'Expense', value: 'Expense'},
@@ -83,7 +83,7 @@ const CreateCateForm = () => {
 				<div className="grid grid-cols-4 gap-4 p-4 shadow-3">
 					{icons.map((el) => (
 						<div key={el.id} onClick={() => handleIconClick(el.path)}>
-							<Badge count={selectIcon === el.path ? <img src={check} alt="" className="bg-red-600 rounded-full p-1"/> : 0}>
+							<Badge count={selectIcon === el.path ? <Check width={20} height={20} className={`bg-red-500 rounded-full p-1`}/> : 0}>
 								<img src={el.path} alt="" className="w-10 h-10 rounded-full cursor-pointer"/>
 							</Badge>
 						</div>

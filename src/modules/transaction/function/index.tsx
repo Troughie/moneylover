@@ -28,7 +28,6 @@ const useDataTransaction = (filter: filter) => {
 
 	if (data) {
 		const transactionData: transactionResponse[] = data?.data || []
-
 		return {transactionData, isFetching}
 	}
 	return {

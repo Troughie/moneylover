@@ -5,6 +5,7 @@ import {debt_loan_type, transactionResponse} from "@/model/interface.ts";
 import {parseFullForm} from "@/utils/day.ts";
 import {limitNumber} from "@/utils";
 import {Card} from "antd";
+import CreatorName from "@/modules/transaction/commons/creatorName.tsx";
 
 interface props {
 	openDetail: (el: any) => void
@@ -39,7 +40,8 @@ const CardBottom: React.FC<props> = ({trans, isRecurring, isSelect, openDetail})
 								<img src={el.category.categoryIcon} alt="" className={`w-10 h-10 rounded-full`}/>
 								<div>
 									<p className={`text-lg font-bold `}>
-										{el.category.name}
+										{el.category.name} -
+										<CreatorName userCreator={el.user}/>
 									</p>
 									<p className={`text-xs text-bodydark2`}>{el?.notes}</p>
 									{isRecurring && <span className={`text-xs text-bodydark2 mt-4`}>next {parseFullForm(el?.date).toString()}</span>}

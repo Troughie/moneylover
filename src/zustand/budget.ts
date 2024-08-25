@@ -4,7 +4,7 @@ import {walletProps} from "../model/interface.ts";
 
 interface WalletState {
 	walletSelect: walletProps | undefined
-	addWallet: (budget: walletProps) => void
+	addWallet: (wallet: walletProps) => void
 }
 
 export const useWalletStore = create<WalletState>()(

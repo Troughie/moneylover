@@ -8,8 +8,6 @@ import useRequest from "@/hooks/useRequest.ts";
 import {del} from "@/libs/api.ts";
 import {useQueryClient} from "@tanstack/react-query";
 import {nameQueryKey} from "@/utils/nameQueryKey.ts";
-import {createGroupChat} from "@/modules/chat/function/chats.ts";
-import {useUserStore} from "@/modules/authentication/store/user.ts";
 
 interface props {
 	infoWallet: walletProps | undefined
@@ -17,7 +15,6 @@ interface props {
 }
 
 const WalletDetail: React.FC<props> = ({infoWallet, isGoal}) => {
-	const {user} = useUserStore.getState().user
 	const queryClient = useQueryClient()
 
 	const {mutate: deleteWallet} = useRequest({
@@ -65,10 +62,6 @@ const WalletDetail: React.FC<props> = ({infoWallet, isGoal}) => {
 			</ul>
 			<div className={`flex-center mt-8 gap-2`}>
 				<Button type={`primary`} danger onClick={() => clickDelete(infoWallet?.id)} className={`text-red-700 `}>Delete wallet</Button>
-				<Button type={`primary`}
-						onClick={() => createGroupChat("test", [user?.id, "97648cdd-dd3c-4bfa-a1c1-3382dcd1814c"], [user?.username ?? "ngoc", "test"], user?.username ?? "ngoc")}
-						className={``}>Share
-					wallet</Button>
 			</div>
 		</div>
 	</>

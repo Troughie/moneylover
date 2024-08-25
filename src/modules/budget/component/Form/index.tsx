@@ -3,11 +3,12 @@ import {InputController, SelectInput} from "@/commons";
 import {useWallet} from "@/context/WalletContext.tsx";
 import {antdOptions, parseNewWallet, parseToNewCate, walletProps} from "@/model/interface.ts";
 import {useWalletStore} from "@/zustand/budget.ts";
-import {useCategory} from "@/context/CategoryContext.tsx";
+import {useCategoryFetch} from "@/context/CategoryContext.tsx";
 import {useEffect, useMemo, useState} from "react";
 import {getCurrentOneWeek} from "@/utils/day.ts";
 import cn from "@/utils/cn";
 import cusDayjs from "@/hooks/cusDayjs.ts";
+import {openCategoryForm} from "@/store/CategoryStore.ts";
 
 const optionsTypCate = [
 	{label: 'Expense', value: 'Expense'},
@@ -25,7 +26,8 @@ const BudgetForm = () => {
 	const [rangeTime, setRangeTime] = useState<string>(timeDefault);
 	const [walletShow, setWalletShow] = useState<walletProps>()
 	const {wallets} = useWallet()
-	const {categories, openModal, changeType} = useCategory()
+	const {categories, changeType} = useCategoryFetch()
+	const {setOpenModal} = openCategoryForm()
 	const {walletSelect} = useWalletStore()
 
 
@@ -84,7 +86,7 @@ const BudgetForm = () => {
 								 value={typeCate}
 								 optionType="button"
 								 buttonStyle="solid"
-							 /><Button onClick={openModal} className={`border-none shadow-none`}>Create new</Button>
+							 /><Button onClick={() => setOpenModal(true)} className={`border-none shadow-none`}>Create new</Button>
 							 </div>}/>
 
 			<InputController label={`Category`} name={"category"}

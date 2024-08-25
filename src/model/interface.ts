@@ -4,6 +4,8 @@ export interface IconProps {
 	width?: string | number;
 	height?: string | number;
 	color?: string;
+	className?: string
+	func?: () => void
 }
 
 export interface changePassword {
@@ -69,6 +71,7 @@ export interface transactionResponse extends baseTran {
 	id: number,
 	category: Category
 	done: boolean
+	user: User
 }
 
 export interface recurringRequest extends baseTran {
@@ -113,6 +116,13 @@ export interface pagination {
 	isLast: boolean
 }
 
+export interface Manager {
+	id: string
+	user: User
+	permission: string
+	totalAmount: number | string
+	totalTransaction: number | string
+}
 
 export const parseToNewCate = (categories: Category[]) => {
 	const newCate: CategoryNew[] = categories.map((e) => ({
@@ -166,8 +176,32 @@ export interface walletProps {
 	start: number
 	target: number
 	main: boolean
-	manager: User[]
+	managers: Manager[]
 	end_date: Date
+}
+
+export interface NotificationProps {
+	id: string,
+	user: string
+	wallet: string
+	unread: string
+	category: string
+	createdDate: string
+}
+
+export enum Permission {
+	Read = "Read",
+	Write = "Write",
+	Delete = "Delete",
+	All = "All",
+}
+
+
+export function getPermissionOptions() {
+	return Object.values(Permission).map(permission => ({
+		value: permission,
+		label: permission
+	}));
 }
 
 interface RenamedWalletProps extends antdOptions {

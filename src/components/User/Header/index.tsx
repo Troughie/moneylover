@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {FilterWallet, ModalPopUp, Notifications} from "@/commons";
-import {Calender, IBell, IUser} from "@/assets";
+import {Calender, IBell, ICopy, IUser} from "@/assets";
 import {useLocation, useNavigate} from "react-router-dom";
 import {delToken} from "@/utils/jwt.ts";
 import ResetPassword from "@/modules/dashboard/component/form/reset.tsx";
@@ -9,28 +9,36 @@ import {yupResolver} from "@hookform/resolvers/yup";
 import {passwordSchema} from "@/libs/schema.ts";
 import {useWallet} from "@/context/WalletContext.tsx";
 import {useWalletStore} from "@/zustand/budget.ts";
-import {changePassword, walletProps} from "@/model/interface.ts";
+import {changePassword, NotificationProps, walletProps} from "@/model/interface.ts";
 import {NumberFormatter} from "@/utils/Format";
-import {useQueryClient} from "@tanstack/react-query";
+import {useQuery, useQueryClient} from "@tanstack/react-query";
 import {nameQueryKey} from "@/utils/nameQueryKey.ts";
 import useRequest from "@/hooks/useRequest.ts";
-import {post} from "@/libs/api.ts";
-import {routePath} from "@/utils";
+import {get, post} from "@/libs/api.ts";
+import {routePath, typeAlert} from "@/utils";
 import {motion as m} from "framer-motion";
+import {useUserStore} from "@/modules/authentication/store/user.ts";
+import {toastAlert} from "@/hooks/toastAlert.ts";
+import {Badge} from "antd";
 
 interface props {
-	user_id: string
-	username: string
-	email: string
+	walletsOpen: React.Dispatch<React.SetStateAction<boolean>>
+	notificationsOpen: React.Dispatch<React.SetStateAction<boolean>>
+	isWalletOpen: boolean
+	isNotificationOpen: boolean
 }
 
-const HeaderUser = React.memo(() => {
+enum statusNoti {
+	All = "All",
+	Unread = "Unread"
+}
+
+const HeaderUser: React.FC<props> = ({walletsOpen, isWalletOpen, isNotificationOpen, notificationsOpen}) => {
 	const {pathname} = useLocation()
 	const navigate = useNavigate()
-	const [popWallet, setPopWallet] = useState<boolean>(false)
-	const [notifications, setNotifications] = useState<boolean>(false)
 	const [currentDay, setCurrentDay] = useState<number>(0)
-	const [user, setUser] = useState<string>("")
+	const [btnType, setBtnType] = useState<string>(statusNoti.All)
+	const {user} = useUserStore.getState().user
 	const [email, setEmail] = useState<string>("")
 	const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
 	const [toggleName, setToggleName] = useState<boolean>(false)
@@ -46,6 +54,17 @@ const HeaderUser = React.memo(() => {
 
 
 	const {walletSelect, addWallet} = useWalletStore()
+
+	const handleChangeStatusBtnNotification = (status: string) => {
+		setBtnType(status)
+	}
+	const fetchNotification = () => {
+		return get({url: `notifications?status=${btnType}`})
+	}
+	const {data} = useQuery({queryKey: [nameQueryKey.notification, btnType], queryFn: fetchNotification})
+
+	const result: NotificationProps[] = data?.data || []
+
 
 	const {mutate: changePassword} = useRequest({
 		mutationFn: (values: changePassword) => {
@@ -91,7 +110,7 @@ const HeaderUser = React.memo(() => {
 		addWallet(data)
 		// @ts-ignore
 		queryClient.invalidateQueries([transactions, budgets, transaction, transaction_all, transaction_month])
-		setPopWallet(!popWallet)
+		walletsOpen(!isWalletOpen)
 	}
 
 	useEffect(() => {
@@ -123,20 +142,23 @@ const HeaderUser = React.memo(() => {
 	useEffect(() => {
 		setCurrentDay(today())
 
-		const user = localStorage.getItem("user")
 		if (user) {
-			const result: props = JSON.parse(user)
-			setUser(result?.username)
-			setEmail(result?.email)
+			setEmail(user?.email)
 		}
 	}, []);
+
+	const savingID = () => {
+		navigator.clipboard.writeText(user?.id).then(() =>
+			toastAlert({type: typeAlert.success, message: "Copy successfully!"})
+		)
+	}
 
 
 	return <>
 		<m.div
 			className={`flex justify-between sticky top-0 z-50 right-0 bg-white mx-4 rounded-2xl items-center p-6 shadow-3 mt-4`}>
 			<div className={`flex gap-4 cursor-pointer`} onClick={() => {
-				setPopWallet(!popWallet)
+				walletsOpen(!isWalletOpen)
 			}}>
 				<img src="https://img.icons8.com/?size=100&id=13016&format=png&color=000000" alt="" className={`w-10 h-10 rounded-full bg-black`}/>
 				<p>
@@ -144,18 +166,20 @@ const HeaderUser = React.memo(() => {
 					<span className={`font-bold font-satoshi`}>{<NumberFormatter number={walletCurrent?.balance}/>}</span>
 				</p>
 			</div>
-			{popWallet && <FilterWallet chooseWallet={chooseWallet}/>}
-			{notifications && <Notifications/>}
+			{isWalletOpen && <FilterWallet chooseWallet={chooseWallet} walletCurrent={walletCurrent}/>}
+			{isNotificationOpen && <Notifications setBtnType={handleChangeStatusBtnNotification} btnType={btnType} notifications={result}/>}
 			<div className={`flex gap-4 items-center relative`}>
 				<div className={`cursor-pointer`} onClick={() => jumpToDay()}>
 					<img src={Calender} alt=""/>
 					<span className={`absolute bottom-0 left-[5%]`}>{currentDay}</span>
 				</div>
-				<div className={`cursor-pointer hover:animate-wiggle`} onClick={() => setNotifications(!notifications)}>
-					<IBell/>
-				</div>
+				<Badge count={result.filter((e) => e.unread).length}>
+					<div className={`cursor-pointer hover:animate-wiggle`} onClick={() => notificationsOpen(!isNotificationOpen)}>
+						<IBell/>
+					</div>
+				</Badge>
 				<p onClick={() => setToggleName(!toggleName)} className={`cursor-pointer font-satoshi text-xl font-medium flex-between gap-2`}>
-					<IUser/><span>{user ?? "No name"}</span>
+					<IUser/><span>{user?.username ?? "No name"}</span>
 				</p>
 			</div>
 			{toggleName &&
@@ -172,10 +196,14 @@ const HeaderUser = React.memo(() => {
 			}
 		</m.div>
 		<ModalPopUp isModalOpen={isModalOpen} handleOk={method.handleSubmit(handleOk)} handleCancel={handleCancel} title={`Change password`}>
+			<div className={`flex items-center gap-4`}>
+				<span className={`font-bold text-lg`}>ID: <span className={`text-sm font-normal font-satoshi`}>{user?.id}</span></span>
+				<ICopy func={savingID} className={`cursor-pointer hover:scale-110 duration-300`} width={30} height={30}/>
+			</div>
 			<FormProvider {...method}>
 				<ResetPassword/>
 			</FormProvider>
 		</ModalPopUp>
 	</>
-})
+}
 export default HeaderUser

@@ -11,5 +11,6 @@ export const nameQueryKey = {
 	category: "cateNoType",
 	budget_history: "budget_history",
 	bills: "bills",
-	icons: "icon"
+	icons: "icon",
+	notification: "notification"
 }

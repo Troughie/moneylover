@@ -11,6 +11,7 @@ import useRequest from "@/hooks/useRequest.ts";
 import {del} from "@/libs/api.ts";
 import {nameQueryKey} from "@/utils/nameQueryKey.ts";
 import {useQueryClient} from "@tanstack/react-query";
+import {useWalletStore} from "@/zustand/budget.ts";
 
 interface props {
 	price: string | number | undefined,
@@ -26,6 +27,7 @@ const ProcessCategory = () => {
 
 	const queryClient = useQueryClient()
 	const {transactionSimilar} = PercentAndTotalAmountTran()
+	const {walletSelect} = useWalletStore()
 	const [detailBudget, setDetailBudget] = useState<props>()
 	const {budgetSelect} = useBudgetStore()
 	const {cancelIsShow, setIsShow, isShowBudgetDetail} = budgetStoreDetail()
@@ -34,7 +36,7 @@ const ProcessCategory = () => {
 		mutationFn: (values: string) => {
 			return del({
 				url: `budget/delete/${values}`,
-				data: values
+				data: walletSelect?.id
 			})
 		},
 		onSuccess: () => {

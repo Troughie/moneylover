@@ -1,5 +1,5 @@
 import {InputController, SelectInput} from "@/commons";
-import {useCategory} from "@/context/CategoryContext.tsx";
+import {useCategoryFetch} from "@/context/CategoryContext.tsx";
 import React, {useMemo} from "react";
 import {parseToAllCate} from "@/model/interface.ts";
 import {DatePicker} from "antd";
@@ -8,7 +8,7 @@ import {DatePicker} from "antd";
 const FilterForm = React.memo(() => {
 
 
-	const {categoryAll} = useCategory()
+	const {categoryAll} = useCategoryFetch()
 	const newCate = useMemo(() => parseToAllCate(categoryAll), [categoryAll])
 	return <>
 		<InputController name={"category"}

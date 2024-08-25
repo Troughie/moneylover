@@ -8,21 +8,22 @@ import {useLoading} from "@/context/LoadingContext.tsx";
 
 interface Props extends UseMutationOptions<any, any, any, any> {
 	errorToast?: string | null;
+	showSuccess?: boolean
 }
 
-const useRequest = ({onSuccess, onError, ...props}: Props) => {
+const useRequest = ({onSuccess, onError, showSuccess = true, ...props}: Props) => {
 	const {setIsLoading} = useLoading();
 	const mutate = useMutation<unknown, unknown, any, unknown>({
 		...props,
 		onMutate: () => {
-			setIsLoading(true);
+			showSuccess && setIsLoading(true);
 		},
 		onSettled: () => {
-			setIsLoading(false);
+			showSuccess && setIsLoading(false);
 		},
 		onSuccess(res, variables: void, context: unknown) {
 			onSuccess?.(res, variables, context);
-			toastAlert({
+			showSuccess && toastAlert({
 				type: (res as any)?.success ? typeAlert.success : typeAlert.error,
 				message: (res as any)?.message
 			})

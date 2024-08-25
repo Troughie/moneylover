@@ -3,7 +3,7 @@ import React, {useEffect, useState} from "react";
 import ReactApexChart from "react-apexcharts";
 import {transactionResponse} from "@/model/interface.ts";
 import {CalculateCategoriesChart, TranIncomePie} from "@/modules/transaction/function/CalculateToChart.ts";
-import {getCurrentWeek} from "@/utils";
+import {getCurrentWeek} from "@/utils/day.ts";
 
 interface props {
 	tran: transactionResponse[] | undefined

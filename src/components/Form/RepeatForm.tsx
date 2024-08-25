@@ -3,7 +3,7 @@ import TextArea from "antd/es/input/TextArea";
 import React, {useCallback, useEffect, useState} from "react";
 import {InputController, SelectInput} from "@/commons";
 import {useWallet} from "@/context/WalletContext.tsx";
-import {useCategory} from "@/context/CategoryContext.tsx";
+import {useCategoryFetch} from "@/context/CategoryContext.tsx";
 import {parseNewWallet, parseToNewCate} from "@/model/interface.ts";
 import {useWalletStore} from "@/zustand/budget.ts";
 import {dayInWeek, getDayAndPositionOfWeek} from "@/utils/day.ts";
@@ -64,7 +64,7 @@ const RepeatForm = React.memo(() => {
 	const [valueOfMonth, setValueOfMonth] = useState<string | number>(setFormDate.date())
 	const {wallets} = useWallet()
 
-	const {categories, changeType} = useCategory()
+	const {categories, changeType} = useCategoryFetch()
 
 	const newWallets = parseNewWallet(wallets)
 

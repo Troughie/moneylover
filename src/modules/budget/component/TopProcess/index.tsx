@@ -19,7 +19,10 @@ const TopProcess = () => {
 		setColor(percentSpent() < 70 ? colorsProgress.green : colorsProgress.red)
 	}, [percentSpent])
 	return <>
-		<Progress strokeColor={color} type="dashboard" percent={percentSpent()} size={windowWidth > 689 ? 350 : 250} gapDegree={150}
+		<Progress strokeColor={color} type="dashboard"
+				  percent={percentSpent()}
+				  size={windowWidth > 689 ? 350 : 250}
+				  gapDegree={150}
 				  format={() => <>
 					  <p className={`text-xs font-satoshi text-bodydark2 mt-[-20px]`}>{isOver ? "OverSpent" : "Amount you can spend"}</p>
 					  <span className={cn(`text-2xl font-satoshi text-black-2`, {

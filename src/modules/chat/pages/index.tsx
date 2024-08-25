@@ -3,30 +3,34 @@ import Header from "@/modules/chat/component/header.tsx";
 import Main from "@/modules/chat/component/main.tsx";
 import {useEffect, useState} from "react";
 import {Group} from "@/modules/chat/function/chats.ts";
-import {useUserStore} from "@/modules/authentication/store/user.ts";
 import {useChatStore} from "@/modules/chat/store/chatStore.ts";
+import {LoadingOutlined} from "@ant-design/icons";
+import {Spin} from "antd";
 
 const Chat = () => {
-	const {user} = useUserStore.getState()
 	const [group, setGroup] = useState<Group>();
 	const [id, setId] = useState<string>("")
-	const {groups, fetchGroups} = useChatStore()
+	const {groups} = useChatStore()
 	useEffect(() => {
-		const result = groups.find((el) => el.id === id)
+		const result = groups.find((el) => el.id === id);
 		if (result) {
-			setGroup(result)
+			setGroup(result);
+			setId(result.id);
+		} else if (groups.length > 0) {
+			const firstGroup = groups[0];
+			setGroup(firstGroup);
+			setId(firstGroup.id);
 		}
 	}, [id, groups]);
 
-	useEffect(() => {
-		fetchGroups()
-	}, [user?.user, id]);
+
 	return <>
 		<div className={`h-[90vh] rounded-lg mt-10 w-[80%] left-[50%] z-9999 translate-x-[-50%] absolute bg-white flex`}>
 			<NavLeft groups={groups} setId={setId} id={id}/>
 			<div className={`flex flex-col w-full relative`}>
 				<Header name={group?.name}/>
-				<Main groupId={id} group={group} setId={setId}/>
+				{group ? <Main group={group}/> : <Spin className={`flex justify-center  items-center `}
+													   indicator={<LoadingOutlined style={{fontSize: 50}} spin/>}/>}
 			</div>
 		</div>
 	</>

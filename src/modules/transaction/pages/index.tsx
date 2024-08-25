@@ -82,7 +82,7 @@ const Transaction = React.memo(() => {
 		setIsModalOpen(false);
 	};
 
-	const {handleOk, deleteTran} = useMutateTransaction({handleCancel, methods, setIsModalDetailOpen})
+	const {handleOk, deleteTran} = useMutateTransaction({handleCancel, methods, setIsModalDetailOpen, walletId: walletSelect?.id})
 
 	const {endBalance, openBalance} = BalanceInMonth(filter);
 

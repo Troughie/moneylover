@@ -43,26 +43,29 @@ const BoxChat: React.FC<props> = ({isSelect, group}) => {
 
 	return <>
 		<div
-			className={cn(`items-center cursor-pointer ${classNameNoneMess} flex rounded-3xl px-4 bg-white hover:border-gray-400 hover:bg-gray-200`, {
-				"bg-primary2 hover:bg-blue-300": isSelect,
+			className={cn(`items-center hover:scale-95  cursor-pointer duration-300 ${classNameNoneMess} flex rounded-3xl px-4 hover:border-gray-400`, {
+				"bg-blue-200 hover:": isSelect,
+				"hover:bg-gray-300": !isSelect
 			})}>
 			<img src="#" alt="" className={`size-10 rounded-full bg-black m-2`}/>
 			<div className={`flex flex-col py-4 px-2 w-full`}>
-				<div className={cn(`flex-between text-black items-start`, {"text-white": isSelect})}>
+				<div className={cn(`flex-between text-black items-start`)}>
 					<span className={cn(`text-2xl font-bold line-clamp-1`)}>{group?.name}</span>
 					<p className={cn(`text-sm font-thin relative`)}>{messageLast?.time || timeCreateGroup}
 					</p>
 				</div>
-				<div className={cn(`text-bodydark text-sm flex items-center gap-1`, {"text-white": isSelect})}>
-					<span className={``}>
-						{messageLast?.sender?.id === user?.id ? "You :" : ""}
-					</span>
-					<span
-						className={`line-clamp-1`}>{messageLast?.text}
+				<div className={cn(`text-bodydark2 text-sm flex-between gap-1 my-1`)}>
+					<div className={`flex gap-2`}>
+						{messageLast?.sender?.id === user?.id && <span className={``}>
+						You
+					</span>}
+						<span
+							className={`line-clamp-1`}>{messageLast?.text ?? group?.create + " create this group"}
 						</span>
+					</div>
 					{group.unreadCount[user?.id] > 0 &&
-                        <div className={cn(`text-black text-sm bg-red-400 rounded-full px-1 py-0`, {"text-white": isSelect})}>
-							{group.unreadCount[user?.id]}
+                        <div className={cn(`text-sm bg-red-400 text-white rounded-full size-5 items-center`, {"bg-blue-400": !isSelect})}>
+                            <span className={`flex-center`}>{group.unreadCount[user?.id]}</span>
                         </div>}
 				</div>
 			</div>

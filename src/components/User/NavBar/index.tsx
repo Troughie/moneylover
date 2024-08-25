@@ -18,16 +18,20 @@ const NavBar = () => {
 	}
 	return <>
 		<m.div
-			className={`w-1/5 bg-main h-screen px-4 hidden lg:block`}>
+			className={`w-1/5 bg-white h-screen px-4 hidden lg:block`}>
 			<div className={`px-8  py-12 rounded-2xl`}>
 				<h1 className={`md:text-4xl text-nowrap text-black font-satoshi`}>Money lover</h1>
 			</div>
 			<ul className={`px-4 mt-[50px] rounded-2xl`}>
 				{navItem.map((el) => (
 					<Link to={el.path} key={el.name}
-						  className={`${handleActiveNav(el.path) ? " border-r-2 border-r-bodydark2 font-bold text-white scale-110 ring-2 ring-blue-400 bg-blue-500" : "text-bodydark2 font-normal"} group  rounded-lg cursor-pointer flex items-center py-5 px-4 duration-1000 mx-1 my-8 justify-between  gap-2`}>
+						  className={cn(` "text-Text hover:scale-105 font-normal group rounded-lg cursor-pointer flex items-center py-5 px-4 duration-1000 mx-1 my-8 justify-between gap-2`
+							  , {
+								  "text-white font-bold  bg-Primary": handleActiveNav(el.path),
+								  "hover:bg-gray-200": !handleActiveNav(el.path)
+							  })}>
 						<span>
-						<el.icons color={handleActiveNav(el.path) ? "#fff" : "#000"} width={"40px"} height={"40px"}/>
+						<el.icons color={"#000"} width={"40px"} height={"40px"}/>
 						</span>
 						<span className={cn("")}>{el.name}</span>
 						<div className={`w-7`}>

@@ -3,6 +3,7 @@ import {Group, markMessagesAsRead} from "@/modules/chat/function/chats.ts";
 import React, {useEffect, useState} from "react";
 import {useUserStore} from "@/modules/authentication/store/user.ts";
 import useDebounce from "@/hooks/useDebounce.tsx";
+import {useChatStore} from "@/modules/chat/store/chatStore.ts";
 
 interface props {
 	groups: Group[]
@@ -12,21 +13,19 @@ interface props {
 
 const NavLeft = ({groups, setId, id}: props) => {
 	const {user} = useUserStore.getState().user
+	const {fetchGroups} = useChatStore()
 	const [groupss, setGroupss] = useState<Group[]>([])
 	const [valueSearch, setValueSearch] = useState<string>()
-	useEffect(() => {
-		const group = groups.at(0)
-		if (group && !id) {
-			setId(group.id)
-		}
-	}, [groups])
-
 	useEffect(() => {
 		setGroupss(groups)
 	}, [groups]);
 
 	const clickDetailMess = async (el: Group) => {
-		await markMessagesAsRead(el.id, user?.id)
+		if (el.unreadCount[user.id] > 0) {
+			await markMessagesAsRead(el.id, user?.id)
+			await fetchGroups()
+		}
+
 		if (valueSearch?.trim()) {
 			setValueSearch("")
 		}
