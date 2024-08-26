@@ -4,6 +4,7 @@ import {Tabs} from "antd";
 import {useWalletStore} from "@/zustand/budget.ts";
 import {useBudgetStore} from "@/modules/budget/store";
 import {currentPositionStore} from "@/modules/budget/store/currentPositionSlider.ts";
+import {useEffect} from "react";
 
 const SliderBudget = () => {
 	const {walletSelect} = useWalletStore()
@@ -12,13 +13,14 @@ const SliderBudget = () => {
 
 	const {position, setPosition} = currentPositionStore()
 	const {budgets} = useBudget(walletSelect?.id)
-
 	const handleChange = (e: number) => {
 		setPosition(e)
 		addBudget(budgets[e])
 	}
 
-
+	useEffect(() => {
+		console.log(budgets)
+	}, [budgets]);
 	return <>
 		<div className={`flex-center gap-5 bg-header_chat w-2/3 mx-auto rounded-lg`}>
 			<div className={`items-center gap-4 pt-4 md:mx-10 overflow-x-hidden`}>

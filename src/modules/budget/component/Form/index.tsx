@@ -57,6 +57,7 @@ const BudgetForm = () => {
 		setTypeCate(value);
 	};
 	useEffect(() => {
+		console.log(rangeTime)
 		if (rangeTime != custom) {
 			const date = rangeTime.split("-")
 			setStart(cusDayjs(date[0]))

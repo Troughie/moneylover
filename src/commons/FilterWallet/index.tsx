@@ -5,6 +5,9 @@ import {useWalletCurrency} from "@/hooks/currency.ts";
 import React, {useEffect, useState} from "react";
 import {walletProps} from "@/model/interface.ts";
 import Check from "@/assets/icons/check.tsx";
+import {Button, Empty} from "antd";
+import {routePath} from "@/utils";
+import {useNavigate} from "react-router-dom";
 
 interface props {
 	chooseWallet: (wallet: walletProps) => void;
@@ -13,6 +16,7 @@ interface props {
 
 const FilterWallet: React.FC<props> = ({chooseWallet, walletCurrent}) => {
 	const currency = useWalletCurrency();
+	const navigate = useNavigate()
 	const {wallets} = useWallet();
 	const [convertedBalances, setConvertedBalances] = useState<{
 		[key: string]: number;
@@ -36,23 +40,30 @@ const FilterWallet: React.FC<props> = ({chooseWallet, walletCurrent}) => {
 	return (
 		<>
 			<div
-				className={` h-[calc(100%*2)] overflow-y-scroll rounded-lg w-[40%] p-4 shadow-3 z-10 absolute top-[90%] left-[20px] bg-white`}
+				className={` h-[calc(100%*3)] overflow-y-scroll rounded-lg w-[40%] p-4 shadow-3 z-10 absolute top-[90%] left-[20px] bg-white`}
 			>
-				{wallets.map((el) => (
-					<div
-						key={el.id}
-						onClick={() => chooseWallet(el)}
-						className={cn(`cursor-pointer border my-1 rounded-lg hover:bg-gray-400 hover:scale-110 duration-300 hover:border-b-bodydark2 hover:border-b-2 mx-10 flex-between gap-4 p-4`, {})}
-					>
-						<div className={`flex items-center gap-4`}>
-							<span className={`font-bold text-2xl font-satoshi`}>{el.name}</span>
-							{walletCurrent?.id === el?.id && <Check className={`bg-red-500 rounded-full p-2`}/>}
-						</div>
-						<span>
+				{wallets.length > 0 ? wallets.map((el) => (
+						<div
+							key={el.id}
+							onClick={() => chooseWallet(el)}
+							className={cn(`cursor-pointer border my-1 rounded-lg hover:bg-gray-400 hover:scale-110 duration-300 hover:border-b-bodydark2 hover:border-b-2 mx-10 flex-between gap-4 p-4`, {})}
+						>
+							<div className={`flex items-center gap-4`}>
+								<span className={`font-bold text-2xl font-satoshi`}>{el.name}</span>
+								{walletCurrent?.id === el?.id && <Check className={`bg-red-500 rounded-full p-2`}/>}
+							</div>
+							<span>
 				  <NumberFormatter number={convertedBalances[el.id]}/>
             </span>
+						</div>
+					)) :
+					<div className={`flex-center flex-col`}>
+						<Empty description={`No wallet`}/>
+						<Button className={`mt-4`} onClick={() => navigate(routePath.wallet.path, {state: {isModalOpen: true}})} type={"link"}>Click
+							here to create new
+							wallet</Button>
 					</div>
-				))}
+				}
 			</div>
 		</>
 	);

@@ -45,12 +45,12 @@ const TableTransaction: React.FC<props> = ({isLoading, openDetail, data, endBala
 	const resultData = useCallback(() => GatherTransaction(data), [data])
 
 	return <>
-		<div className={cn(`py-4 px-6 shadow-3 md:w-2/5 mx-auto `,
+		{walletSelect && <div className={cn(`py-4 px-6 shadow-3 md:w-2/5 mx-auto `,
 			{"mt-10": walletSelect?.type === typeWallet.Goal, "hidden": walletSelect?.type === typeWallet.Basic && data.length === 0})}>
 			{walletSelect?.type != typeWallet.Goal ? <CardBalance endBalance={endBalance} openBalance={openBalance}/> : <CardGoalWalletProcess/>}
 
-			<span className={`flex-center text-sm text-green-600 cursor-pointer`} onClick={() => setIsOpenChart(!isOpenChart)}>View report for this period</span>
-		</div>
+            <span className={`flex-center text-sm text-green-600 cursor-pointer`} onClick={() => setIsOpenChart(!isOpenChart)}>View report for this period</span>
+        </div>}
 
 		<div className={`mt-10 px-4 md:px-20 font-satoshi md:w-5/5 lg:w-3/3 mx-auto`}>
 			<div className={``}>

@@ -17,7 +17,7 @@ const dayFormat = "YYYY-MM-DD"
 
 const parseDay = (day: string | Date) => {
 	const parsedDate = dayjs(day, dateFormat);
-	if (parsedDate.isValid()) {
+	if (parsedDate?.isValid()) {
 		return parsedDate;
 	} else {
 		return dayjs(day, dayFormat).format(dateFormat);

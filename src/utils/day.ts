@@ -92,7 +92,7 @@ export const getCurrentOneWeek = () => {
 			label: `This month (${firstDayOfCurrentMonth.format(dayFormat)}-${lastDayOfCurrentMonth.format(dayFormat)})`
 		},
 		{
-			value: "1",
+			value: "custom",
 			label: "Custom"
 		}
 	]

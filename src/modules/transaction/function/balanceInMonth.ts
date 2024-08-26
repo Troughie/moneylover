@@ -9,7 +9,8 @@ const fetchBalanceInMonth = (key: any): Promise<ResponseData> => {
 }
 
 const BalanceInMonth = (filter: filter): balanceInMonth => {
-	const {data} = useQuery({queryKey: ["transaction", filter], queryFn: fetchBalanceInMonth})
+
+	const {data} = useQuery({queryKey: ["transaction", filter], queryFn: fetchBalanceInMonth, enabled: !!filter.wallet,})
 	const result: balanceInMonth = data?.data
 	return {
 		openBalance: result?.openBalance,

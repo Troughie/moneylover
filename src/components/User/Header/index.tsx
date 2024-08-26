@@ -1,11 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {FilterWallet, ModalPopUp, Notifications} from "@/commons";
-import {Calender, IBell, ICopy, IUser} from "@/assets";
+import {Calender, IBell, IUser} from "@/assets";
 import {useLocation, useNavigate} from "react-router-dom";
-import ResetPassword from "@/modules/dashboard/component/form/reset.tsx";
-import {FormProvider, useForm} from "react-hook-form";
-import {yupResolver} from "@hookform/resolvers/yup";
-import {passwordSchema} from "@/libs/schema.ts";
 import {useWallet} from "@/context/WalletContext.tsx";
 import {useWalletStore} from "@/zustand/budget.ts";
 import {changePassword, NotificationProps, walletProps} from "@/model/interface.ts";
@@ -19,12 +15,16 @@ import {motion as m} from "framer-motion";
 import {useUserStore} from "@/modules/authentication/store/user.ts";
 import {toastAlert} from "@/hooks/toastAlert.ts";
 import {Badge} from "antd";
+import SettingUser from "@/components/User/Component/UserProfile.tsx";
+import Friends from "@/components/User/Component/Friends.tsx";
 
 interface props {
 	walletsOpen: React.Dispatch<React.SetStateAction<boolean>>
 	notificationsOpen: React.Dispatch<React.SetStateAction<boolean>>
+	setToggleName: React.Dispatch<React.SetStateAction<boolean>>
 	isWalletOpen: boolean
 	isNotificationOpen: boolean
+	toggleName: boolean
 }
 
 enum statusNoti {
@@ -32,7 +32,13 @@ enum statusNoti {
 	Unread = "Unread"
 }
 
-const HeaderUser: React.FC<props> = ({walletsOpen, isWalletOpen, isNotificationOpen, notificationsOpen}) => {
+interface UserProfile {
+	title: string
+	func: () => void
+
+}
+
+const HeaderUser: React.FC<props> = ({setToggleName, toggleName, walletsOpen, isWalletOpen, isNotificationOpen, notificationsOpen}) => {
 	const {pathname} = useLocation()
 	const navigate = useNavigate()
 	const [currentDay, setCurrentDay] = useState<number>(0)
@@ -41,17 +47,15 @@ const HeaderUser: React.FC<props> = ({walletsOpen, isWalletOpen, isNotificationO
 	const {removeUser} = useUserStore()
 	const [email, setEmail] = useState<string>("")
 	const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
-	const [toggleName, setToggleName] = useState<boolean>(false)
+	const [friendOpen, setFriendOpen] = useState<boolean>(false)
+	const [showChangePassword, setShowChangePassword] = useState<boolean>(false)
 	const queryClient = useQueryClient()
 
 	const {transactions, budgets, transaction, transaction_month, transaction_all} = nameQueryKey
 
-	const method = useForm({mode: "onChange", resolver: yupResolver(passwordSchema)})
-
 	const [walletCurrent, setWalletCurrent] = useState<walletProps>()
 
 	const {wallets} = useWallet()
-
 
 	const {walletSelect, addWallet} = useWalletStore()
 
@@ -89,6 +93,7 @@ const HeaderUser: React.FC<props> = ({walletsOpen, isWalletOpen, isNotificationO
 
 	const handleCancel = () => {
 		setIsModalOpen(false)
+		setFriendOpen(false)
 	}
 
 	const logout = (path: string = "/") => {
@@ -135,9 +140,11 @@ const HeaderUser: React.FC<props> = ({walletsOpen, isWalletOpen, isNotificationO
 			addWallet(wallet)
 			setWalletCurrent(wallet)
 		}
-
-
 	}, [walletSelect, wallets]);
+
+	const handleChangePasswordOpen = () => {
+		setShowChangePassword(!showChangePassword)
+	}
 
 	useEffect(() => {
 		setCurrentDay(today())
@@ -145,7 +152,7 @@ const HeaderUser: React.FC<props> = ({walletsOpen, isWalletOpen, isNotificationO
 		if (user) {
 			setEmail(user?.email)
 		}
-	}, []);
+	}, [user]);
 
 	const savingID = () => {
 		navigator.clipboard.writeText(user?.id).then(() =>
@@ -153,17 +160,31 @@ const HeaderUser: React.FC<props> = ({walletsOpen, isWalletOpen, isNotificationO
 		)
 	}
 
+	const userProfile: UserProfile[] = [
+		{
+			title: "Setting",
+			func: () => setIsModalOpen(!isModalOpen)
+		},
+		{
+			title: "Friend",
+			func: () => setFriendOpen(!friendOpen)
+		},
+		{
+			title: "Logout",
+			func: () => logout()
+		}
+	]
 
 	return <>
 		<m.div
-			className={`flex justify-between sticky top-0 z-50 right-0 bg-white mx-4 rounded-2xl items-center p-6 shadow-3 mt-4`}>
+			className={`flex justify-between sticky top-0 z-1 right-0 bg-white mx-4 rounded-2xl items-center p-6 shadow-3 mt-4`}>
 			<div className={`flex gap-4 cursor-pointer`} onClick={() => {
 				walletsOpen(!isWalletOpen)
 			}}>
 				<img src="https://img.icons8.com/?size=100&id=13016&format=png&color=000000" alt="" className={`w-10 h-10 rounded-full bg-black`}/>
 				<p>
 					<p>{walletCurrent?.name}</p>
-					<span className={`font-bold font-satoshi`}>{<NumberFormatter number={walletCurrent?.balance}/>}</span>
+					<span className={`font-bold font-satoshi`}>{<NumberFormatter number={walletCurrent?.balance || 0}/>}</span>
 				</p>
 			</div>
 			{isWalletOpen && <FilterWallet chooseWallet={chooseWallet} walletCurrent={walletCurrent}/>}
@@ -190,23 +211,26 @@ const HeaderUser: React.FC<props> = ({walletsOpen, isWalletOpen, isNotificationO
                 <>
                     <div className={`absolute top-[80px] bg-white p-8 shadow-3 right-0`}>
                         <ul className={`font-bold text-2xl`}>
-                            <li onClick={() => setIsModalOpen(!isModalOpen)}
-                                className={`cursor-pointer mx-2 mb-4 py-4 border-b-bodydark2 border-b`}>Setting
-                            </li>
-                            <li onClick={() => logout()} className={`mx-2 cursor-pointer`}>Logout</li>
+							{userProfile.map((e) => (
+
+								<li onClick={e.func}
+									className={`cursor-pointer px-4 rounded-md hover:bg-gray-300 mx-2 mb-4 py-4 border-b-bodydark2 border-b`}>{e.title}
+								</li>
+							))}
                         </ul>
                     </div>
                 </>
 			}
 		</m.div>
-		<ModalPopUp isModalOpen={isModalOpen} handleOk={method.handleSubmit(handleOk)} handleCancel={handleCancel} title={`Change password`}>
-			<div className={`flex items-center gap-4`}>
-				<span className={`font-bold text-lg`}>ID: <span className={`text-sm font-normal font-satoshi`}>{user?.id}</span></span>
-				<ICopy func={savingID} className={`cursor-pointer hover:scale-110 duration-300`} width={30} height={30}/>
-			</div>
-			<FormProvider {...method}>
-				<ResetPassword/>
-			</FormProvider>
+		<ModalPopUp isModalOpen={isModalOpen} showOke={false} showCancel={false} handleCancel={handleCancel}
+					title={`Change password`}>
+			<SettingUser showChangePassword={showChangePassword} handleChangePasswordOpen={handleChangePasswordOpen} handleOk={handleOk}
+						 savingID={savingID}/>
+		</ModalPopUp>
+
+		<ModalPopUp width={700} isModalOpen={friendOpen} showOke={false} showCancel={false} handleCancel={handleCancel}
+					title={`Friends`}>
+			<Friends/>
 		</ModalPopUp>
 	</>
 }

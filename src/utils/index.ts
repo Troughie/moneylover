@@ -126,4 +126,30 @@ export const limitNumber = (value: number, min: number, max: number) => {
 	return Math.max(min, Math.min(max, value))
 }
 
+export const maskEmail = (email: string) => {
+	// Split the email into two parts: the local part and the domain part
+	const [localPart, domain] = email.split('@');
+
+	// Mask the local part except for the first and last characters
+	const maskedLocalPart = localPart[0] + '*'.repeat(localPart.length - 10) + localPart[localPart.length - 1];
+
+	// Return the masked email
+	return `${maskedLocalPart}@${domain}`;
+};
+
+export const maskString = (text: string) => {
+	// Check if the string is long enough to mask
+	if (text.length <= 10) {
+		return text; // If the string is too short, return it unchanged
+	}
+
+	// Show the first 5 characters, then mask the middle part, and finally show the last 5 characters
+	const firstPart = text.slice(0, 6); // First 5 characters
+	const lastPart = text.slice(-5); // Last 5 characters
+
+	const maskedPart = '*'.repeat(text.length - 10); // Mask the middle part
+
+	return `${firstPart}${maskedPart.slice(0, 6)}${lastPart}`;
+};
+
 

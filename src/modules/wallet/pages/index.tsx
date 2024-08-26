@@ -128,8 +128,8 @@ const Wallet = React.memo(() => {
 		<BreakCrumb pageName={"Wallet"}/>
 		<div className={`container-wrapper p-10 `}>
 			<div className={`flex-center border-b pb-5 md:mx-50`}>
-				<Button className={`font-bold text-xl `} onClick={() => setIsWalletTypeOpen(!isWalletTypeOpen)} size={`large`}>Add
-					Wallet</Button>
+				<Button className={`font-bold text-xl `} onClick={() => setIsWalletTypeOpen(!isWalletTypeOpen)} size={`large`} type={"primary"}>
+					{wallets.length > 0 ? "Add wallet" : "Add new wallet"}</Button>
 			</div>
 			<TableWallet wallets={wallets} isFetching={isFetching} handleClick={handleInfoWallet}/>
 			{wallets?.length != 0 &&

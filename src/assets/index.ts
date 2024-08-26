@@ -2,8 +2,8 @@
 export {default as Bars} from "./icons/BarsIcon.tsx";
 export {default as Cancel} from "./icons/CancelIcon.tsx";
 export {default as Calender} from "./icons/Calendar Interface Icon.svg";
-export {default as ArrUp} from "./icons/Arrow Up 337.svg";
-export {default as ArrDown} from "./icons/Arrow Down Icon.svg";
+export {default as ArrUp} from "./icons/ArrowUp.tsx";
+export {default as ArrDown} from "./icons/ArrowDown.tsx";
 export {default as ArrLeft} from "./icons/Arrow Left 335.svg";
 export {default as ArrRight} from "./icons/Arrow Right Icon.svg";
 export {default as Plus} from "./icons/Plus Circle Icon.tsx";
@@ -32,6 +32,7 @@ export {default as ITransport} from "./icons/Transportation icon.svg";
 
 //img user
 export {default as Saving} from "./img/Savings re eq4w.svg";
+export {default as Avatar} from "./img/avatar.png";
 
 //home page
 export {default as budget} from "./img/budget.png";

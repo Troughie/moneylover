@@ -24,7 +24,11 @@ export const fetchTransaction = (key: any): Promise<ResponseData> => {
 
 
 const useDataTransaction = (filter: filter) => {
-	const {data, isFetching} = useQuery({queryKey: [nameQueryKey.transactions, filter], queryFn: fetchTransaction})
+	const {data, isFetching} = useQuery({
+		queryKey: [nameQueryKey.transactions, filter],
+		queryFn: fetchTransaction,
+		enabled: !!filter.wallet,
+	})
 
 	if (data) {
 		const transactionData: transactionResponse[] = data?.data || []

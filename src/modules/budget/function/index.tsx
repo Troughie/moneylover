@@ -19,7 +19,10 @@ interface props {
 const useBudget = (walletId: string | undefined): props => {
 	const {addBudget} = useBudgetStore()
 	const [budget1s, setBudget1s] = useState<BudgetSimilar[]>([])
-	const {data} = useQuery({queryKey: [nameQueryKey.budgets, walletId], queryFn: fetchBudgets})
+	const {data} = useQuery({
+		queryKey: [nameQueryKey.budgets, walletId], queryFn: fetchBudgets,
+		enabled: !!walletId
+	})
 
 	useEffect(() => {
 		const budgets = data?.data || []
