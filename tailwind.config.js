@@ -211,7 +211,8 @@ export default {
                     "  hsl(245deg 65% 85%) 80%,\n" +
                     "  hsl(247deg 44% 90%) 90%,\n" +
                     "  hsl(0deg 6% 94%) 100%\n" +
-                    ");"
+                    ");",
+                bgMoney: "url('/assets/img/bg_money.jpg')"
             },
             content: {
                 "icon-copy": 'url("../images/icon/icon-copy-alt.svg")',

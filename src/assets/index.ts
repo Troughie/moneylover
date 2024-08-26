@@ -45,6 +45,8 @@ export {default as f5} from "./img/Money Lover Logo.svg";
 export {default as f6} from "./img/Moneylover Feature 6.svg";
 export {default as ios} from "./img/ios.svg";
 export {default as android} from "./img/android.svg";
+export {default as bg_money} from "./img/bg_money.jpg";
+export {default as ForgotImg} from "./img/ForgotImg.tsx";
 
 //logo login
 export {default as Logo} from "./icons/logo.tsx";

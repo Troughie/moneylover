@@ -53,9 +53,9 @@ const Login: React.FC = () => {
 	}
 
 	return (
-		<div>
+		<div className={`h-screen`}>
 			<LoadingComponent/>
-			<div className="rounded-sm border border-stroke bg-white shadow-default mt-[200px]">
+			<div className="rounded-sm border border-stroke bg-white shadow-3 pt-[200px]">
 				<div className="flex flex-wrap items-center">
 					<m.div
 						initial={{x: -1000, opacity: 0}}

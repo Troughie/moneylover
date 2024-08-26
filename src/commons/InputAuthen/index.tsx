@@ -3,7 +3,7 @@ import {Input} from "antd";
 
 interface props {
 	name: string
-	type: string
+	type: "text" | "file" | "email" | "password"
 	placeholder: string
 	label: string
 	icons?: JSX.Element

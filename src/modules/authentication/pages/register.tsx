@@ -35,9 +35,9 @@ const Register = () => {
 	const handleOnSubmit = (data: any) => {
 		register(data)
 	}
-	return <>
+	return <div className={`h-screen`}>
 		<LoadingComponent/>
-		<div className="rounded-sm border border-stroke bg-white shadow-default  mt-[200px]">
+		<div className="rounded-sm border border-stroke bg-white shadow-3 pt-[200px]">
 			<div className=" flex-wrap flex-center">
 				<m.div
 					initial={{x: 900}}
@@ -95,7 +95,7 @@ const Register = () => {
 				</m.div>
 			</div>
 		</div>
-	</>
+	</div>
 }
 
 export default Register

@@ -55,6 +55,23 @@ export const authSchema = yup.object().shape({
 	password: yup.string().required("Password is required").min(6, "Password must be at least 6 characters")
 })
 
+export const authForgotSchema = yup.object().shape({
+	email: yup
+		.string()
+		.required('Email is required')
+		.min(6, 'Email must be at least 6 characters')
+		.max(60, 'Email must not exceed 60 characters')
+		.matches(PATTERN_VALID_EMAIL, 'Email is not valid! ex:xxxxx@xxxx.xxx'),
+})
+
+export const authCodeSchema = yup.object().shape({
+	otp: yup.string().required("Otp is required").min(8, "Otp must be at least 6 characters"),
+})
+
+export const authChangePassSchema = yup.object().shape({
+	password: yup.string().required("Password is required").min(6, "Password must be at least 6 characters"),
+})
+
 export const authRegisterSchema = yup.object().shape({
 	email: yup
 		.string()

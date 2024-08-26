@@ -1,4 +1,4 @@
-import {Bill, Budget, Forgot, HomeUser, Login, RecurringTran, Register, Transaction, Wallet} from "@/modules";
+import {Bill, Budget, ChangePasswordForgot, Forgot, HomeUser, Login, RecurringTran, Register, Transaction, Wallet} from "@/modules";
 import {IBudget, IDashBoard, ITransaction, IWallet} from "../assets";
 import {IconProps} from "@/model/interface.ts";
 
@@ -36,6 +36,18 @@ export const routePath = {
 		path: "/forgot",
 		name: "Forgot",
 		element: Forgot,
+		icons: null
+	},
+	enterCode: {
+		path: "/enter",
+		name: "Enter",
+		element: Forgot,
+		icons: null
+	},
+	changePass: {
+		path: "/change-password",
+		name: "ChangePassword",
+		element: ChangePasswordForgot,
 		icons: null
 	},
 	register: {
@@ -82,16 +94,26 @@ export const routePath = {
 	}
 }
 
-export const routePathArray = () => {
-
+export const filterRoutes = (excludeKeys: string[]) => {
 	const result: route[] = []
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	const {login, bill, register, forgot, ...route} = routePath
-	Object.entries(route).map(([, value]) => {
-		result.push(value)
+	const route = {...routePath}
+
+	excludeKeys.forEach((key) => {
+		// @ts-ignore
+		delete route[key]
 	})
+
+	Object.entries(route).map(([, value]) => {
+		result.push(<route>value)
+	})
+
 	return result
 }
+
+export const routePrivate = () => filterRoutes(['login', 'bill', 'register', 'forgot', "enterCode", "changePass"])
+
+// Sử dụng cho public routes
+export const routePublic = () => filterRoutes(['bill', 'budget', 'dashboard', 'wallet', 'recurring', 'transaction'])
 
 
 export const filterOptionSelect = (input: string, option?: { label: string; value: string }) =>

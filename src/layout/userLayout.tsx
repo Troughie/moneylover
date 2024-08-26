@@ -81,9 +81,10 @@ const UserLayout: React.FC<{ children: ReactNode }> = ({children}) => {
 							isWalletOpen={walletOpen}/>
 				<m.div
 					onClick={cancelModal}
-					initial={{opacity: 0.1}}
-					animate={{opacity: 2}}
-					transition={{duration: 2}}
+					initial={{y: "50%", opacity: 0, scale: 0.5}}
+					animate={{y: 0, opacity: 1, scale: 1}}
+					exit={{y: "50%", opacity: 0, scale: 0.5}}
+					transition={{duration: 0.4}}
 					className={`mx-auto max-w-screen-2xl w-full p-4`}>
 					{children}
 				</m.div>

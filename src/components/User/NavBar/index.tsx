@@ -1,13 +1,13 @@
 import {ArrRight} from "@/assets";
 import {Link, useLocation} from "react-router-dom";
-import {routePathArray} from "@/utils";
+import {routePrivate} from "@/utils";
 import {motion as m} from "framer-motion";
 import cn from "@/utils/cn";
 
 
 const NavBar = () => {
 
-	const navItem = routePathArray()
+	const navItem = routePrivate()
 
 	const {pathname} = useLocation()
 
