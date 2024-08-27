@@ -13,5 +13,8 @@ export const nameQueryKey = {
 	budget_history: "budget_history",
 	bills: "bills",
 	icons: "icon",
-	notification: "notification"
+	notification: "notification",
+	friendsSearch: "friendSearch",
+	friendsAll: "friend-all",
+	friendsReceive: "friend-receive",
 }

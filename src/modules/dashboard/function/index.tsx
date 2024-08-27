@@ -17,7 +17,7 @@ const fetchBudgets = (key: any): Promise<ResponseData> => {
 
 
 const fetchTranAll = (key: any): Promise<ResponseData> => {
-	return get({url: "transactions/all", params: {wallet: key.queryKey[1]?.id}})
+	return get({url: "transactions", params: {wallet: key.queryKey[1]?.id}})
 }
 
 const useHomePage = (): props => {

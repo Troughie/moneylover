@@ -157,7 +157,7 @@ export const getCurrentWeek = (monthStorage: string | null, yearStorage: string 
 	while (currentDay.isBefore(monthStorage ? lastDayOfMonth : now) || currentDay.isSame(monthStorage ? lastDayOfMonth : now, 'day')) {
 		const dayOfWeekIndex = currentDay.date();
 		const dayOfWeekIndex2 = currentDay.day();
-		if (dayOfWeekIndex2 === 0) {
+		if (dayOfWeekIndex2 === 0 || (dayOfWeekIndex === lastDayOfMonth.date() && lastDayOfMonth.isBefore(now))) {
 			daysOfWeekInMonth.push(`${firstDayOfWeek},${dayOfWeekIndex}`)
 			firstDayOfWeek = dayOfWeekIndex + 1
 		}

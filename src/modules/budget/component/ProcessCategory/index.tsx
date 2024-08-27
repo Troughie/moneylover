@@ -5,13 +5,14 @@ import {useBudgetStore} from "@/modules/budget/store";
 import {ModalPopUp} from "@/commons";
 import DetailBudgetCate from "@/modules/budget/component/DetailBudgetCate";
 import {budgetStoreDetail} from "@/modules/budget/store/modalBudget.ts";
-import React, {useState} from "react";
+import {useState} from "react";
 import {BudgetSimilar, cateSimilar} from "@/modules/budget/interface";
 import useRequest from "@/hooks/useRequest.ts";
 import {del} from "@/libs/api.ts";
 import {nameQueryKey} from "@/utils/nameQueryKey.ts";
 import {useQueryClient} from "@tanstack/react-query";
 import {useWalletStore} from "@/zustand/budget.ts";
+import {currentPositionStore} from "@/modules/budget/store/currentPositionSlider.ts";
 
 interface props {
 	price: string | number | undefined,
@@ -31,6 +32,7 @@ const ProcessCategory = () => {
 	const [detailBudget, setDetailBudget] = useState<props>()
 	const {budgetSelect} = useBudgetStore()
 	const {cancelIsShow, setIsShow, isShowBudgetDetail} = budgetStoreDetail()
+	const {position, setPosition} = currentPositionStore()
 
 	const {mutate: deleteBudget} = useRequest({
 		mutationFn: (values: string) => {
@@ -47,6 +49,7 @@ const ProcessCategory = () => {
 	})
 	const clickDeleteBudget = (id: string | undefined) => {
 		deleteBudget(id)
+		setPosition(position)
 	}
 
 	const handleShowDetail = (budget: BudgetSimilar, cate: cateSimilar, price: string | number | undefined, percent: number, totalLeft: number, isOver: boolean, id: string) => {
@@ -65,20 +68,21 @@ const ProcessCategory = () => {
 		<ModalPopUp isModalOpen={isShowBudgetDetail} showOke={false} handleCancel={cancelIsShow} title={""}>
 			<DetailBudgetCate category={detailBudget?.category} budgetCurrent={detailBudget?.budgetCurrent} price={detailBudget?.price}
 							  percent={detailBudget?.percent} isOver={detailBudget?.isOver}
-							  totalLeft={detailBudget?.totalLeft} deleteBudget={clickDeleteBudget} id={detailBudget?.id}/>
+							  totalLeft={detailBudget?.totalLeft} deleteBudget={clickDeleteBudget} id={detailBudget?.category.idBudget}/>
 		</ModalPopUp>
 		{budgetSelect?.category?.map((el, i) => {
-			const tran = transactionSimilar.find((t) => t.category.id === el.id)
+			const tran = transactionSimilar.find((t) => t.category.id === el.id && el.user.id === t.user.id)
 			const {spentOver, percent, totalLeft, isOver} = CheckSpentOver(tran?.amount || 0, el?.amountBudget)
 			return <div key={i} className={`w-full flex-center`}
 						onClick={() => handleShowDetail(budgetSelect, el, tran?.amount, percent, totalLeft, isOver, el?.idBudget)}>
 				<CardCategory className={`w-[calc(100%+40px)] md:w-2/3 cursor-pointer`} img={tran?.category.categoryIcon || el.categoryIcon}
 							  name={tran?.category.name || el.name}
 							  amount={tran?.amount || 0}
+							  creator={el.user.username}
 							  isOver={isOver} spentOver={spentOver} percent={percent} totalLeft={totalLeft}/>
 			</div>
 		})}
 	</>
 }
 
-export default React.memo(ProcessCategory)
+export default ProcessCategory

@@ -228,7 +228,7 @@ const HeaderUser: React.FC<props> = ({setToggleName, toggleName, walletsOpen, is
 						 savingID={savingID}/>
 		</ModalPopUp>
 
-		<ModalPopUp width={700} isModalOpen={friendOpen} showOke={false} showCancel={false} handleCancel={handleCancel}
+		<ModalPopUp width={900} isModalOpen={friendOpen} showOke={false} showCancel={false} handleCancel={handleCancel}
 					title={`Friends`}>
 			<Friends/>
 		</ModalPopUp>

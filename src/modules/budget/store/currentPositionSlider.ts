@@ -6,6 +6,6 @@ interface props {
 }
 
 export const currentPositionStore = create<props>((set) => ({
-	position: 1,
+	position: 0,
 	setPosition: (e) => set(() => ({position: e})),
 }))

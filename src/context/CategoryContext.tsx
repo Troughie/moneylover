@@ -25,7 +25,7 @@ export const CategoryFetchProvider: React.FC<CategoryFetchProviderProps> = ({chi
 	};
 
 	const fetchCateNoType = () => {
-		return get({url: "categories/all"});
+		return get({url: "categories", params: {type: "All"}});
 	};
 
 	const data = useQueries({

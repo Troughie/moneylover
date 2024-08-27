@@ -59,7 +59,7 @@ export const TranChartPeriod = (categories: string[], tran: transactionResponse[
 export const CalculateCategoriesChart = (tran: transactionResponse[] | undefined) => {
 	const firstCate: string[] = []
 	tran?.map((el) => {
-		if (!firstCate.includes(el.category.name)) {
+		if (!firstCate.includes(el.category.name) && !el.exclude) {
 			firstCate.push(el.category.name)
 		}
 		return firstCate

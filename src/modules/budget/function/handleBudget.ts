@@ -3,8 +3,9 @@ import {swalAlert} from "@/hooks/swalAlert.ts";
 import {typeAlert} from "@/utils";
 import {BudgetRequest, BudgetResponse, BudgetSimilar} from "@/modules/budget/interface";
 import {MutateOptions} from "@tanstack/react-query";
+import {User} from "@/model/interface.ts";
 
-export const handleSubmitBudget = (data: any, budgets: BudgetSimilar[], createBudget: (variables: any, options?: (MutateOptions<unknown, unknown, any, unknown> | undefined)) => void) => {
+export const handleSubmitBudget = (user: User, position: number, setPosition: (e: number) => void, data: any, budgets: BudgetSimilar[], createBudget: (variables: any, options?: (MutateOptions<unknown, unknown, any, unknown> | undefined)) => void) => {
 	const start = dayjs(data?.period_start);
 	const end = dayjs(data?.period_end);
 
@@ -22,14 +23,14 @@ export const handleSubmitBudget = (data: any, budgets: BudgetSimilar[], createBu
 	const existBudget = budgets.find((el) =>
 		end.isSame(dayjs(el.period_end)) &&
 		start.isSame(dayjs(el.period_start)) &&
-		el.category.find((e) => e.id === categoryId) &&
+		el.category.find((e) => e.id === categoryId && e.user.id === user.id) &&
 		el.wallet === wallet
 	);
 
 	const request: BudgetRequest = {
 		...data,
 		category: categoryId,
-		id: existBudget?.id,
+		id: existBudget?.category.find((e) => e.user.id === user.id)?.idBudget,
 		period_start: start.format("YYYY-MM-DD"),
 		period_end: end.format("YYYY-MM-DD")
 	};
@@ -46,13 +47,16 @@ export const handleSubmitBudget = (data: any, budgets: BudgetSimilar[], createBu
 				if (result.isConfirmed) {
 					request.overWrite = true;
 					createBudget(request);
+					setPosition(position)
 				} else if (result.isDenied) {
 					request.overWrite = false;
+					setPosition(position)
 					createBudget(request);
 				}
 			},
 		});
 	} else {
+		setPosition(position)
 		createBudget(request);
 	}
 };
@@ -60,24 +64,30 @@ export const handleSubmitBudget = (data: any, budgets: BudgetSimilar[], createBu
 
 export const mergeBudgetSimilar = (budgets: BudgetResponse[]) => {
 
-	return budgets.reduce((result, budget) => {
+	const budetsSimilar = budgets.reduce((result, budget) => {
 		// const {category,...res}=budget
-		const existBudget = result.find((b) => budget.name === b.name);
+		const existBudget = result.find((b) => budget.name === b.name && b.wallet === b.wallet);
 		if (!existBudget) {
 			result.push({
 				...budget,
 				name: budget.name,
-				category: [{...budget.category, idBudget: budget.id, amountBudget: budget.amount}],
+				category: [{...budget.category, idBudget: budget.id, amountBudget: budget.amount, user: budget.user}],
 				amount: budget.amount,
 				wallet: budget.wallet,
 				period_end: budget.period_end,
 				period_start: budget.period_start,
-				id: budget.id
+				id: budget.id,
 			})
 		} else {
 			existBudget.amount += budget.amount
-			existBudget.category.push({...budget.category, idBudget: budget.id, amountBudget: budget.amount})
+			existBudget.category.push({...budget.category, idBudget: budget.id, amountBudget: budget.amount, user: budget.user})
 		}
 		return result
 	}, [] as BudgetSimilar[])
+
+	return budetsSimilar.sort((a, b) => {
+		const time1 = dayjs(a.period_end)
+		const time2 = dayjs(b.period_end)
+		return time1.isBefore(time2) ? -1 : time1.isAfter(time2) ? 1 : 0;
+	})
 }

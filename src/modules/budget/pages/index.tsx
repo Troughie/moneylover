@@ -22,6 +22,8 @@ import {nameQueryKey} from "@/utils/nameQueryKey.ts";
 import {handleSubmitBudget} from "@/modules/budget/function/handleBudget.ts";
 import {useWalletStore} from "@/zustand/budget.ts";
 import {showModalNoWallet} from "@/utils/showModalNoWallet.tsx";
+import {currentPositionStore} from "@/modules/budget/store/currentPositionSlider.ts";
+import {useUserStore} from "@/modules/authentication/store/user.ts";
 
 
 const Budget = () => {
@@ -33,7 +35,8 @@ const Budget = () => {
 	const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 	const [isHistory, setIsHistory] = useState<boolean>(false);
 	const methods = useForm({mode: "onChange", resolver: yupResolver(budgetSchema), defaultValues: {amount: 0}})
-
+	const {position, setPosition} = currentPositionStore()
+	const {user} = useUserStore.getState().user
 	const {mutate: createBudget} = useRequest({
 		mutationFn: (values: BudgetRequest) => {
 			console.log(values)
@@ -63,7 +66,7 @@ const Budget = () => {
 
 
 	const handleOk = (data: any) => {
-		handleSubmitBudget(data, budgets, createBudget)
+		handleSubmitBudget(user, position, setPosition, data, budgets, createBudget)
 	}
 	const handleCancel = () => {
 		setIsModalOpen(false);

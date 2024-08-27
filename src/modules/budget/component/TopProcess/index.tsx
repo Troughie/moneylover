@@ -27,8 +27,8 @@ const TopProcess = () => {
 					  <p className={`text-xs font-satoshi text-bodydark2 mt-[-20px]`}>{isOver ? "OverSpent" : "Amount you can spend"}</p>
 					  <span className={cn(`text-2xl font-satoshi text-black-2`, {
 						  "text-red-700": isOver
-					  })}>{<NumberFormatter
-						  number={isOver ? spentOver : budgetSelect?.amount}/>}</span>
+					  })}>{budgetSelect && <NumberFormatter
+                          number={isOver ? spentOver : budgetSelect?.amount - totalTranAmount()}/>}</span>
 				  </>}/>
 		<div className={`flex-center w-[calc(100%+40px)] md:w-2/3 gap-4 md:shadow-3 md:p-4 rounded-lg`}>
 			<BoxBottomProcess bottomText={'Total budgets'} topText={budgetSelect?.amount}/>

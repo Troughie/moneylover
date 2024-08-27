@@ -8,11 +8,11 @@ interface props {
 const CreatorName = ({userCreator}: props) => {
 	const {user} = useUserStore.getState().user
 	if (user?.id === userCreator?.id) {
-		return <><span className={`text-lg font-normal`}>
+		return <><span className={`text-lg text-bodydark2 font-normal`}>
 			 You
 		</span></>
 	}
-	return <><span className={`text-lg font-normal`}> {userCreator?.username}</span></>
+	return <><span className={`text-lg text-bodydark2 font-normal`}> {userCreator?.username}</span></>
 }
 
 export default CreatorName

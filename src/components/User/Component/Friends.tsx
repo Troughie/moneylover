@@ -1,9 +1,14 @@
-import {useState} from "react";
+import {useCallback, useState} from "react";
 import cn from "@/utils/cn";
 import AddFriend from "@/components/User/Common/SearchAdd.tsx";
+import AllFriend from "@/components/User/Common/AllFriend.tsx";
+import RequestFriend from "@/components/User/Common/RequestFriend.tsx";
+import {AnimatePresence} from "framer-motion"
 
 const Friends = () => {
 	const [selectBtn, setSelectBtn] = useState<string>("All")
+
+
 	const button = [
 		{
 			title: "All"
@@ -16,6 +21,18 @@ const Friends = () => {
 		}
 	]
 
+	const showContentFriend = useCallback(() => {
+		if (selectBtn === "All") {
+			return <AllFriend/>
+		}
+
+		if (selectBtn === "Request") {
+			return <RequestFriend/>
+		}
+		return <><AddFriend/></>
+
+	}, [selectBtn])
+
 	return <>
 		<div>
 			<div className={`flex gap-3 items-center justify-start`}>
@@ -26,10 +43,12 @@ const Friends = () => {
 									, {"border-b-2 border-b-blue-600": selectBtn === e.title})}>{e.title}</button>
 					))}
 			</div>
-
-			<div className={`mt-4 p-4 rounded-lg border border-bodydark`}>
-				<AddFriend/>
-			</div>
+			<AnimatePresence>
+				<div
+					className={`mt-4 p-4 rounded-lg border border-bodydark`}>
+					{showContentFriend()}
+				</div>
+			</AnimatePresence>
 		</div>
 	</>
 }

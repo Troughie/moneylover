@@ -8,6 +8,11 @@ export interface IconProps {
 	func?: () => void
 }
 
+export interface FriendProps {
+	createdAt: Date
+	user: User
+}
+
 export interface changePassword {
 	email: string
 	oldPassword: string

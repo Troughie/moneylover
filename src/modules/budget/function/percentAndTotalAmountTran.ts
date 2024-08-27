@@ -30,7 +30,7 @@ export const PercentAndTotalAmountTran = (budget?: BudgetSimilar | BudgetRespons
 
 	const transactionSimilar = useCallback(() => {
 		return transactionData.reduce((result, obj) => {
-			const existInObj = result?.find((e) => e.category.id === obj.category.id)
+			const existInObj = result?.find((e) => e.category.id === obj.category.id && e.user.id === obj.user.id)
 			if (existInObj) {
 				if (obj?.category?.categoryType === typeCategory.Expense) {
 					existInObj.amount += obj?.amount;

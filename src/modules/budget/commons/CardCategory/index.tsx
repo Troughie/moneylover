@@ -16,9 +16,10 @@ interface props {
 	spentOver: number | undefined
 	totalLeft: number | undefined
 	className?: string
+	creator?: string
 }
 
-const CardCategory: React.FC<props> = ({name, className, spentOver, totalLeft, showDate, isOver, start, percent, end, amount, img}) => {
+const CardCategory: React.FC<props> = ({creator, name, className, spentOver, totalLeft, showDate, isOver, start, percent, end, amount, img}) => {
 
 	return <>
 		<div className={twMerge(`mt-4 w-2/4 border-bodydark2 shadow-3 p-4`, className)}>
@@ -31,7 +32,10 @@ const CardCategory: React.FC<props> = ({name, className, spentOver, totalLeft, s
 				</div>
 				<div className={`w-full`}>
 					<div className={`flex-between`}>
-						<span>{name}</span>
+						<div className={`flex items-center gap-2`}>
+							<span>{name}</span>-
+							<span className={`font-bold text-lg`}>{creator}</span>
+						</div>
 						<p><NumberFormatter number={amount}/></p>
 					</div>
 					<p className={cn(`text-right text-red-700 text-xs`, {"text-body": !isOver})}>
