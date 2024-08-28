@@ -1,5 +1,5 @@
 import {HeaderUser} from "@/components";
-import React, {ReactNode, useEffect, useState} from "react";
+import React, {ReactNode, useEffect} from "react";
 import NavBar from "@/components/User/NavBar";
 import LoadingComponent from "@/components/Loading";
 import FloatButtonAction from "@/components/FloatButtonAction";
@@ -17,6 +17,7 @@ import {post} from "@/libs/api.ts";
 import {nameQueryKey} from "@/utils/nameQueryKey.ts";
 import {useUserStore} from "@/modules/authentication/store/user.ts";
 import {useQueryClient} from "@tanstack/react-query";
+import {useHeaderStore} from "@/store/HeaderStore.ts";
 
 interface CateReq {
 	type: string;
@@ -27,19 +28,12 @@ interface CateReq {
 const UserLayout: React.FC<{ children: ReactNode }> = ({children}) => {
 	const {user} = useUserStore.getState().user
 	const queryClient = useQueryClient()
-	const [walletOpen, setWalletOpen] = useState<boolean>(false)
-	const [notification, setNotification] = useState<boolean>(false)
 	const Methods = useForm({mode: "onChange", resolver: yupResolver(categorySchema)});
-	const [toggleName, setToggleName] = useState<boolean>(false)
 
 	const {setOpenModal, openModal} = openCategoryForm()
+	const {setFalseAll} = useHeaderStore()
 	const {groups, fetchGroups, setIsOpenChat, isOpenChat} = useChatStore()
 
-	const cancelModal = () => {
-		setWalletOpen(false)
-		setNotification(false)
-		setToggleName(false)
-	}
 
 	useEffect(() => {
 		fetchGroups()
@@ -82,11 +76,9 @@ const UserLayout: React.FC<{ children: ReactNode }> = ({children}) => {
 
 			<NavBar/>
 			<div className={`relative flex flex-col w-full overflow-y-auto overflow-x-hidden`}>
-				<HeaderUser toggleName={toggleName} setToggleName={setToggleName} notificationsOpen={setNotification}
-							isNotificationOpen={notification} walletsOpen={setWalletOpen}
-							isWalletOpen={walletOpen}/>
+				<HeaderUser/>
 				<m.div
-					onClick={cancelModal}
+					onClick={setFalseAll}
 					initial={{y: "50%", opacity: 0, scale: 0.5}}
 					animate={{y: 0, opacity: 1, scale: 1}}
 					exit={{y: "50%", opacity: 0, scale: 0.5}}

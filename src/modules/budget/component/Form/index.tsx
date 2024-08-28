@@ -2,7 +2,7 @@ import {Button, DatePicker, Input, Radio, RadioChangeEvent, Select, Switch} from
 import {InputController, SelectInput} from "@/commons";
 import {useWallet} from "@/context/WalletContext.tsx";
 import {antdOptions, parseNewWallet, parseToNewCate, walletProps} from "@/model/interface.ts";
-import {useWalletStore} from "@/zustand/budget.ts";
+import {useWalletStore} from "@/store/WalletStore.ts";
 import {useCategoryFetch} from "@/context/CategoryContext.tsx";
 import {useEffect, useMemo, useState} from "react";
 import {getCurrentOneWeek} from "@/utils/day.ts";
@@ -50,14 +50,13 @@ const BudgetForm = () => {
 			setWalletShow(wallets.filter((el) => el.type != "goal")[0])
 		}
 		return Wallets
-	}, [wallets])
+	}, [walletSelect, wallets])
 
 	const onChangeTypeCate = ({target: {value}}: RadioChangeEvent) => {
 		changeType(value)
 		setTypeCate(value);
 	};
 	useEffect(() => {
-		console.log(rangeTime)
 		if (rangeTime != custom) {
 			const date = rangeTime.split("-")
 			setStart(cusDayjs(date[0]))
@@ -75,7 +74,7 @@ const BudgetForm = () => {
 
 	return <>
 		<form className={`flex flex-col gap-4 mt-5`}>
-			<InputController label={`Wallet`} name={"wallet"} defaultValue={walletShow?.id}
+			<InputController label={`Wallet`} name={"wallet"} defaultValue={walletShow?.id} value={walletShow?.id}
 							 render={({field}) => <SelectInput defaultValue={walletShow?.name} field={field} options={walletNotGoal}
 															   title={"Select wallet"}/>}/>
 

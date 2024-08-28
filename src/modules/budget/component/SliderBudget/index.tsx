@@ -1,7 +1,7 @@
 import useBudget from "@/modules/budget/function";
 import {formatDate} from "@/utils/Format/formatDate.ts";
 import {Tabs} from "antd";
-import {useWalletStore} from "@/zustand/budget.ts";
+import {useWalletStore} from "@/store/WalletStore.ts";
 import {useBudgetStore} from "@/modules/budget/store";
 import {currentPositionStore} from "@/modules/budget/store/currentPositionSlider.ts";
 

@@ -2,7 +2,7 @@ export {default as Card} from "./home/Card";
 export {default as Feature} from "./home/Feature";
 export {default as Comment} from "./home/CardComment";
 export {default as FilterWallet} from "./FilterWallet";
-export {default as Notifications} from "./Notifications";
+export {default as Notifications} from "../modules/notifications/page";
 
 export {default as InputAuthentication} from "./InputAuthen";
 

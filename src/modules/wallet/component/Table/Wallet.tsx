@@ -1,15 +1,13 @@
 import {Button, Empty, Spin, Switch} from "antd";
 import {LoadingOutlined} from "@ant-design/icons";
 import cn from "@/utils/cn";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {NumberFormatter} from "@/utils/Format";
-import {User, walletProps} from "@/model/interface.ts";
+import {walletProps} from "@/model/interface.ts";
 import {ModalPopUp} from "@/commons";
 import usePostWalletMutate from "@/modules/wallet/function/postMutate.ts";
-import {createGroupChat} from "@/modules/chat/function/chats.ts";
 import {useUserStore} from "@/modules/authentication/store/user.ts";
 import ListManager from "@/modules/wallet/component/Table/ListManager.tsx";
-import {useChatStore} from "@/modules/chat/store/chatStore.ts";
 
 interface props {
 	wallets: walletProps[],
@@ -20,30 +18,21 @@ interface props {
 const TableWallet: React.FC<props> = ({handleClick, wallets, isFetching}) => {
 
 	const [wallet, setWallet] = useState<walletProps>()
-	const {fetchGroups} = useChatStore()
 	const {user} = useUserStore.getState().user
-	const {getUserWithCode, userFound, onChangeWalletMain, valueInput, addManager, setValueInput} = usePostWalletMutate()
+	const {onChangeWalletMain} = usePostWalletMutate()
 	const [manager, setManager] = useState<boolean>(false)
 
 	const handleOpenManager = () => {
 		setManager(!manager)
-		setValueInput(undefined)
 	}
+
+	useEffect(() => {
+		console.log(wallets)
+	}, [wallets]);
 
 	const handleOkManager = (wallet: walletProps) => {
 		setManager(!manager)
 		setWallet(wallet)
-	}
-
-	const handleAddManager = async () => {
-		const memberName: string[] = [`${user?.username}`, `${userFound?.username}`]
-		if (userFound) {
-			const users: User[] = [user, userFound]
-			if (wallet) {
-				await addManager(createGroupChat(wallet.id, memberName.join(","), users), userFound, wallet.id)
-				await fetchGroups()
-			}
-		}
 	}
 
 
@@ -55,7 +44,13 @@ const TableWallet: React.FC<props> = ({handleClick, wallets, isFetching}) => {
 						   checked={wallet?.main}
 						   unCheckedChildren=""/>
 		} else {
-			return <span className={`font-bold text-sm`}>Staff</span>
+			return <span className={`font-bold text-sm`}></span>
+		}
+	}
+
+	const showManagerLength = (e: walletProps) => {
+		if (e.user.id != user.id) {
+			return `Share by ${e.user.username}`
 		}
 	}
 
@@ -64,10 +59,10 @@ const TableWallet: React.FC<props> = ({handleClick, wallets, isFetching}) => {
 		<div className={`text-center`}>
 			<p className={`my-5 text-2xl font-bold  text-nowrap`}>List wallet</p>
 			<div className={`grid pb-5 grid-cols-12 border-b-bodydark2 border-b text-center`}>
-				<div className={`col-span-2 text-sm text-bodydark2`}>Id</div>
 				<div className={`col-span-4 text-sm text-bodydark2`}>Name</div>
 				<div className={`col-span-1 text-sm text-bodydark2`}>Type</div>
 				<div className={`col-span-3 text-sm text-bodydark2`}>Balance</div>
+				<div className={`col-span-2 text-sm text-bodydark2`}>Total manager</div>
 				<div className={`col-span-1 text-sm text-bodydark2`}>Switch main</div>
 				<div className={`col-span-1 text-sm text-bodydark2`}>Community</div>
 			</div>
@@ -81,10 +76,10 @@ const TableWallet: React.FC<props> = ({handleClick, wallets, isFetching}) => {
 							<div key={el.id} className={cn(`grid mt-2 grid-cols-12`, {"bg-blue-50": i % 2 === 0})}>
 								<div onClick={() => handleClick(el)}
 									 className={cn(`grid grid-cols-10 col-span-10 hover:scale-y-110 hover:font-semibold text-center duration-500 cursor-pointer py-4`)}>
-									<span className={`col-span-2`}>{i}</span>
 									<span className={`col-span-4`}>{el.name}</span>
 									<span className={`col-span-1`}>{el.type}</span>
 									<span className={`col-span-3`}>{<NumberFormatter number={el.balance}/>}</span>
+									<span className={`col-span-2`}>{showManagerLength(el)} ({el.managers.length})</span>
 								</div>
 								<span className={cn(`col-span-1 flex-center `)}>{
 									isOwnerWallet(el)}</span>
@@ -100,8 +95,8 @@ const TableWallet: React.FC<props> = ({handleClick, wallets, isFetching}) => {
 		<ModalPopUp width={900} isModalOpen={manager} showOke={false} showCancel={false} handleCancel={handleOpenManager}
 					title={`List manager`}>
 			<>{wallet &&
-                <ListManager wallets={wallets} addManager={handleAddManager} userFound={userFound} wallet={wallet} getUserWithCode={getUserWithCode}
-                             valueInput={valueInput}/>
+                <ListManager wallets={wallets} wallet={wallet}
+                />
 			}
 			</>
 		</ModalPopUp>

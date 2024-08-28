@@ -11,7 +11,7 @@ import useRequest from "@/hooks/useRequest.ts";
 import {del} from "@/libs/api.ts";
 import {nameQueryKey} from "@/utils/nameQueryKey.ts";
 import {useQueryClient} from "@tanstack/react-query";
-import {useWalletStore} from "@/zustand/budget.ts";
+import {useWalletStore} from "@/store/WalletStore.ts";
 import {currentPositionStore} from "@/modules/budget/store/currentPositionSlider.ts";
 
 interface props {

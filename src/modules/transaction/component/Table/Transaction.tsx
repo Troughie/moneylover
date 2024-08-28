@@ -7,7 +7,7 @@ import CardTop from "@/modules/transaction/commons/CardTop.tsx";
 import {ModalPopUp} from "@/commons";
 import TransitionChart from "@/modules/transaction/commons/Chart.tsx";
 import CardBalance from "@/modules/transaction/commons/CardBalane.tsx";
-import {useWalletStore} from "@/zustand/budget.ts";
+import {useWalletStore} from "@/store/WalletStore.ts";
 import CardGoalWalletProcess from "@/modules/transaction/commons/CardGoalWalletProcess.tsx";
 import cn from "@/utils/cn";
 import GatherTransaction from "@/modules/transaction/function/GatherTransaction.ts";

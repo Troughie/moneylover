@@ -1,6 +1,6 @@
 import {NumberFormatter} from "@/utils/Format";
 import {Progress} from "antd";
-import {useWalletStore} from "@/zustand/budget.ts";
+import {useWalletStore} from "@/store/WalletStore.ts";
 import CalculatorWalletGoal from "@/modules/transaction/function/CalculatorWalletGoal.ts";
 import {useCallback} from "react";
 

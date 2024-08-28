@@ -5,7 +5,7 @@ import {InputController, SelectInput} from "@/commons";
 import {useWallet} from "@/context/WalletContext.tsx";
 import {useCategoryFetch} from "@/context/CategoryContext.tsx";
 import {parseNewWallet, parseToNewCate, typeCategory, typeWallet} from "@/model/interface.ts";
-import {useWalletStore} from "@/zustand/budget.ts";
+import {useWalletStore} from "@/store/WalletStore.ts";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import {dateFormat} from "@/utils";
@@ -56,7 +56,7 @@ const AddFormTransaction = React.memo(() => {
 
 	return <>
 		<form className={`flex flex-col gap-4 mt-5`}>
-			<InputController label={`Wallet`} name={"wallet"} defaultValue={walletSelect?.id}
+			<InputController label={`Wallet`} name={"wallet"} defaultValue={walletSelect?.id} value={walletSelect?.id}
 							 render={({field}) => <SelectInput defaultValue={walletSelect?.name} field={field} options={newWallets}
 															   title={"Select wallet"}/>}/>
 

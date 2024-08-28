@@ -6,9 +6,6 @@ import {ModalPopUp} from "@/commons";
 import {FormProvider, useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup";
 import {budgetSchema} from "@/libs/schema.ts";
-import useRequest from "@/hooks/useRequest.ts";
-import {post} from "@/libs/api.ts";
-import {BudgetRequest} from "../interface";
 import TopProcess from "../component/TopProcess";
 import ProcessCategory from "../component/ProcessCategory";
 import SliderBudget from "@/modules/budget/component/SliderBudget";
@@ -17,41 +14,28 @@ import useBudget from "@/modules/budget/function";
 import {useWallet} from "@/context/WalletContext.tsx";
 import {useNavigate} from "react-router-dom";
 import {FormatValueInput} from "@/utils/Format/fortmat.value.input.ts";
-import {useQueryClient} from "@tanstack/react-query";
-import {nameQueryKey} from "@/utils/nameQueryKey.ts";
 import {handleSubmitBudget} from "@/modules/budget/function/handleBudget.ts";
-import {useWalletStore} from "@/zustand/budget.ts";
+import {useWalletStore} from "@/store/WalletStore.ts";
 import {showModalNoWallet} from "@/utils/showModalNoWallet.tsx";
 import {currentPositionStore} from "@/modules/budget/store/currentPositionSlider.ts";
 import {useUserStore} from "@/modules/authentication/store/user.ts";
+import useBudgetPost from "@/modules/budget/function/postMutateBudget.ts";
 
 
 const Budget = () => {
 	const {walletSelect} = useWalletStore()
 	const navigate = useNavigate()
 	const {wallets} = useWallet()
-	const queryClient = useQueryClient()
 
 	const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 	const [isHistory, setIsHistory] = useState<boolean>(false);
 	const methods = useForm({mode: "onChange", resolver: yupResolver(budgetSchema), defaultValues: {amount: 0}})
 	const {position, setPosition} = currentPositionStore()
 	const {user} = useUserStore.getState().user
-	const {mutate: createBudget} = useRequest({
-		mutationFn: (values: BudgetRequest) => {
-			console.log(values)
-			return post({
-				url: "budget/add",
-				data: values
-			})
-		},
-		onSuccess: () => {
-			// @ts-ignore
-			queryClient.invalidateQueries([nameQueryKey.budgets])
-			handleCancel()
-			methods.reset()
-		}
-	})
+	const handleCancel = () => {
+		setIsModalOpen(false);
+		setIsHistory(false)
+	};
 	const {budgets} = useBudget(walletSelect?.id)
 
 	const amount = methods.watch("amountDisplay")
@@ -59,6 +43,7 @@ const Budget = () => {
 	const showModal = () => {
 		showModalNoWallet(wallets, navigate, setIsModalOpen)
 	}
+	const {createBudget} = useBudgetPost({methods, handleCancel})
 
 	useEffect(() => {
 		FormatValueInput(amount, methods.setValue, walletSelect?.currency)
@@ -68,10 +53,7 @@ const Budget = () => {
 	const handleOk = (data: any) => {
 		handleSubmitBudget(user, position, setPosition, data, budgets, createBudget)
 	}
-	const handleCancel = () => {
-		setIsModalOpen(false);
-		setIsHistory(false)
-	};
+
 	return <UserLayout>
 		<BreakCrumb pageName={"Budget"}/>
 		<div className={`container-wrapper-auto relative p-10`}>

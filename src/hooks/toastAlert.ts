@@ -29,5 +29,7 @@ export const toastAlert = (props: alertProps) => {
 			return toast.error(message, options);
 		case typeAlert.info:
 			return toast.info(message, options);
+		case typeAlert.warning:
+			return toast.warning(message, options)
 	}
 }

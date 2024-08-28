@@ -3,6 +3,7 @@ import {Link, useLocation} from "react-router-dom";
 import {routePrivate} from "@/utils";
 import {motion as m} from "framer-motion";
 import cn from "@/utils/cn";
+import {useHeaderStore} from "@/store/HeaderStore.ts";
 
 
 const NavBar = () => {
@@ -10,6 +11,8 @@ const NavBar = () => {
 	const navItem = routePrivate()
 
 	const {pathname} = useLocation()
+
+	const {setFalseAll} = useHeaderStore()
 
 	const handleActiveNav = (route: string) => {
 		const path = pathname.split("/")[1]
@@ -25,6 +28,7 @@ const NavBar = () => {
 			<ul className={`px-2 mt-[50px] rounded-2xl`}>
 				{navItem.map((el) => (
 					<Link to={el.path} key={el.name}
+						  onClick={setFalseAll}
 						  className={cn(` "text-Text hover:scale-105 font-normal group rounded-lg cursor-pointer flex items-center py-5 px-4 duration-200 mx-1 my-8 justify-between gap-2`
 							  , {
 								  "text-white font-bold  bg-Primary": handleActiveNav(el.path),

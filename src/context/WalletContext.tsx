@@ -31,7 +31,6 @@ export const WalletProvider: React.FC<propsChild> = ({children}) => {
 
 
 	const walletData: walletProps[] = data?.data ?? [];
-
 	const value = useMemo(() => ({
 		wallets: walletData,
 		isFetching,

@@ -11,7 +11,7 @@ import {Plus} from "@/assets";
 import {useWallet} from "@/context/WalletContext.tsx";
 import {useNavigate} from "react-router-dom";
 import {showModalNoWallet} from "@/utils/showModalNoWallet.tsx";
-import {useWalletStore} from "@/zustand/budget.ts";
+import {useWalletStore} from "@/store/WalletStore.ts";
 import {FormatValueInput} from "@/utils/Format/fortmat.value.input.ts";
 import {recurringRequest} from "@/model/interface.ts";
 import useRequest from "@/hooks/useRequest.ts";

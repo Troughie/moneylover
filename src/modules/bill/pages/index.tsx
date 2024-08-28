@@ -9,7 +9,7 @@ import {yupResolver} from "@hookform/resolvers/yup";
 import {RecurringSchema} from "@/libs/schema.ts";
 import {handleValueRecurring} from "@/utils/handleValueRecurring.ts";
 import {FormatValueInput} from "@/utils/Format/fortmat.value.input.ts";
-import {useWalletStore} from "@/zustand/budget.ts";
+import {useWalletStore} from "@/store/WalletStore.ts";
 import useRequest from "@/hooks/useRequest.ts";
 import {recurringRequest} from "@/model/interface.ts";
 import {post} from "@/libs/api.ts";

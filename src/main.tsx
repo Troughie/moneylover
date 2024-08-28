@@ -9,7 +9,6 @@ import {CategoryFetchProvider} from "@/context/CategoryContext.tsx";
 const queryClient = new QueryClient();
 ReactDOM.createRoot(document.getElementById("root")!).render(
 	<QueryClientProvider client={queryClient}>
-
 		<LoadingProvider>
 			<Router>
 				<ToastContainer limit={3}/>

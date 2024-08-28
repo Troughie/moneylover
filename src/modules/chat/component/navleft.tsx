@@ -2,8 +2,8 @@ import BoxChat from "@/modules/chat/common/boxChat.tsx";
 import {Group, markMessagesAsRead} from "@/modules/chat/function/chats.ts";
 import React, {useEffect, useState} from "react";
 import {useUserStore} from "@/modules/authentication/store/user.ts";
-import useDebounce from "@/hooks/useDebounce.tsx";
 import {useChatStore} from "@/modules/chat/store/chatStore.ts";
+import {useDebounce} from "@/hooks/useDebounce.tsx";
 
 interface props {
 	groups: Group[]
@@ -15,7 +15,14 @@ const NavLeft = ({groups, setId, id}: props) => {
 	const {user} = useUserStore.getState().user
 	const {fetchGroups, setIsMediaOpen, setIsInformationOpen} = useChatStore()
 	const [groupss, setGroupss] = useState<Group[]>([])
-	const [valueSearch, setValueSearch] = useState<string>()
+	const [valueSearch, setValueSearch] = useState<string>("")
+	const valueDebounce = useDebounce(valueSearch, 300)
+
+	useEffect(() => {
+		if (valueDebounce) {
+			searchGroup(valueDebounce)
+		}
+	}, [valueDebounce]);
 	useEffect(() => {
 		setGroupss(groups)
 	}, [groups]);
@@ -34,9 +41,9 @@ const NavLeft = ({groups, setId, id}: props) => {
 		setIsMediaOpen(false)
 	}
 
-	const searchGroup = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setValueSearch(e.target.value)
-		const result = groups.filter((el) => (el.name.includes(e.target.value)))
+	const searchGroup = (e: string) => {
+		setValueSearch(e)
+		const result = groups.filter((el) => (el.name.includes(e)))
 		setGroupss(result)
 	}
 
@@ -46,7 +53,7 @@ const NavLeft = ({groups, setId, id}: props) => {
 			<span className={`px-2 pt-8 pb-4 font-bold text-sm md:text-2xl`}>Chats</span>
 			<input type="search"
 				   value={valueSearch}
-				   onChange={useDebounce(searchGroup, 1000)}
+				   onChange={(e) => setValueSearch(e.target.value)}
 				   className="block w-full py-4 ps-6 text-sm text-gray-900 border rounded-full bg-gray-50 focus:ring-blue-500 focus:border-blue-500 border-blue-200"
 				   placeholder="Searching.." required/>
 			<span className={`text-lg text-bodydark`}>All chat</span>

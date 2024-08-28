@@ -11,6 +11,7 @@ export interface IconProps {
 export interface FriendProps {
 	createdAt: Date
 	user: User
+	id: string
 }
 
 export interface changePassword {
@@ -183,16 +184,9 @@ export interface walletProps {
 	main: boolean
 	managers: Manager[]
 	end_date: Date
+	user: User
 }
 
-export interface NotificationProps {
-	id: string,
-	user: string
-	wallet: string
-	unread: string
-	category: string
-	createdDate: string
-}
 
 export enum Permission {
 	Read = "Read",

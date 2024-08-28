@@ -7,6 +7,7 @@ import {IDelete} from "@/assets";
 import {swalAlert} from "@/hooks/swalAlert.ts";
 import {typeAlert} from "@/utils";
 import {removeMemberFromGroup} from "@/modules/chat/function/chats.ts";
+import {useUserStore} from "@/modules/authentication/store/user.ts";
 
 interface props {
 	manager: Manager
@@ -21,6 +22,7 @@ interface options {
 
 const CardManager: React.FC<props> = ({manager, wallet, isOwner}) => {
 
+	const {user} = useUserStore.getState().user
 	const {changePermission, removeManager} = usePostWalletMutate()
 	const [optionsPermission] = useState<options[]>(getPermissionOptions())
 	const [defaultPermission] = useState<options>({
@@ -74,7 +76,7 @@ const CardManager: React.FC<props> = ({manager, wallet, isOwner}) => {
 				<span className={`col-span-1 font-bold text-lg text-nowrap`}>Total spent</span>
 				<span className={`col-span-2 font-bold text-lg text-nowrap`}>Total transaction</span>
 				<span className={`col-span-1 font-bold text-lg text-nowrap`}>Permission</span>
-				<span className={`col-span-1`}>{manager.user.username}</span>
+				<span className={`col-span-1`}>{manager.user.id === user.id ? "You" : manager.user.username}</span>
 				<span className={`col-span-1`}><NumberFormatter number={manager.totalAmount}/></span>
 				<span className={`col-span-2`}>{manager.totalTransaction}</span>
 				<Select

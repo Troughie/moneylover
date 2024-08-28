@@ -1,9 +1,9 @@
 import useRequest from "@/hooks/useRequest.ts";
 import {post} from "@/libs/api.ts";
-import {useState} from "react";
 import {ResponseData, User} from "@/model/interface.ts";
 import {nameQueryKey} from "@/utils/nameQueryKey.ts";
 import {useQueryClient} from "@tanstack/react-query";
+import React from "react";
 
 interface props {
 	userId?: string
@@ -11,9 +11,7 @@ interface props {
 	permission?: string
 }
 
-const usePostWalletMutate = () => {
-	const [userFound, setUserFound] = useState<User>()
-	const [valueInput, setValueInput] = useState<string>()
+const usePostWalletMutate = (setUserFound?: React.Dispatch<React.SetStateAction<User | undefined>>, setValue?: React.Dispatch<React.SetStateAction<string>>) => {
 	const queryClient = useQueryClient()
 
 	const {mutate: getUser} = useRequest({
@@ -24,9 +22,10 @@ const usePostWalletMutate = () => {
 		},
 		showSuccess: false,
 		onSuccess: (res: ResponseData) => {
-			setUserFound(res?.data)
+			setUserFound && setUserFound(res?.data)
 		}
 	})
+
 
 	const {mutate: addManagerToWallet} = useRequest({
 		mutationFn: (value: props) => {
@@ -37,7 +36,9 @@ const usePostWalletMutate = () => {
 		},
 		onSuccess: () => {
 			// @ts-ignore
-			queryClient.invalidateQueries([nameQueryKey.wallet, nameQueryKey.wallets])
+			queryClient.invalidateQueries([nameQueryKey.wallets])
+			setUserFound && setUserFound(undefined)
+			setValue && setValue("")
 		}
 	})
 
@@ -50,7 +51,7 @@ const usePostWalletMutate = () => {
 		},
 		onSuccess: () => {
 			// @ts-ignore
-			queryClient.invalidateQueries([nameQueryKey.wallet, nameQueryKey.wallets])
+			queryClient.invalidateQueries([nameQueryKey.wallets])
 		}
 	})
 
@@ -62,7 +63,7 @@ const usePostWalletMutate = () => {
 		},
 		onSuccess: () => {
 			// @ts-ignore
-			queryClient.invalidateQueries([nameQueryKey.wallet, nameQueryKey.wallets])
+			queryClient.invalidateQueries([nameQueryKey.wallets])
 		}
 	})
 
@@ -76,7 +77,7 @@ const usePostWalletMutate = () => {
 		},
 		onSuccess: () => {
 			// @ts-ignore
-			queryClient.invalidateQueries([nameQueryKey.wallet, nameQueryKey.wallets])
+			queryClient.invalidateQueries([nameQueryKey.wallets])
 		}
 	})
 
@@ -91,20 +92,12 @@ const usePostWalletMutate = () => {
 			userId: user?.id
 		}
 		addManagerToWallet(param)
-		setValueInput(undefined)
-		setUserFound(undefined)
+		setUserFound && setUserFound(undefined)
 		await func
 	}
 
-	const getUserWithCode = (code: React.ChangeEvent<HTMLInputElement>) => {
 
-		const value = code.target.value
-		if (value.trim()) {
-			getUser(value)
-		}
-	}
-
-	return {getUserWithCode, userFound, valueInput, addManager, setValueInput, onChangeWalletMain, changePermission, removeManager}
+	return {getUser, addManager, onChangeWalletMain, changePermission, removeManager}
 }
 
 export default usePostWalletMutate

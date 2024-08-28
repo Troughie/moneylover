@@ -10,7 +10,7 @@ import {CheckSpentOver} from "@/modules/budget/function/checkSpentOver.ts";
 import {filter} from "@/modules/transaction/model";
 import {nameQueryKey} from "@/utils/nameQueryKey.ts";
 import {mergeBudgetSimilar} from "@/modules/budget/function/handleBudget.ts";
-import {useWalletStore} from "@/zustand/budget.ts";
+import {useWalletStore} from "@/store/WalletStore.ts";
 import {fetchBudgets} from "@/modules/budget/function";
 import cn from "@/utils/cn";
 import {NumberFormatter} from "@/utils/Format";
@@ -58,7 +58,7 @@ const BudgetHistory: React.FC<props> = ({isFetch}) => {
 
 		return categoryIds.join(",");
 	}, [budgetSimilar]);
-	
+
 	useEffect(() => {
 		if (!data) return;
 		const fetchTransactions = async () => {

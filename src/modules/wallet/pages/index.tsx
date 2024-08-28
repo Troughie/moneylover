@@ -9,12 +9,14 @@ import {goalSchema, walletSchema} from "@/libs/schema.ts";
 import {useQueryClient} from "@tanstack/react-query";
 import {post} from "@/libs/api.ts";
 import useRequest from "@/hooks/useRequest.ts";
-import {walletProps, typeWallet} from "@/model/interface.ts";
+import {typeWallet, walletProps} from "@/model/interface.ts";
 import {GoalForm, TableWallet, WalletForm} from "../component";
 import useWalletManager from "../function";
 import {FormatValueInput} from "@/utils/Format/fortmat.value.input.ts";
 import {useLocation} from "react-router-dom";
 import WalletDetail from "@/modules/wallet/component/Table/WalletDetail.tsx";
+import {swalAlert} from "@/hooks/swalAlert.ts";
+import {typeAlert} from "@/utils";
 
 interface type {
 	name: string,
@@ -100,6 +102,13 @@ const Wallet = React.memo(() => {
 
 
 	const handleSelectTypeWallet = (type: string) => {
+		if (type === typeWallet.Goal) {
+			swalAlert({
+				type: typeAlert.info,
+				message: "Feature under development, please wait for future updates!!"
+			})
+			return;
+		}
 		setWalletType(type)
 		setIsModalOpen(true)
 		setIsWalletTypeOpen(!isWalletTypeOpen)

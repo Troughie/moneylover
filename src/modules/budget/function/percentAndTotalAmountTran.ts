@@ -1,6 +1,6 @@
 import {useBudgetStore} from "@/modules/budget/store";
 import useDataTransaction from "@/modules/transaction/function";
-import {useWalletStore} from "@/zustand/budget.ts";
+import {useWalletStore} from "@/store/WalletStore.ts";
 import {useCallback, useMemo} from "react";
 import {BudgetResponse, BudgetSimilar} from "@/modules/budget/interface";
 import {filter} from "@/modules/transaction/model";

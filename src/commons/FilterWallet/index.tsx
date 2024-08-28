@@ -3,18 +3,21 @@ import cn from "@/utils/cn";
 import {convertMoney, NumberFormatter} from "@/utils/Format";
 import {useWalletCurrency} from "@/hooks/currency.ts";
 import React, {useEffect, useState} from "react";
-import {walletProps} from "@/model/interface.ts";
+import {User, walletProps} from "@/model/interface.ts";
 import Check from "@/assets/icons/check.tsx";
 import {Button, Empty} from "antd";
 import {routePath} from "@/utils";
 import {useNavigate} from "react-router-dom";
 
 interface props {
-	chooseWallet: (wallet: walletProps) => void;
-	walletCurrent?: walletProps
+	chooseWallet: (id: string) => void;
+	walletCurrent?: string
+	showMoney?: boolean
+	detailWallet?: (e: walletProps) => React.ReactNode
+	userFound?: User
 }
 
-const FilterWallet: React.FC<props> = ({chooseWallet, walletCurrent}) => {
+const FilterWallet: React.FC<props> = ({userFound, chooseWallet, walletCurrent, showMoney, detailWallet}) => {
 	const currency = useWalletCurrency();
 	const navigate = useNavigate()
 	const {wallets} = useWallet();
@@ -40,21 +43,26 @@ const FilterWallet: React.FC<props> = ({chooseWallet, walletCurrent}) => {
 	return (
 		<>
 			<div
-				className={` h-[calc(100%*3)] overflow-y-scroll rounded-lg w-[40%] p-4 shadow-3 z-10 absolute top-[90%] left-[20px] bg-white`}
+				className={cn(`h-[calc(100%*3)] gap-4 grid grid-cols-2 overflow-y-scroll rounded-lg w-[60%] p-4 shadow-3 z-1 absolute top-[90%] left-[20px] bg-white`
+					, {"h-full w-full relative top-0 left-0": !showMoney})}
 			>
 				{wallets.length > 0 ? wallets.map((el) => (
-						<div
-							key={el.id}
-							onClick={() => chooseWallet(el)}
-							className={cn(`cursor-pointer border my-1 rounded-lg hover:bg-gray-400 hover:scale-110 duration-300 hover:border-b-bodydark2 hover:border-b-2 mx-10 flex-between gap-4 p-4`, {})}
-						>
-							<div className={`flex items-center gap-4`}>
-								<span className={`font-bold text-2xl font-satoshi`}>{el.name}</span>
-								{walletCurrent?.id === el?.id && <Check className={`bg-red-500 rounded-full p-2`}/>}
+						<div onClick={() => chooseWallet(el.id)}
+							 className={`relative shadow-3 rounded-lg border border-bodydark p-4 flex-between cursor-pointer`}>
+							<div className={`flex gap-4`}>
+								<div className={cn(``, {"animate-click-effect": !showMoney && walletCurrent === el.id})}>
+									<img src="https://img.icons8.com/?size=100&id=13016&format=png&color=000000" alt=""
+										 className={`w-10 h-10 rounded-full bg-black`}/>
+									<span className={`mt-2 line-clamp-1`}>{el.name}</span>
+								</div>
+								{detailWallet && detailWallet(el)}
 							</div>
-							<span>
-				  <NumberFormatter number={convertedBalances[el.id]}/>
-            </span>
+							{showMoney &&
+                                <NumberFormatter number={convertedBalances[el.id]}/>
+							}
+							{userFound && <div
+                                className={`absolute z-1  text-bodydark2 text-sm bottom-1 right-1`}>{el.managers.find((m) => m.user.id === userFound.id) ? "Shared" : ""}</div>}
+							{walletCurrent === el.id && <Check className={`font-bold`} color={`red`}/>}
 						</div>
 					)) :
 					<div className={`flex-center flex-col`}>

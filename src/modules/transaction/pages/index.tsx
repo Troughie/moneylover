@@ -16,7 +16,7 @@ import FilterDate from "@/modules/transaction/component/FilterDate";
 import BalanceInMonth from "@/modules/transaction/function/balanceInMonth.ts";
 import {filter} from "@/modules/transaction/model";
 import {FormatValueInput} from "@/utils/Format/fortmat.value.input.ts";
-import {useWalletStore} from "@/zustand/budget.ts";
+import {useWalletStore} from "@/store/WalletStore.ts";
 import {showModalNoWallet} from "@/utils/showModalNoWallet.tsx";
 import TranDetail from "@/modules/transaction/commons/TranDetail.tsx";
 import useMutateTransaction from "@/modules/transaction/function/postMutateTransaction.ts";
@@ -31,6 +31,7 @@ const Transaction = React.memo(() => {
 	const methods = useForm({
 		mode: "onChange",
 		resolver: yupResolver(transactionSchema),
+		defaultValues: {amount: 0}
 	})
 
 	const FilterMethods = useForm({mode: "onChange"})

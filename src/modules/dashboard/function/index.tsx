@@ -1,7 +1,7 @@
 import {useQueries,} from "@tanstack/react-query";
 import {ResponseData, transactionResponse} from "@/model/interface.ts";
 import {get} from "@/libs/api.ts";
-import {useWalletStore} from "@/zustand/budget.ts";
+import {useWalletStore} from "@/store/WalletStore.ts";
 import {BudgetResponse} from "@/modules/budget/interface";
 import {nameQueryKey} from "@/utils/nameQueryKey.ts";
 

@@ -5,7 +5,7 @@ import {InputController, SelectInput} from "@/commons";
 import {useWallet} from "@/context/WalletContext.tsx";
 import {useCategoryFetch} from "@/context/CategoryContext.tsx";
 import {parseNewWallet, parseToNewCate} from "@/model/interface.ts";
-import {useWalletStore} from "@/zustand/budget.ts";
+import {useWalletStore} from "@/store/WalletStore.ts";
 import {dayInWeek, getDayAndPositionOfWeek} from "@/utils/day.ts";
 import dayjs from "dayjs";
 import {dateFormat} from "@/utils";

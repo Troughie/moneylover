@@ -23,6 +23,7 @@ export {default as ICopy} from "./icons/CopyIcon.tsx";
 export {default as IDelete} from "./icons/DeleteIcon.tsx";
 export {default as IImage} from "./icons/imageIcon.tsx";
 export {default as IInformation} from "./icons/InformationIcon.tsx";
+export {default as IWarning} from "./icons/WarningIcon.tsx";
 
 export {default as IShopping} from "./icons/Shopping Card Icon.svg";
 export {default as IFood} from "./icons/Food Dish Icon.svg";

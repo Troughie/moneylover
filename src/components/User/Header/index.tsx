@@ -1,31 +1,25 @@
-import React, {useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import {FilterWallet, ModalPopUp, Notifications} from "@/commons";
 import {Calender, IBell, IUser} from "@/assets";
-import {useLocation, useNavigate} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import {useWallet} from "@/context/WalletContext.tsx";
-import {useWalletStore} from "@/zustand/budget.ts";
-import {changePassword, NotificationProps, walletProps} from "@/model/interface.ts";
+import {useWalletStore} from "@/store/WalletStore.ts";
 import {NumberFormatter} from "@/utils/Format";
-import {useQuery, useQueryClient} from "@tanstack/react-query";
+import {useQueryClient} from "@tanstack/react-query";
 import {nameQueryKey} from "@/utils/nameQueryKey.ts";
-import useRequest from "@/hooks/useRequest.ts";
-import {get, post} from "@/libs/api.ts";
-import {routePath, typeAlert} from "@/utils";
+import {typeAlert} from "@/utils";
 import {motion as m} from "framer-motion";
 import {useUserStore} from "@/modules/authentication/store/user.ts";
 import {toastAlert} from "@/hooks/toastAlert.ts";
 import {Badge} from "antd";
-import SettingUser from "@/components/User/Component/UserProfile.tsx";
-import Friends from "@/components/User/Component/Friends.tsx";
+import SettingUser from "@/modules/userProfile/page/UserProfile.tsx";
+import Friends from "@/modules/userProfile/page/Friends.tsx";
+import useNotifications from "@/modules/notifications/function";
+import {useProfileStore} from "@/modules/userProfile/store";
+import {useHeaderStore} from "@/store/HeaderStore.ts";
+import useProfileFunction from "@/modules/userProfile/function";
+import {walletProps} from "@/model/interface.ts";
 
-interface props {
-	walletsOpen: React.Dispatch<React.SetStateAction<boolean>>
-	notificationsOpen: React.Dispatch<React.SetStateAction<boolean>>
-	setToggleName: React.Dispatch<React.SetStateAction<boolean>>
-	isWalletOpen: boolean
-	isNotificationOpen: boolean
-	toggleName: boolean
-}
 
 enum statusNoti {
 	All = "All",
@@ -38,22 +32,18 @@ interface UserProfile {
 
 }
 
-const HeaderUser: React.FC<props> = ({setToggleName, toggleName, walletsOpen, isWalletOpen, isNotificationOpen, notificationsOpen}) => {
-	const {pathname} = useLocation()
+const HeaderUser = () => {
 	const navigate = useNavigate()
 	const [currentDay, setCurrentDay] = useState<number>(0)
 	const [btnType, setBtnType] = useState<string>(statusNoti.All)
 	const {user} = useUserStore.getState().user
 	const {removeUser} = useUserStore()
-	const [email, setEmail] = useState<string>("")
-	const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
-	const [friendOpen, setFriendOpen] = useState<boolean>(false)
 	const [showChangePassword, setShowChangePassword] = useState<boolean>(false)
 	const queryClient = useQueryClient()
+	const {isNotificationOpen, isWalletOpen, toggleName, changeStatusBtn, setFalseAll} = useHeaderStore()
+	const {friendOpen, setFriendOpen, setProfileOpen, profileOpen} = useProfileStore()
 
 	const {transactions, budgets, transaction, transaction_month, transaction_all} = nameQueryKey
-
-	const [walletCurrent, setWalletCurrent] = useState<walletProps>()
 
 	const {wallets} = useWallet()
 
@@ -62,37 +52,12 @@ const HeaderUser: React.FC<props> = ({setToggleName, toggleName, walletsOpen, is
 	const handleChangeStatusBtnNotification = (status: string) => {
 		setBtnType(status)
 	}
-	const fetchNotification = () => {
-		return get({url: `notifications?status=${btnType}`})
-	}
-	const {data} = useQuery({queryKey: [nameQueryKey.notification, btnType], queryFn: fetchNotification})
 
-	const result: NotificationProps[] = data?.data || []
+	const {notifications} = useNotifications(btnType)
 
-
-	const {mutate: changePassword} = useRequest({
-		mutationFn: (values: changePassword) => {
-			return post({
-				url: "auth/changePassword",
-				data: values
-			})
-		},
-
-		onSuccess: () => {
-			logout(routePath.login.path)
-		}
-	})
-
-	const handleOk = (data: any) => {
-		const passwordNew: changePassword = {
-			email,
-			...data
-		}
-		changePassword(passwordNew)
-	}
 
 	const handleCancel = () => {
-		setIsModalOpen(false)
+		setProfileOpen(false)
 		setFriendOpen(false)
 	}
 
@@ -100,6 +65,8 @@ const HeaderUser: React.FC<props> = ({setToggleName, toggleName, walletsOpen, is
 		removeUser()
 		navigate(path)
 	}
+
+	const {handleOk} = useProfileFunction(logout)
 
 	const today = () => {
 		const date: Date = new Date()
@@ -110,36 +77,22 @@ const HeaderUser: React.FC<props> = ({setToggleName, toggleName, walletsOpen, is
 		console.log(new Date())
 	}
 
-	const chooseWallet = (data: walletProps) => {
-		setWalletCurrent(data)
-		addWallet(data)
+	const chooseWallet = (id: string) => {
+		const wallet = wallets.find(el => el.id === id)
+		if (wallet) {
+			addWallet(wallet)
+		}
 		// @ts-ignore
 		queryClient.invalidateQueries([transactions, budgets, transaction, transaction_all, transaction_month])
-		walletsOpen(!isWalletOpen)
+		setFalseAll()
 	}
 
 	useEffect(() => {
-		setToggleName(false)
-	}, [pathname]);
-
-
-	useEffect(() => {
-		const wallet = wallets.find(el => el.main)
-		const wc1 = wallets.find(el => el.id === walletSelect?.id)
-		if (!walletSelect) {
-			if (wallet) {
-				addWallet(wallet)
-			}
+		const walletMain = wallets.find(el => el.main && el.user.id === user.id)
+		if (walletMain) {
+			addWallet(walletSelect ?? walletMain)
 		}
-		if (wc1) {
-			// @ts-ignore
-			addWallet(wc1)
-			setWalletCurrent(wc1)
-		} else {
-			// @ts-ignore
-			addWallet(wallet)
-			setWalletCurrent(wallet)
-		}
+
 	}, [walletSelect, wallets]);
 
 	const handleChangePasswordOpen = () => {
@@ -148,10 +101,6 @@ const HeaderUser: React.FC<props> = ({setToggleName, toggleName, walletsOpen, is
 
 	useEffect(() => {
 		setCurrentDay(today())
-
-		if (user) {
-			setEmail(user?.email)
-		}
 	}, [user]);
 
 	const savingID = () => {
@@ -163,7 +112,7 @@ const HeaderUser: React.FC<props> = ({setToggleName, toggleName, walletsOpen, is
 	const userProfile: UserProfile[] = [
 		{
 			title: "Setting",
-			func: () => setIsModalOpen(!isModalOpen)
+			func: () => setProfileOpen(!profileOpen)
 		},
 		{
 			title: "Friend",
@@ -175,35 +124,52 @@ const HeaderUser: React.FC<props> = ({setToggleName, toggleName, walletsOpen, is
 		}
 	]
 
+	const detailWallet = (e: walletProps): React.ReactNode | undefined => {
+		if (e.main && e.user.id === user.id) {
+			return <span className={`text-lg text-red-400`}>Main</span>
+		}
+
+		if (e.user.id != user.id) {
+			return <p className={`font-bold text-lg`}>{e.user.username}</p>
+		}
+
+		return undefined
+	}
+
 	return <>
 		<m.div
 			className={`flex justify-between sticky top-0 z-1 right-0 bg-white mx-4 rounded-2xl items-center p-6 shadow-3 mt-4`}>
 			<div className={`flex gap-4 cursor-pointer`} onClick={() => {
-				walletsOpen(!isWalletOpen)
+				changeStatusBtn("Wallet")
 			}}>
 				<img src="https://img.icons8.com/?size=100&id=13016&format=png&color=000000" alt="" className={`w-10 h-10 rounded-full bg-black`}/>
 				<p>
-					<p>{walletCurrent?.name}</p>
-					<span className={`font-bold font-satoshi`}>{<NumberFormatter number={walletCurrent?.balance || 0}/>}</span>
+					<p>{walletSelect?.name}</p>
+					<span className={`font-bold font-satoshi`}>{<NumberFormatter number={walletSelect?.balance || 0}/>}</span>
 				</p>
 			</div>
-			{isWalletOpen && <FilterWallet chooseWallet={chooseWallet} walletCurrent={walletCurrent}/>}
-			{isNotificationOpen && <Notifications setBtnType={handleChangeStatusBtnNotification} btnType={btnType} notifications={result}/>}
+			{isWalletOpen &&
+                <FilterWallet detailWallet={detailWallet} chooseWallet={chooseWallet} walletCurrent={walletSelect?.id} showMoney={true}/>}
+			{isNotificationOpen && <Notifications setBtnType={handleChangeStatusBtnNotification} btnType={btnType} notifications={notifications}/>}
 			<div className={`flex gap-4 items-center relative`}>
 				<div className={`cursor-pointer`} onClick={() => jumpToDay()}>
 					<img src={Calender} alt=""/>
 					<span className={`absolute bottom-0 left-[5%]`}>{currentDay}</span>
 				</div>
-				<Badge count={result.filter((e) => e.unread).length}>
+				<Badge count={notifications.filter((e) => e.unread).length}>
 					<m.div
 						initial={{transform: "rotate(-9deg)"}}
 						animate={{transform: "rotate(0)"}}
 						transition={{duration: 0.4}}
-						className={`cursor-pointer hover:animate-wiggle`} onClick={() => notificationsOpen(!isNotificationOpen)}>
+						className={`cursor-pointer hover:animate-wiggle`} onClick={() => {
+						changeStatusBtn("Notification")
+					}}>
 						<IBell/>
 					</m.div>
 				</Badge>
-				<p onClick={() => setToggleName(!toggleName)} className={`cursor-pointer font-satoshi text-xl font-medium flex-between gap-2`}>
+				<p onClick={() => {
+					changeStatusBtn("Name")
+				}} className={`cursor-pointer font-satoshi text-xl font-medium flex-between gap-2`}>
 					<IUser/><span>{user?.username ?? "No name"}</span>
 				</p>
 			</div>
@@ -222,7 +188,7 @@ const HeaderUser: React.FC<props> = ({setToggleName, toggleName, walletsOpen, is
                 </>
 			}
 		</m.div>
-		<ModalPopUp isModalOpen={isModalOpen} showOke={false} showCancel={false} handleCancel={handleCancel}
+		<ModalPopUp isModalOpen={profileOpen} showOke={false} showCancel={false} handleCancel={handleCancel}
 					title={`Change password`}>
 			<SettingUser showChangePassword={showChangePassword} handleChangePasswordOpen={handleChangePasswordOpen} handleOk={handleOk}
 						 savingID={savingID}/>

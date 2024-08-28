@@ -19,7 +19,7 @@ const checkIcon: React.FC<IconProps> = ({className, width = 24, height = 24, col
 						stroke={color}
 						strokeLinecap="round"
 						strokeLinejoin="round"
-						strokeWidth="2"
+						strokeWidth="4"
 					/>
 					<line
 						x1="12"
@@ -29,7 +29,7 @@ const checkIcon: React.FC<IconProps> = ({className, width = 24, height = 24, col
 						stroke={color}
 						strokeLinecap="round"
 						strokeLinejoin="round"
-						strokeWidth="2"
+						strokeWidth="4"
 					/>
 				</g>
 			</svg>
