@@ -110,10 +110,10 @@ export const filterRoutes = (excludeKeys: string[]) => {
 	return result
 }
 
-export const routePrivate = () => filterRoutes(['login', 'bill', 'register', 'forgot', "enterCode", "changePass"])
+export const routePrivate = () => filterRoutes(['login', 'bill', 'register', 'forgot', "enterCode", "changePass", 'recurring'])
 
 // Sử dụng cho public routes
-export const routePublic = () => filterRoutes(['bill', 'budget', 'dashboard', 'wallet', 'recurring', 'transaction'])
+export const routePublic = () => filterRoutes(['bill', 'budget', 'dashboard', 'wallet', 'transaction'])
 
 
 export const filterOptionSelect = (input: string, option?: { label: string; value: string }) =>

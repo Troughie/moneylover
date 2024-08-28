@@ -9,9 +9,14 @@ import {BarChart} from "../component";
 import {useCallback, useEffect, useMemo, useState} from "react";
 import {typeCategory} from "@/model/interface.ts";
 import dayjs from "dayjs";
+import useWalletManager from "@/modules/wallet/function";
+import {useUserStore} from "@/modules/authentication/store/user.ts";
+import {Link} from "react-router-dom";
 // import {useWalletCurrency} from "@/hooks/currency.ts";
 
 const DashBoard = () => {
+	const {wallets} = useWalletManager()
+	const {user} = useUserStore.getState().user
 	const {budgets, transactions} = useHomePage()
 	// const {wallets} = useWallet()
 	// const currency = useWalletCurrency();
@@ -56,11 +61,23 @@ const DashBoard = () => {
 			<div className={`grid grid-cols-1 md:grid-cols-12 gap-6 row-span-1 h-auto`}>
 				<div
 					className={`shadow-4 bg-white rounded-2xl md:col-span-6 py-8  xl:col-span-8 flex flex-col-reverse md:flex-row items-center justify-between px-6`}>
-					<div className={`flex flex-col gap-5`}><span
-						className={`text-3xl font-semibold`}>Welcome back </span>
+					<div className={`flex flex-col gap-5`}>
 						<span
-							className={`text-2xl text-bodydark2`}>Total transaction in {dayjs().format("MMMM")} is <span
-							className={`font-bold text-2xl text-black`}>{countTotalTranOfMonth().length}</span> </span>
+							className={`text-3xl font-semibold`}>{wallets.length > 0 ? `Welcome back ` : `Hello ${user.username}`}</span>
+
+						{wallets.length > 0 ?
+							<span
+								className={`text-2xl text-bodydark2`}>Total transaction in {dayjs().format("MMMM")} is <span
+								className={`font-bold text-2xl text-black`}>{countTotalTranOfMonth().length}</span> </span>
+							:
+							<>
+								<span className={`text-lg`}>Start creating a wallet to use the application  <Link
+									className={`text-blue-500 font-semibold`}
+									to={routePath.wallet.path}
+									state={{isModalOpen: true}}> click here</Link></span>
+							</>
+						}
+
 					</div>
 					<img src={Saving} alt="" className={`w-40 h-40`}/>
 				</div>

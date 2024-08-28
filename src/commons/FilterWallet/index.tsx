@@ -44,7 +44,10 @@ const FilterWallet: React.FC<props> = ({userFound, chooseWallet, walletCurrent, 
 		<>
 			<div
 				className={cn(`h-[calc(100%*3)] gap-4 grid grid-cols-2 overflow-y-scroll rounded-lg w-[60%] p-4 shadow-3 z-1 absolute top-[90%] left-[20px] bg-white`
-					, {"h-full w-full relative top-0 left-0": !showMoney})}
+					, {
+						"h-full w-full relative top-0 left-0": !showMoney,
+						"grid-cols-1": wallets.length === 0
+					})}
 			>
 				{wallets.length > 0 ? wallets.map((el) => (
 						<div onClick={() => chooseWallet(el.id)}
@@ -65,7 +68,7 @@ const FilterWallet: React.FC<props> = ({userFound, chooseWallet, walletCurrent, 
 							{walletCurrent === el.id && <Check className={`font-bold`} color={`red`}/>}
 						</div>
 					)) :
-					<div className={`flex-center flex-col`}>
+					<div className={`flex-center mx-auto w-full flex-col`}>
 						<Empty description={`No wallet`}/>
 						<Button className={`mt-4`} onClick={() => navigate(routePath.wallet.path, {state: {isModalOpen: true}})} type={"link"}>Click
 							here to create new

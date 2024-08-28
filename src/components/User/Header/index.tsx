@@ -42,7 +42,6 @@ const HeaderUser = () => {
 	const queryClient = useQueryClient()
 	const {isNotificationOpen, isWalletOpen, toggleName, changeStatusBtn, setFalseAll} = useHeaderStore()
 	const {friendOpen, setFriendOpen, setProfileOpen, profileOpen} = useProfileStore()
-
 	const {transactions, budgets, transaction, transaction_month, transaction_all} = nameQueryKey
 
 	const {wallets} = useWallet()
@@ -79,6 +78,7 @@ const HeaderUser = () => {
 
 	const chooseWallet = (id: string) => {
 		const wallet = wallets.find(el => el.id === id)
+		console.log(wallet)
 		if (wallet) {
 			addWallet(wallet)
 		}
@@ -89,11 +89,28 @@ const HeaderUser = () => {
 
 	useEffect(() => {
 		const walletMain = wallets.find(el => el.main && el.user.id === user.id)
-		if (walletMain) {
-			addWallet(walletSelect ?? walletMain)
+		// Reset walletSelect khi phát hiện tài khoản mới
+		const isManager = walletSelect?.managers.find((e) => e.user.id === user?.id);
+
+		if (!walletSelect || (walletSelect?.user?.id !== user.id) && !isManager) {
+			addWallet(walletMain);
+			return;
 		}
 
-	}, [walletSelect, wallets]);
+		if (wallets.length === 0) {
+			addWallet(undefined);
+			return;
+		}
+
+		if (isManager) {
+			addWallet(walletSelect);
+			return;
+		}
+
+		if (!isManager && walletMain?.id !== walletSelect?.id && walletSelect?.user?.id !== user?.id) {
+			addWallet(walletMain);
+		}
+	}, [wallets, user?.id]);
 
 	const handleChangePasswordOpen = () => {
 		setShowChangePassword(!showChangePassword)
@@ -144,8 +161,13 @@ const HeaderUser = () => {
 			}}>
 				<img src="https://img.icons8.com/?size=100&id=13016&format=png&color=000000" alt="" className={`w-10 h-10 rounded-full bg-black`}/>
 				<p>
-					<p>{walletSelect?.name}</p>
-					<span className={`font-bold font-satoshi`}>{<NumberFormatter number={walletSelect?.balance || 0}/>}</span>
+					{wallets.length === 0 && <p>No wallet</p>}
+					{wallets.length > 0 &&
+                        <p className={`text-lg font-bold`}>{walletSelect?.name} <span
+                            className={`text-sm font-normal`}>{walletSelect?.user?.id != user?.id && `Share by ${walletSelect?.user?.username}`}</span>
+                        </p>}
+					<span className={`font-bold font-satoshi`}>{<NumberFormatter
+						number={walletSelect?.balance || 0}/>}</span>
 				</p>
 			</div>
 			{isWalletOpen &&

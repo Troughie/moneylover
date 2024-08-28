@@ -23,13 +23,14 @@ const Main = ({group}: props) => {
 	const handleScroll = async () => {
 		if (messageContainerRef.current) {
 			const {scrollTop} = messageContainerRef.current;
-			if (scrollTop === 0 && group) {  // User has scrolled to the top
+			if (scrollTop === 0 && group && messages.length > 0) {  // User has scrolled to the top
 				await fetchMessage();  // Fetch more messages
 			}
 		}
 	};
 
 	useEffect(() => {
+
 		const container = messageContainerRef.current;
 		container?.addEventListener('scroll', handleScroll);
 
@@ -39,6 +40,8 @@ const Main = ({group}: props) => {
 	}, [fetchMessage]);
 
 	useEffect(() => {
+		console.log(isLoading)
+
 		const sortedMessages = messages?.sort((a, b) => {
 			// Sort by latest message timestamp if unread count is the same
 			const latestMessageTimeA = a?.createdAt || 0;

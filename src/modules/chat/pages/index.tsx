@@ -4,8 +4,6 @@ import Main from "@/modules/chat/component/main.tsx";
 import {useEffect, useState} from "react";
 import {Group} from "@/modules/chat/function/chats.ts";
 import {useChatStore} from "@/modules/chat/store/chatStore.ts";
-import {LoadingOutlined} from "@ant-design/icons";
-import {Spin} from "antd";
 import InformationRight from "@/modules/chat/component/informationRight.tsx";
 import Media from "@/modules/chat/component/Media.tsx";
 import {AnimatePresence} from "framer-motion";
@@ -33,8 +31,7 @@ const Chat = () => {
 			<NavLeft groups={groups} setId={setId} id={id}/>
 			<div className={`flex flex-col w-full relative`}>
 				<Header name={group?.name}/>
-				{group ? <Main group={group}/> : <Spin className={`flex justify-center  items-center `}
-													   indicator={<LoadingOutlined style={{fontSize: 50}} spin/>}/>}
+				{group ? <Main group={group}/> : <span className={`text-center mt-20 text-2xl text-bodydark2`}>No groups chat available</span>}
 			</div>
 			<AnimatePresence>
 				{isInformationOpen && <InformationRight group={group}/>}

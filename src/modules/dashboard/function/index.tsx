@@ -26,8 +26,8 @@ const useHomePage = (): props => {
 
 	const data = useQueries({
 		queries: [
-			{queryKey: [nameQueryKey.budget, walletSelect], queryFn: fetchBudgets, staleTime: Infinity},
-			{queryKey: [nameQueryKey.transaction_all, walletSelect], queryFn: fetchTranAll, staleTime: Infinity},
+			{queryKey: [nameQueryKey.budget, walletSelect], queryFn: fetchBudgets, enabled: !!walletSelect},
+			{queryKey: [nameQueryKey.transaction_all, walletSelect], queryFn: fetchTranAll, enabled: !!walletSelect},
 		],
 	})
 

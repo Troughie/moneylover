@@ -34,13 +34,13 @@ const ShowChat: React.FC<props> = ({isLoading, sortMessages, messageContainerRef
 			<div className={`h-full flex flex-col gap-6`}>
 				{sortMessages.map((msg, i) => {
 					const isYour = msg?.sender?.id === user?.id
-					return <div ref={i === sortMessages.length - 1 ? lastMessageRef : null} key={i} className={`pb-8`}>
+					return <div key={i} className={`pb-8`}>
 						<span className={`w-full flex-center my-8 text-bodydark2`}>{dayjs(msg.timer).format("D MM, YYYY, h:mm A")}</span>
 						<span className={cn(`text-bodydark2 ml-8`, {"hidden": isYour})}>{msg.sender.username}</span>
 						{msg.message.map((item, index) => {
 							const lastMessPerson = msg.message.length - 1 === index
 							const firstMessPerson = index === 0
-							return <div className={`pb-1`}>
+							return <div ref={i === sortMessages.length - 1 ? lastMessageRef : null} className={`pb-1`}>
 								<MsgBox lengthMsg={msg.message.length} key={item.id} msg={item} isYour={isYour}
 										lastMessagePerson={lastMessPerson}
 										firstMessPerson={firstMessPerson}/>

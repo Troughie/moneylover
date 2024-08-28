@@ -8,6 +8,7 @@ import useRequest from "@/hooks/useRequest.ts";
 import {del} from "@/libs/api.ts";
 import {useQueryClient} from "@tanstack/react-query";
 import {nameQueryKey} from "@/utils/nameQueryKey.ts";
+import {deleteGroupWithMessages} from "@/modules/chat/function/chats.ts";
 
 interface props {
 	infoWallet: walletProps | undefined
@@ -23,9 +24,10 @@ const WalletDetail: React.FC<props> = ({infoWallet, isGoal}) => {
 				url: `wallet/delete/${value}`,
 			})
 		},
-		onSuccess: () => {
+		onSuccess: async () => {
 			// @ts-ignore
-			queryClient.invalidateQueries([nameQueryKey.wallet, "wallets"])
+			queryClient.invalidateQueries([nameQueryKey.wallet, nameQueryKey.wallets])
+			infoWallet && await deleteGroupWithMessages(infoWallet.id)
 		}
 	})
 
@@ -34,7 +36,7 @@ const WalletDetail: React.FC<props> = ({infoWallet, isGoal}) => {
 		swalAlert({
 			type: typeAlert.info,
 			title: `Do you want delete wallet `,
-			message: "You will also delete all of its transactions, budgets ,bills, and this action cannot be undone.",
+			message: "You will also delete all of its transactions, budgets ,bills, and this action cannot be undone.And group chat will disappear",
 			showCancel: true,
 			optional: {cancelButtonColor: "#3952c6", confirmButtonColor: "#b82126"},
 			thenFunc: ((result) => {

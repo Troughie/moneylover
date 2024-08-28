@@ -108,6 +108,12 @@ export interface ResponseData {
 	success: boolean
 }
 
+export interface ResponseFirebase {
+	message: string,
+	data: any
+	success: boolean
+}
+
 export enum debt_loan_type {
 	debt = 1,
 	loan = 2

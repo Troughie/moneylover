@@ -13,11 +13,14 @@ import {
 	serverTimestamp,
 	setDoc,
 	updateDoc,
-	where
+	deleteDoc,
+	where,
+	writeBatch
 } from 'firebase/firestore';
 import {getDownloadURL, ref, StorageReference, uploadBytes, listAll} from 'firebase/storage';
 import {v4 as uuidv4} from 'uuid';
-import {User} from "@/model/interface.ts";
+import {ResponseFirebase, User} from "@/model/interface.ts";
+import {errorResponse, successResponse} from "@/utils/ResponseFirebase.tsx";
 
 
 export interface createdAt {
@@ -167,7 +170,7 @@ export const getLatestMessageForGroup = async (groupId: string): Promise<Message
 	return latestMessage || null;
 };
 
-export const addMemberToGroup = async (groupId: string, newMember: TimeAddUser) => {
+export const addMemberToGroup = async (groupId: string, newMember: TimeAddUser): Promise<ResponseFirebase> => {
 	try {
 		const groupRef = doc(db, 'groups', groupId);
 
@@ -176,7 +179,7 @@ export const addMemberToGroup = async (groupId: string, newMember: TimeAddUser) 
 		if (groupDoc.exists()) {
 			if (groupDoc.data()?.membersId.includes(newMember.user.id)) {
 				console.log("Member has already in group!!!", groupId)
-				return;
+				return errorResponse("Member has already in group!!!");
 			}
 
 			let objectRef = {
@@ -201,11 +204,56 @@ export const addMemberToGroup = async (groupId: string, newMember: TimeAddUser) 
 			await updateDoc(groupRef, objectRef);
 
 			console.log('Member added to group and group name updated, unreadCount set for the new member');
+			return successResponse('Member added to group and group name updated, unreadCount set for the new member')
 		} else {
 			console.log('Group does not exist');
+			return errorResponse('Group does not exist')
 		}
 	} catch (error) {
 		console.error('Error adding member to group:', error);
+		return errorResponse('Error adding member to group:' + error)
+	}
+};
+
+const deleteMessages = async (groupId: string) => {
+	const messagesRef = collection(db, 'groups', groupId, 'messages');
+	const querySnapshot = await getDocs(messagesRef);
+
+	const batchSize = 10;
+	let batch = writeBatch(db); // Tạo batch
+	let count = 0; // Theo dõi số lượng documents
+
+	querySnapshot.forEach((doc) => {
+		batch.delete(doc.ref);
+		count++;
+
+		// Khi đạt đến batchSize thì commit batch và tạo batch mới
+		if (count === batchSize) {
+			batch.commit();
+			batch = writeBatch(db); // Tạo batch mới
+			count = 0; // Reset đếm
+		}
+	});
+
+	// Commit những documents còn lại trong batch
+	if (count > 0) {
+		await batch.commit();
+	}
+
+	console.log('All messages in the group have been deleted.');
+};
+
+export const deleteGroupWithMessages = async (groupId: string) => {
+	try {
+		// Xóa toàn bộ collection 'messages' trước
+		await deleteMessages(groupId)
+		// Xóa document 'groupId' trong 'groups'
+		const groupRef = doc(db, 'groups', groupId);
+		await deleteDoc(groupRef);
+
+		console.log(`Group with ID ${groupId} and its messages have been deleted.`);
+	} catch (error) {
+		console.error('Error deleting group and messages:', error);
 	}
 };
 
