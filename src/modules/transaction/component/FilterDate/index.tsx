@@ -1,4 +1,4 @@
-import {monthDates, timeTransaction} from "@/modules/transaction/model";
+import {monthDates} from "@/modules/transaction/model";
 import React, {useCallback, useEffect, useRef, useState} from "react";
 import cn from "@/utils/cn";
 import dayjs from "dayjs";
@@ -14,17 +14,18 @@ const FilterDate: React.FC<props> = ({setFilter}) => {
 	const [currentSelectDateFilter, setCurrentSelectDateFilter] = useState<string>(
 		`${new Date().getMonth() + 1}-${new Date().getFullYear()}`
 	)
-	const {transactions} = useHomePage()
+	const {transactions} = useHomePage(true)
 
-	const countTranOfMonth = useCallback((currentTime: timeTransaction | null) => {
+	const countTranOfMonth = useCallback((currentTime: { month: number; year: number } | null) => {
 		return transactions.filter((el) => {
 			const dateToCheck = dayjs(el.date)
 			const currentDate = dayjs()
-			if (!currentTime) {
-				return null;
+			if (!currentTime && dateToCheck.isAfter(currentDate)) {
+				return el;
 			}
-			if (dateToCheck.year() === currentTime.year) {
-				if (dateToCheck.month() === +currentTime.month - 1 || dateToCheck.isAfter(currentDate) && !!currentTime) {
+
+			if (dateToCheck.year() === currentTime?.year) {
+				if (dateToCheck.month() === +currentTime?.month - 1 && dateToCheck.isBefore(currentDate)) {
 					return el
 				}
 			}
@@ -82,7 +83,7 @@ const FilterDate: React.FC<props> = ({setFilter}) => {
 				})}
 				<Badge count={countTranOfMonth(null).length}>
 					<div onClick={() =>
-						clickChangeTime(true, new Date().getMonth() + 2, new Date().getFullYear(), dayjs().add(1, "day").toISOString().split('T')[0], undefined)
+						clickChangeTime(true, new Date().getMonth() + 1, new Date().getFullYear(), dayjs().add(1, 'day').toISOString().split('T')[0], undefined)
 					}
 						 className={cn(`py-2 text-nowrap px-4 cursor-pointer `, {" border-b bg-gray-200 py-2 px-4 rounded-lg border-b-bodydark2": isFuture})}>
 						FUTURE

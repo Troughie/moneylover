@@ -1,8 +1,7 @@
 import {useWallet} from "@/context/WalletContext.tsx";
 import cn from "@/utils/cn";
-import {convertMoney, NumberFormatter} from "@/utils/Format";
-import {useWalletCurrency} from "@/hooks/currency.ts";
-import React, {useEffect, useState} from "react";
+import {NumberFormatter} from "@/utils/Format";
+import React from "react";
 import {User, walletProps} from "@/model/interface.ts";
 import Check from "@/assets/icons/check.tsx";
 import {Button, Empty} from "antd";
@@ -18,28 +17,9 @@ interface props {
 }
 
 const FilterWallet: React.FC<props> = ({userFound, chooseWallet, walletCurrent, showMoney, detailWallet}) => {
-	const currency = useWalletCurrency();
 	const navigate = useNavigate()
 	const {wallets} = useWallet();
-	const [convertedBalances, setConvertedBalances] = useState<{
-		[key: string]: number;
-	}>({});
 
-	useEffect(() => {
-		const fetchConvertedBalances = async () => {
-			const newConvertedBalances: { [key: string]: number } = {};
-			for (const wallet of wallets) {
-				newConvertedBalances[wallet.id] = await convertMoney(
-					wallet.balance,
-					wallet.currency,
-					currency
-				);
-			}
-			setConvertedBalances(newConvertedBalances);
-		};
-
-		fetchConvertedBalances();
-	}, [wallets, currency]);
 	return (
 		<>
 			<div
@@ -50,7 +30,7 @@ const FilterWallet: React.FC<props> = ({userFound, chooseWallet, walletCurrent, 
 					})}
 			>
 				{wallets.length > 0 ? wallets.map((el) => (
-						<div onClick={() => chooseWallet(el.id)}
+						<div key={el.id} onClick={() => chooseWallet(el.id)}
 							 className={`relative shadow-3 rounded-lg border border-bodydark p-4 flex-between cursor-pointer`}>
 							<div className={`flex gap-4`}>
 								<div className={cn(``, {"animate-click-effect": !showMoney && walletCurrent === el.id})}>
@@ -61,7 +41,7 @@ const FilterWallet: React.FC<props> = ({userFound, chooseWallet, walletCurrent, 
 								{detailWallet && detailWallet(el)}
 							</div>
 							{showMoney &&
-                                <NumberFormatter number={convertedBalances[el.id]}/>
+                                <NumberFormatter number={el.balance} type={el.currency}/>
 							}
 							{userFound && <div
                                 className={`absolute z-1  text-bodydark2 text-sm bottom-1 right-1`}>{el.managers.find((m) => m.user.id === userFound.id) ? "Shared" : ""}</div>}

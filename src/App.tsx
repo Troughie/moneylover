@@ -15,7 +15,7 @@ function App() {
 		<Routes>
 			<Route index element={<Home/>}/>
 			{routesPublic.map((el) => (
-				<Route path={el.path} element={
+				<Route key={el.name} path={el.path} element={
 					<PublicRoute>
 						<el.element/>
 					</PublicRoute>

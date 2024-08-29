@@ -4,6 +4,7 @@ import {get} from "@/libs/api.ts";
 import {useWalletStore} from "@/store/WalletStore.ts";
 import {BudgetResponse} from "@/modules/budget/interface";
 import {nameQueryKey} from "@/utils/nameQueryKey.ts";
+import dayjs from "dayjs";
 
 interface props {
 	budgets: BudgetResponse[]
@@ -17,17 +18,17 @@ const fetchBudgets = (key: any): Promise<ResponseData> => {
 
 
 const fetchTranAll = (key: any): Promise<ResponseData> => {
-	return get({url: "transactions", params: {wallet: key.queryKey[1]?.id}})
+	return get({url: "transactions", params: {wallet: key.queryKey[1]?.id, end: !key.queryKey[2] ? dayjs().format("YYYY-MM-DD") : null}})
 }
 
-const useHomePage = (): props => {
+const useHomePage = (isFuture: boolean = false): props => {
 
 	const {walletSelect} = useWalletStore()
 
 	const data = useQueries({
 		queries: [
 			{queryKey: [nameQueryKey.budget, walletSelect], queryFn: fetchBudgets, enabled: !!walletSelect},
-			{queryKey: [nameQueryKey.transaction_all, walletSelect], queryFn: fetchTranAll, enabled: !!walletSelect},
+			{queryKey: [nameQueryKey.transaction_all, walletSelect, isFuture], queryFn: fetchTranAll, enabled: !!walletSelect},
 		],
 	})
 

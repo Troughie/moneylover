@@ -50,11 +50,11 @@ const NavLeft = ({groups, setId, id}: props) => {
 
 	return <>
 		<div className={` w-40 lg:w-2/5 pl-4  bg-nav flex flex-col gap-4 pr-2`}>
-			<span className={`px-2 pt-8 pb-4 font-bold text-sm md:text-2xl`}>Chats</span>
+			<span className={` pt-8 pb-4 font-bold text-sm md:text-2xl`}>Chats</span>
 			<input type="search"
 				   value={valueSearch}
 				   onChange={(e) => setValueSearch(e.target.value)}
-				   className="block w-full py-4 ps-6 text-sm text-gray-900 border rounded-full bg-gray-50 focus:ring-blue-500 focus:border-blue-500 border-blue-200"
+				   className="block w-full py-4 ps-4 text-sm text-gray-900 border rounded-full bg-gray-50 focus:ring-blue-500 focus:border-blue-500 border-blue-200"
 				   placeholder="Searching.." required/>
 			<span className={`text-lg text-bodydark`}>All chat</span>
 			{

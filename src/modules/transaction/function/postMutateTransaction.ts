@@ -34,7 +34,7 @@ const useMutateTransaction = ({handleCancel, methods, setIsModalDetailOpen, wall
 
 		onSuccess: () => {
 			// @ts-ignore
-			queryClient.invalidateQueries([nameQueryKey.transactions, nameQueryKey.wallet])
+			queryClient.invalidateQueries([nameQueryKey.transactions, nameQueryKey.wallet, nameQueryKey.wallets])
 			handleCancel()
 			methods.reset({amount: 0, amountDisplay: "0", category: undefined, date: undefined, notes: "", exclude: false})
 		}
@@ -50,7 +50,7 @@ const useMutateTransaction = ({handleCancel, methods, setIsModalDetailOpen, wall
 
 		onSuccess: () => {
 			// @ts-ignore
-			queryClient.invalidateQueries([nameQueryKey.transactions, nameQueryKey.wallet])
+			queryClient.invalidateQueries([nameQueryKey.transactions, nameQueryKey.wallet, nameQueryKey.wallets])
 			setIsModalDetailOpen(false)
 			handleCancel()
 		}

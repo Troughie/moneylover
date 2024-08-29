@@ -92,6 +92,7 @@ const HeaderUser = () => {
 		// Reset walletSelect khi phát hiện tài khoản mới
 		const isManager = walletSelect?.managers.find((e) => e.user.id === user?.id);
 
+		const updateWalletSelect = wallets.find(el => el.id === walletSelect?.id)
 		if (!walletSelect || (walletSelect?.user?.id !== user.id) && !isManager) {
 			addWallet(walletMain);
 			return;
@@ -109,7 +110,15 @@ const HeaderUser = () => {
 
 		if (!isManager && walletMain?.id !== walletSelect?.id && walletSelect?.user?.id !== user?.id) {
 			addWallet(walletMain);
+			return
 		}
+
+		if (updateWalletSelect) {
+			addWallet(updateWalletSelect)
+			return
+		}
+
+		addWallet(walletMain);
 	}, [wallets, user?.id]);
 
 	const handleChangePasswordOpen = () => {

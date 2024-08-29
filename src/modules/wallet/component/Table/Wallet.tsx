@@ -1,7 +1,7 @@
 import {Button, Empty, Spin, Switch} from "antd";
 import {LoadingOutlined} from "@ant-design/icons";
 import cn from "@/utils/cn";
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import {NumberFormatter} from "@/utils/Format";
 import {walletProps} from "@/model/interface.ts";
 import {ModalPopUp} from "@/commons";
@@ -26,9 +26,6 @@ const TableWallet: React.FC<props> = ({handleClick, wallets, isFetching}) => {
 		setManager(!manager)
 	}
 
-	useEffect(() => {
-		console.log(wallets)
-	}, [wallets]);
 
 	const handleOkManager = (wallet: walletProps) => {
 		setManager(!manager)
@@ -78,7 +75,7 @@ const TableWallet: React.FC<props> = ({handleClick, wallets, isFetching}) => {
 									 className={cn(`grid grid-cols-10 col-span-10 hover:scale-y-110 hover:font-semibold text-center duration-500 cursor-pointer py-4`)}>
 									<span className={`col-span-4`}>{el.name}</span>
 									<span className={`col-span-1`}>{el.type}</span>
-									<span className={`col-span-3`}>{<NumberFormatter number={el.balance}/>}</span>
+									<span className={`col-span-3`}>{<NumberFormatter number={el.balance} type={el?.currency}/>}</span>
 									<span className={`col-span-2`}>{showManagerLength(el)} ({el.managers.length})</span>
 								</div>
 								<span className={cn(`col-span-1 flex-center `)}>{

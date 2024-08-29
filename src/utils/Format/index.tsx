@@ -1,12 +1,15 @@
+import {useWalletStore} from "@/store/WalletStore.ts";
 import {useWalletCurrency} from "@/hooks/currency.ts";
+import {useEffect, useState} from "react";
 
 interface props {
-	number: string | number | undefined
+	number: string | number
+	type?: string
 }
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const convertMoney = async (amountInVND: number | string, typeCurrent: string | undefined, type?: string | null) => {
-	if (type != typeCurrent) {
+	if (type != typeCurrent && typeCurrent) {
 		const response = await fetch(`https://api.exchangerate-api.com/v4/latest/${typeCurrent}`);
 		const data = await response.json();
 
@@ -17,22 +20,34 @@ export const convertMoney = async (amountInVND: number | string, typeCurrent: st
 	}
 }
 
-export const NumberFormatter = ({number}: props) => {
-	// eslint-disable-next-line react-hooks/rules-of-hooks
-	const currency = useWalletCurrency()
-	const formatNumber = (number: number | undefined | string) => {
+export const NumberFormatter = ({number, type}: props) => {
+	const {walletSelect} = useWalletStore();
+	const currency = useWalletCurrency();
+	const [formattedNumber, setFormattedNumber] = useState<number>(0);
+
+	// Function to format the number
+	const formatNumber = (num: number | string | undefined) => {
 		const options = {
 			style: 'currency',
-			currency: currency || "VND",
+			currency: walletSelect?.currency || "VND",
 			minimumFractionDigits: 2,
 		};
-		const locales = currency === "USD" ? "en-US" : "vi-VN";
+		const locales = walletSelect?.currency === "USD" ? "en-US" : "vi-VN";
+		// @ts-ignore
 		const formatter = new Intl.NumberFormat(locales, options);
-		return formatter.format(number as number);
+		return formatter.format(num as number);
 	};
 
-	return (
-		<>{formatNumber(number)}</>
-	);
-}
+	useEffect(() => {
+		const fetchAndFormatNumber = async () => {
+			if (number) {
+				const numberWithCurrency = await convertMoney(number, type, currency);
+				setFormattedNumber(numberWithCurrency);
+			}
+		};
+		fetchAndFormatNumber();
+	}, [number, walletSelect?.currency, currency]);
+
+	return <>{formatNumber(formattedNumber)}</>;
+};
 

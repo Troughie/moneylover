@@ -30,7 +30,7 @@ const Chat = () => {
 		<div className={`h-[90vh] rounded-lg mt-10 w-[80%] left-[50%] z-99 translate-x-[-50%] absolute bg-white flex`}>
 			<NavLeft groups={groups} setId={setId} id={id}/>
 			<div className={`flex flex-col w-full relative`}>
-				<Header name={group?.name}/>
+				{group && <Header name={group?.name}/>}
 				{group ? <Main group={group}/> : <span className={`text-center mt-20 text-2xl text-bodydark2`}>No groups chat available</span>}
 			</div>
 			<AnimatePresence>
