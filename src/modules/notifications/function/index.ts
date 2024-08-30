@@ -11,7 +11,6 @@ const useNotifications = (btnType: string) => {
 	const {data} = useQuery({queryKey: [nameQueryKey.notification, btnType], queryFn: fetchNotification})
 
 	const result: NotificationProps[] = data?.data || []
-
 	const notificationSort = result.sort((a, b) => {
 		const time1 = dayjs(a.createdDate)
 		const time2 = dayjs(b.createdDate)

@@ -9,7 +9,7 @@ import {Check} from "@/assets";
 
 const optionsTypCate = [
 	{label: 'Expense', value: 'Expense'},
-	{label: 'InCome', value: 'Income'},
+	{label: 'Income', value: 'Income'},
 ];
 
 interface IconsRes {
@@ -21,7 +21,11 @@ const fetchIcon = (): Promise<ResponseData> => {
 	return get({url: "icons"});
 };
 
-const CreateCateForm = () => {
+interface props {
+	resetValue: boolean
+}
+
+const CreateCateForm = ({resetValue}: props) => {
 	const {data} = useQuery({queryKey: [nameQueryKey.icons], queryFn: fetchIcon});
 	const [icons, setIcons] = useState<IconsRes[]>([]);
 	const [typeCate, setTypeCate] = useState<string>("Expense");
@@ -33,6 +37,14 @@ const CreateCateForm = () => {
 			setIcons(data.data);
 		}
 	}, [data]);
+
+	useEffect(() => {
+		if (resetValue) {
+			setTypeCate("Expense")
+			setShowIcon(false)
+			setSelectIcon("")
+		}
+	}, [resetValue]);
 
 	const onChangeTypeCate = ({target: {value}}: RadioChangeEvent) => {
 		setTypeCate(value);
@@ -49,6 +61,7 @@ const CreateCateForm = () => {
 				label="Category type"
 				name="type"
 				defaultValue={typeCate}
+				value={typeCate}
 				render={({field}) => (
 					<Radio.Group
 						{...field}

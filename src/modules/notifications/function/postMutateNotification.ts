@@ -7,17 +7,18 @@ import {useProfileStore} from "@/modules/userProfile/store";
 import {useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {routePath} from "@/utils";
+import {useUserStore} from "@/modules/authentication/store/user.ts";
+import {createGroupChat} from "@/modules/chat/function/chats.ts";
+import {useChatStore} from "@/modules/chat/store/chatStore.ts";
 
-interface checkTypeNotification {
-	id: string
-	type: string
-}
 
 const useNotificationPost = () => {
 	const navigate = useNavigate()
+	const {user} = useUserStore.getState().user
 	const queryClient = useQueryClient()
 	const {setTypeFriend, setFriendOpen} = useProfileStore()
-	const [typeNotification, setTypeNotification] = useState<string>("")
+	const {fetchGroups} = useChatStore()
+	const [notification, setNotification] = useState<NotificationProps>()
 	const {mutate: MakeAllRead} = useRequest({
 		mutationFn: (values: NotificationProps[]) => {
 			return post({
@@ -38,22 +39,29 @@ const useNotificationPost = () => {
 			})
 		},
 		showSuccess: false,
-		onSuccess: () => {
+		onSuccess: async () => {
 			// @ts-ignore
 			queryClient.invalidateQueries([nameQueryKey.notification])
-			if (typeNotification === NotificationType.friend) {
+			if (notification?.type === NotificationType.friend) {
 				setFriendOpen(true)
-				setTypeFriend("Request")
+				if (notification?.message) {
+					setTypeFriend("All")
+					const users = [user, notification?.creator]
+					await createGroupChat(notification?.creator?.id, notification?.creator?.username, users, "person")
+					await fetchGroups()
+				} else {
+					setTypeFriend("Request")
+				}
 			}
-			if (typeNotification === NotificationType.budget) {
+			if (notification?.type === NotificationType.budget) {
 				navigate(routePath.budget.path)
 			}
 		}
 	})
 
-	const handleMarkAsRead = (data: checkTypeNotification) => {
-		if (data.type) {
-			setTypeNotification(data.type)
+	const handleMarkAsRead = (data: NotificationProps) => {
+		if (data) {
+			setNotification(data)
 		}
 		MarkAsRead(data.id)
 	}

@@ -146,7 +146,10 @@ const HeaderUser = () => {
 		},
 		{
 			title: "Logout",
-			func: () => logout()
+			func: () => {
+				setFalseAll()
+				logout()
+			}
 		}
 	]
 
@@ -209,8 +212,7 @@ const HeaderUser = () => {
                     <div className={`absolute top-[80px] bg-white p-8 shadow-3 right-0`}>
                         <ul className={`font-bold text-2xl`}>
 							{userProfile.map((e) => (
-
-								<li onClick={e.func}
+								<li key={e.title} onClick={e.func}
 									className={`cursor-pointer px-4 rounded-md hover:bg-gray-300 mx-2 mb-4 py-4 border-b-bodydark2 border-b`}>{e.title}
 								</li>
 							))}

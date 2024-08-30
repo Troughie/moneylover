@@ -51,14 +51,15 @@ const WalletDetail: React.FC<props> = ({infoWallet, isGoal}) => {
 			<ul className={`flex flex-col gap-2`}>
 				<li className={`flex-between`}><span className={`infoWallet`}>Name:</span>{infoWallet?.name}</li>
 				<li className={`flex-between`}><span className={`infoWallet`}>Type:</span>{infoWallet?.type}</li>
-				<li className={`flex-between`}><span className={`infoWallet`}>Balance:</span>{<NumberFormatter number={infoWallet?.balance}/>}
+				<li className={`flex-between`}><span className={`infoWallet`}>Balance:</span>{<NumberFormatter
+					number={infoWallet ? infoWallet?.balance : 0}/>}
 				</li>
 				{isGoal &&
                     <>
                         <li className={`flex-between`}><span className={`infoWallet`}>Start amount:</span>{<NumberFormatter
-							number={infoWallet?.start}/>}</li>
+							number={infoWallet ? infoWallet.start : 0}/>}</li>
                         <li className={`flex-between`}><span className={`infoWallet`}>Goal balance:</span>{<NumberFormatter
-							number={infoWallet?.target}/>}</li>
+							number={infoWallet ? infoWallet?.target : 0}/>}</li>
                     </>
 				}
 			</ul>

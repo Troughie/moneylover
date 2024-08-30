@@ -80,7 +80,7 @@ const Main = ({group}: props) => {
 	return <>
 		<div onClick={handleClickCloseRight} className={`h-full relative`}>
 			<div className={`h-full`}>
-				<ShowChat messageContainerRef={messageContainerRef} sortMessages={sortMessages} isLoading={isLoading}/>
+				<ShowChat group={group} messageContainerRef={messageContainerRef} sortMessages={sortMessages} isLoading={isLoading}/>
 				<Search handleSendMessage={handleSendMessage} setNewMessage={setNewMessage} message={newMessage}/>
 			</div>
 		</div>

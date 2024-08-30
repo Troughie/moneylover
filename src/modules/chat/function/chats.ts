@@ -39,6 +39,7 @@ export interface Group {
 	creator: string;
 	membersName: string[]
 	unreadCount: { [userId: string]: number };
+	type: string
 }
 
 interface TimeAddUser {
@@ -65,7 +66,7 @@ export interface MergeMessage {
 
 type groupsProps = Group[];
 
-export const createGroupChat = async (groupId: string, groupName: string, users: User[]) => {
+export const createGroupChat = async (groupId: string, groupName: string, users: User[], type: string = "group") => {
 	try {
 		const groupRef = doc(db, 'groups', groupId);
 		const groupSnapshot = await getDoc(groupRef);
@@ -100,6 +101,7 @@ export const createGroupChat = async (groupId: string, groupName: string, users:
 			creator,
 			unreadCount,
 			createdAt: serverTimestamp(),
+			type
 		}
 
 		await setDoc(groupRef, groupMess);
@@ -139,6 +141,23 @@ export const renameGroup = async (groupId: string, groupName: string | undefined
 	}
 }
 
+export const getUserWithGroup = async (groupId: string) => {
+	// Reference to the specific group document
+	const groupDocRef = doc(db, 'groups', groupId);
+
+	// Fetch the document
+	const groupDoc = await getDoc(groupDocRef);
+
+	// Check if the document exists
+	if (groupDoc.exists()) {
+		// Group exists, return the group data
+		return groupDoc.data();
+	} else {
+		// Group does not exist
+		return null;
+	}
+};
+
 export const getUserGroups = async (userId: string): Promise<groupsProps | undefined> => {
 	try {
 		const groupsQuery = query(collection(db, 'groups'), where('membersId', 'array-contains', userId));
@@ -152,7 +171,7 @@ export const getUserGroups = async (userId: string): Promise<groupsProps | undef
 		});
 	} catch (error) {
 		console.error('Error fetching groups:', error);
-		return undefined; // Explicitly return undefined in case of an error
+		return []; // Explicitly return undefined in case of an error
 	}
 };
 
@@ -339,6 +358,7 @@ export const sendMessageToGroup = async (groupId: string, senderId: User, messag
 			}, {} as { [key: string]: number });
 
 			await updateDoc(groupRef, unreadCountUpdates);
+			await markMessagesAsRead(groupId, senderId?.id)
 		}
 
 		console.log('Message sent');

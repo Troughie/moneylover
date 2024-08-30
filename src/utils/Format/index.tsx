@@ -3,7 +3,7 @@ import {useWalletCurrency} from "@/hooks/currency.ts";
 import {useEffect, useState} from "react";
 
 interface props {
-	number: string | number
+	number: string | number | undefined
 	type?: string
 }
 

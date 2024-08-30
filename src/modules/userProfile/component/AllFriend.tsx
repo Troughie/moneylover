@@ -11,7 +11,7 @@ import cn from "@/utils/cn";
 import {FilterWallet, ModalPopUp} from "@/commons";
 import {useUserStore} from "@/modules/authentication/store/user.ts";
 import {useWallet} from "@/context/WalletContext.tsx";
-import {createGroupChat} from "@/modules/chat/function/chats.ts";
+import {createGroupChat, getUserWithGroup} from "@/modules/chat/function/chats.ts";
 import usePostWalletMutate from "@/modules/wallet/function/postMutate.ts";
 import {useChatStore} from "@/modules/chat/store/chatStore.ts";
 import usePostFriend from "@/modules/userProfile/function/postMutateFriend.ts";
@@ -60,6 +60,7 @@ const AllFriend = () => {
 		queryFn: getAllFriend,
 	})
 
+
 	const handleAddManager = async () => {
 
 		if (selectWallet && userFound) {
@@ -80,6 +81,16 @@ const AllFriend = () => {
 	}
 
 	const result: FriendProps[] = data?.data || []
+
+	useEffect(() => {
+		result?.map(async (e) => {
+			const hasGroup = await getUserWithGroup(e?.user?.id)
+			if (!hasGroup) {
+				const users = [user, e.user]
+				await createGroupChat(e.user.id, e.user.username, users, "person")
+			}
+		})
+	}, [result]);
 
 	const detailWallet = (e: walletProps): React.ReactNode | undefined => {
 		if (e.main && e.user.id === user.id) {

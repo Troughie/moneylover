@@ -3,18 +3,17 @@ import {NotificationProps, NotificationType} from "@/modules/notifications/model
 import {Avatar} from "antd";
 import cn from "@/utils/cn";
 import {IWarning} from "@/assets";
-
-interface checkTypeNotification {
-	id: string
-	type: string
-}
+import {useUserStore} from "@/modules/authentication/store/user.ts";
 
 interface props {
 	notification: NotificationProps
-	onClick: (data: checkTypeNotification) => void
+	onClick: (data: NotificationProps) => void
 }
 
 const NotificationCard = ({notification, onClick}: props) => {
+
+	const {user} = useUserStore.getState().user
+
 	const showMessage = (notification: NotificationProps) => {
 		if (notification.type === NotificationType.friend) {
 			return <>{notification?.message || "sent you a friend request"}</>
@@ -24,7 +23,8 @@ const NotificationCard = ({notification, onClick}: props) => {
 			const amount = notification?.message.split(" ")
 			const span = (
 				<span className={`line-clamp-1`}>
-    				{amount?.slice(0, 2).join(" ")}{" "}
+					<span className={"text-lg font-bold"}>{notification?.creator?.id === user?.id ? "You" : notification?.creator?.username}</span>
+					{amount?.slice(0, 2).join(" ")}{" "}
 					<span className="text-lg font-bold">{amount[2]}</span>{" "}
 					{amount?.slice(4).join(" ")}
 					<span className={`text-lg font-bold`}>{notification.category}</span>
@@ -70,12 +70,8 @@ const NotificationCard = ({notification, onClick}: props) => {
 	}
 
 	return (<div onClick={() => {
-		const data: checkTypeNotification = {
-			id: notification.id,
-			type: notification.type
-		}
 		if (notification.unread) {
-			onClick(data)
+			onClick(notification)
 		}
 	}}
 				 className={cn("mt-2 hover:bg-gray-300 duration-200 cursor-pointer px-6 py-4 bg-white rounded-lg shadow w-full"

@@ -1,5 +1,5 @@
 import {HeaderUser} from "@/components";
-import React, {ReactNode, useEffect} from "react";
+import React, {ReactNode, useEffect, useState} from "react";
 import NavBar from "@/components/User/NavBar";
 import LoadingComponent from "@/components/Loading";
 import FloatButtonAction from "@/components/FloatButtonAction";
@@ -29,7 +29,7 @@ const UserLayout: React.FC<{ children: ReactNode }> = ({children}) => {
 	const {user} = useUserStore.getState().user
 	const queryClient = useQueryClient()
 	const Methods = useForm({mode: "onChange", resolver: yupResolver(categorySchema)});
-
+	const [resetValue, setResetValue] = useState<boolean>(false)
 	const {setOpenModal, openModal} = openCategoryForm()
 	const {setFalseAll} = useHeaderStore()
 	const {groups, fetchGroups, setIsOpenChat, isOpenChat} = useChatStore()
@@ -50,6 +50,7 @@ const UserLayout: React.FC<{ children: ReactNode }> = ({children}) => {
 			// @ts-ignore
 			queryClient.invalidateQueries([nameQueryKey.categories]);
 			Methods.reset();
+			setResetValue(true)
 			setOpenModal(false);
 		},
 	});
@@ -61,7 +62,7 @@ const UserLayout: React.FC<{ children: ReactNode }> = ({children}) => {
 		<LoadingComponent/>
 		<ModalPopUp isModalOpen={openModal} handleOk={Methods.handleSubmit(handleOke)} handleCancel={() => setOpenModal(false)}>
 			<FormProvider {...Methods}>
-				<CreateCateForm/>
+				<CreateCateForm resetValue={resetValue}/>
 			</FormProvider>
 		</ModalPopUp>
 		<div className={`flex bg-mainLinear h-screen overflow-hidden bg-primary1`}>

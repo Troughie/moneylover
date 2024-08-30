@@ -1,3 +1,5 @@
+import {User} from "@/model/interface.ts";
+
 export interface NotificationProps {
 	id: string,
 	user: string
@@ -7,6 +9,7 @@ export interface NotificationProps {
 	createdDate: string
 	type: string
 	message: string
+	creator: User
 }
 
 export enum NotificationType {
