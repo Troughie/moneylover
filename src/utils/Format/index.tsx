@@ -46,8 +46,8 @@ export const NumberFormatter = ({number, type}: props) => {
 			}
 		};
 		fetchAndFormatNumber();
-	}, [number, walletSelect?.currency, currency]);
+	}, [number, walletSelect, currency]);
 
-	return <>{formatNumber(formattedNumber)}</>;
+	return <>{formatNumber(walletSelect ? formattedNumber : 0)}</>;
 };
 
