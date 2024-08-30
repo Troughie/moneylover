@@ -11,7 +11,7 @@ import cn from "@/utils/cn";
 import {FilterWallet, ModalPopUp} from "@/commons";
 import {useUserStore} from "@/modules/authentication/store/user.ts";
 import {useWallet} from "@/context/WalletContext.tsx";
-import {createGroupChat, getUserWithGroup} from "@/modules/chat/function/chats.ts";
+import {createGroupChat, deleteGroupWithMessages, getUserWithGroup} from "@/modules/chat/function/chats.ts";
 import usePostWalletMutate from "@/modules/wallet/function/postMutate.ts";
 import {useChatStore} from "@/modules/chat/store/chatStore.ts";
 import usePostFriend from "@/modules/userProfile/function/postMutateFriend.ts";
@@ -51,6 +51,18 @@ const AllFriend = () => {
 
 	const {removeFriend} = usePostFriend()
 
+	const handleRemoveFriend = async (id: string) => {
+		if (userFound) {
+			const groupId = user.id.split("-")[0] + "-" + userFound.id.split("-")[0]
+			const groupId2 = userFound.id.split("-")[0] + "-" + user.id.split("-")[0]
+
+			await deleteGroupWithMessages(groupId)
+			await deleteGroupWithMessages(groupId2)
+			removeFriend(id)
+			await fetchGroups()
+		}
+	}
+
 	const getAllFriend = () => {
 		return get({url: `friends-request`, params: {type: "accepted"}})
 	}
@@ -84,12 +96,17 @@ const AllFriend = () => {
 
 	useEffect(() => {
 		result?.map(async (e) => {
-			const hasGroup = await getUserWithGroup(e?.user?.id)
-			if (!hasGroup) {
+			const groupId = user.id.split("-")[0] + "-" + e.user.id.split("-")[0]
+			const groupId2 = e.user.id.split("-")[0] + "-" + user.id.split("-")[0]
+
+			const hasGroup = await getUserWithGroup(groupId)
+			const hasGroup2 = await getUserWithGroup(groupId2)
+			if (!hasGroup && !hasGroup2) {
 				const users = [user, e.user]
-				await createGroupChat(e.user.id, e.user.username, users, "person")
+				await createGroupChat(groupId, e.user.username, users, "person")
 			}
 		})
+		fetchGroups()
 	}, [result]);
 
 	const detailWallet = (e: walletProps): React.ReactNode | undefined => {
@@ -114,7 +131,7 @@ const AllFriend = () => {
 				{isLoading ? <LoadingSpin/> :
 					result.length > 0 ? result?.map((e) => (
 						<div
-							key={e.user.id}
+							key={e.id}
 							className={`p-4 relative mx-6 group shadow-3 flex-between rounded-lg border-bodydark border`}>
 							<div className={`flex items-center gap-4`}>
 								<img src={Avatar} alt={""} className={`size-10 rounded-full`}/>
@@ -138,7 +155,7 @@ const AllFriend = () => {
 											className={`border-b border-b-white text-white line-clamp-1 text-sm p-2 rounded-sm hover:bg-gray-400`}>Add
 										friend to wallet
 									</button>
-									<button onClick={() => removeFriend(e.id)}
+									<button onClick={() => handleRemoveFriend(e.id)}
 											className={`text-white text-sm p-2 rounded-sm  hover:bg-gray-400`}>Remove friend
 									</button>
 								</div>

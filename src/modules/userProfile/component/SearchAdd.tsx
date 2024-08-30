@@ -1,6 +1,6 @@
 import {Avatar} from "@/assets";
 import {Button, Empty} from "antd";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {useQuery, useQueryClient} from "@tanstack/react-query";
 import {nameQueryKey} from "@/utils/nameQueryKey.ts";
 import {get, post} from "@/libs/api.ts";
@@ -12,6 +12,7 @@ import {useDebounce} from "@/hooks/useDebounce.tsx";
 
 const AddFriend = () => {
 	const [valueSearch, setValueSearch] = useState<string>("")
+	const [userFound, setUserFound] = useState<User[]>([])
 	const queryClient = useQueryClient()
 	const valueDebounce = useDebounce(valueSearch, 300)
 	const searchUser = () => {
@@ -24,7 +25,10 @@ const AddFriend = () => {
 		enabled: !!valueSearch
 	})
 
-	const result: User[] = data?.data || []
+	useEffect(() => {
+		const result: User[] = data?.data || []
+		setUserFound(result)
+	}, [data?.data]);
 
 	const {mutate: addFriend} = useRequest({
 		mutationFn: (value: string) => {
@@ -37,6 +41,7 @@ const AddFriend = () => {
 			// @ts-ignore
 			queryClient.invalidateQueries([nameQueryKey.friendsSearch])
 			setValueSearch("")
+			setUserFound([])
 		}
 	})
 
@@ -53,7 +58,7 @@ const AddFriend = () => {
 			</div>
 			<div className={`mt-8 grid grid-cols-2 gap-6`}>
 				{isFetching ? <div className={`col-span-2`}><LoadingSpin/></div> :
-					result.length > 0 ? result?.map((e) => (
+					userFound.length > 0 ? userFound?.map((e) => (
 						<div key={e.id} className={`p-4 mx-6 shadow-3 flex-between rounded-lg border-bodydark border`}>
 							<div className={`flex items-center gap-4`}>
 								<img src={Avatar} alt={""} className={`size-10 rounded-full`}/>

@@ -7,17 +7,12 @@ import {useProfileStore} from "@/modules/userProfile/store";
 import {useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {routePath} from "@/utils";
-import {useUserStore} from "@/modules/authentication/store/user.ts";
-import {createGroupChat} from "@/modules/chat/function/chats.ts";
-import {useChatStore} from "@/modules/chat/store/chatStore.ts";
 
 
 const useNotificationPost = () => {
 	const navigate = useNavigate()
-	const {user} = useUserStore.getState().user
 	const queryClient = useQueryClient()
 	const {setTypeFriend, setFriendOpen} = useProfileStore()
-	const {fetchGroups} = useChatStore()
 	const [notification, setNotification] = useState<NotificationProps>()
 	const {mutate: MakeAllRead} = useRequest({
 		mutationFn: (values: NotificationProps[]) => {
@@ -44,14 +39,7 @@ const useNotificationPost = () => {
 			queryClient.invalidateQueries([nameQueryKey.notification])
 			if (notification?.type === NotificationType.friend) {
 				setFriendOpen(true)
-				if (notification?.message) {
-					setTypeFriend("All")
-					const users = [user, notification?.creator]
-					await createGroupChat(notification?.creator?.id, notification?.creator?.username, users, "person")
-					await fetchGroups()
-				} else {
-					setTypeFriend("Request")
-				}
+				setTypeFriend(notification?.message ? "All" : "Request")
 			}
 			if (notification?.type === NotificationType.budget) {
 				navigate(routePath.budget.path)
