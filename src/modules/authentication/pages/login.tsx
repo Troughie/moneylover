@@ -104,6 +104,14 @@ const Login: React.FC = () => {
 											</Link>
 										</p>
 									</div>
+									<div className="mt-6 text-center xl:hidden">
+										<p>
+											Don’t have an account?{" "}
+											<Link to={routePath.register.path} className="text-primary">
+												Register
+											</Link>
+										</p>
+									</div>
 								</form>
 							</FormProvider>
 						</div>

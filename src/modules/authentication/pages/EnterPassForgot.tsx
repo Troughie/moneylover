@@ -75,7 +75,7 @@ const ChangePasswordForgot = () => {
 	}
 	return <>{
 		!showErr ?
-			<div className={`h-screen`}>
+			<div className={`h-screen w-full border-stroke xl:w-1/2 xl:border-l-2`}>
 				<LoadingComponent/>
 				<div className="rounded-sm border border-stroke bg-white shadow-3 pt-10 mt-[300px]">
 					<div className={`w-2/3 mx-auto pb-10`}>

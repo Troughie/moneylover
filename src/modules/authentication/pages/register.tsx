@@ -67,9 +67,17 @@ const Register = () => {
 								</div>
 								<div className="mt-6 text-center">
 									<p>
-										You has already account
+										You has already account . {" "}
 										<Link to={routePath.login.path} className="text-primary">
 											Click here
+										</Link>
+									</p>
+								</div>
+								<div className="mt-6 text-center xl:hidden">
+									<p>
+										Don’t have an account?{" "}
+										<Link to={routePath.login.path} className="text-primary">
+											Sign in
 										</Link>
 									</p>
 								</div>

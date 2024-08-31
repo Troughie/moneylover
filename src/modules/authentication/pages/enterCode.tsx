@@ -27,8 +27,7 @@ const EnterCode = ({methods, handleEnterCode}: props) => {
 
 						<div className="mb-5">
 							<button
-								className="w-full cursor-pointer rounded-lg border bg-black p-4 text-white transition hover:bg-opacity-90">Sign
-								in
+								className="w-full cursor-pointer rounded-lg border bg-black p-4 text-white transition hover:bg-opacity-90">Submit
 							</button>
 						</div>
 					</form>

@@ -7,9 +7,11 @@ interface props {
 	placeholder: string
 	label: string
 	icons?: JSX.Element
+	setValue?: React.Dispatch<React.SetStateAction<string>>
+
 }
 
-const InputAuthen: React.FC<props> = ({name, type, placeholder, icons, label}) => {
+const InputAuthen: React.FC<props> = ({setValue, name, type, placeholder, icons, label}) => {
 	return <>
 		<div className="mb-4">
 			<label className="mb-2.5 block font-medium text-black">
@@ -17,6 +19,7 @@ const InputAuthen: React.FC<props> = ({name, type, placeholder, icons, label}) =
 			</label>
 			<InputController name={name} render={({field}) => <div className="relative">
 				<Input
+					onChange={(e) => setValue && setValue(e.target.value)}
 					{...field}
 					type={type}
 					placeholder={placeholder}

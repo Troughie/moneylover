@@ -6,9 +6,11 @@ import {Person} from "@/assets";
 interface props {
 	methods: UseFormReturn<{ email: string }, any, undefined>
 	handleForgotPassword: (data: any) => void
+	setEmail: React.Dispatch<React.SetStateAction<string>>
+
 }
 
-const ForgotForm = ({methods, handleForgotPassword}: props) => {
+const ForgotForm = ({setEmail, methods, handleForgotPassword}: props) => {
 	return <>
 		<m.div
 			initial={{y: "50%", opacity: 0, scale: 0.5}}
@@ -20,14 +22,13 @@ const ForgotForm = ({methods, handleForgotPassword}: props) => {
 				<span className={`text-xl text-black-2  font-semibold flex-center mb-4`}>Reset your password</span>
 				<FormProvider {...methods}>
 					<form onSubmit={methods.handleSubmit(handleForgotPassword)}>
-						<InputAuthentication name={"email"} type={"email"}
+						<InputAuthentication setValue={setEmail} name={"email"} type={"email"}
 											 placeholder={"Enter your email"} icons={<Person/>}
 											 label={"Email"}/>
 
 						<div className="mb-5">
 							<button
-								className="w-full cursor-pointer rounded-lg border bg-black p-4 text-white transition hover:bg-opacity-90">Sign
-								in
+								className="w-full cursor-pointer rounded-lg border bg-black p-4 text-white transition hover:bg-opacity-90">Search
 							</button>
 						</div>
 					</form>

@@ -3,6 +3,7 @@ import {useQueries} from "@tanstack/react-query";
 import {get} from "@/libs/api.ts";
 import {Category} from "@/model/interface.ts";
 import {nameQueryKey} from "@/utils/nameQueryKey.ts";
+import {useWalletStore} from "@/store/WalletStore.ts";
 
 interface CategoryFetchProps {
 	categories: Category[];
@@ -18,6 +19,7 @@ interface CategoryFetchProviderProps {
 const CategoryFetchContext = createContext<CategoryFetchProps | undefined>(undefined);
 
 export const CategoryFetchProvider: React.FC<CategoryFetchProviderProps> = ({children}) => {
+	const {walletSelect} = useWalletStore()
 	const [type, setType] = useState<string>();
 
 	const fetchCategory = (key: any) => {
@@ -33,10 +35,12 @@ export const CategoryFetchProvider: React.FC<CategoryFetchProviderProps> = ({chi
 			{
 				queryKey: [nameQueryKey.categories, type],
 				queryFn: fetchCategory,
+				enabled: !!walletSelect
 			},
 			{
 				queryKey: [nameQueryKey.category],
 				queryFn: fetchCateNoType,
+				enabled: !!walletSelect
 			},
 		],
 	});

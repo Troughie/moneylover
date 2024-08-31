@@ -7,11 +7,12 @@ import {motion as m} from "framer-motion";
 import LoadingComponent from "@/components/Loading";
 import useRequest from "@/hooks/useRequest.ts";
 import {post} from "@/libs/api.ts";
-import {routePath} from "@/utils";
+import {routePath, typeAlert} from "@/utils";
 import {useEffect, useState} from "react";
 import ForgotForm from "@/modules/authentication/component/Form/forgotForm.tsx";
 import EnterCode from "@/modules/authentication/pages/enterCode.tsx";
 import Error from "@/modules/authentication/component/Error.tsx";
+import {swalAlert} from "@/hooks/swalAlert.ts";
 
 interface props {
 	email: string
@@ -31,7 +32,7 @@ const Forgot = () => {
 	const [showEnter, setShowEnter] = useState<boolean>(false)
 	const [showErr, setShowErr] = useState<boolean>(false)
 	const [sessionLocal, setSessionLocal] = useState<sessionProps>()
-
+	const [email, setEmail] = useState<string>("")
 
 	const {mutate: forgot} = useRequest({
 		mutationFn: (values: props) => {
@@ -40,13 +41,22 @@ const Forgot = () => {
 				data: values,
 			});
 		},
-		onSuccess: (data) => {
-			console.log(data)
-			const result = data?.data
-			if (result?.length > 1) {
-				navigate(`/enter?s=${result[1]}&account=${result[0]}`)
+		showSuccess: false,
+		onSuccess: async (data) => {
+			await swalAlert({
+				type: typeAlert.success,
+				message: `An otp code has been sent to your email ${email}`,
+				showCancel: false,
+				thenFunc: (result) => {
+					const result1 = data?.data
+					if (result.isConfirmed) {
+						if (result1?.length > 1) {
+							navigate(`/enter?s=${result1[1]}&account=${result1[0]}`)
 
-			}
+						}
+					}
+				}
+			})
 		},
 	})
 
@@ -60,7 +70,6 @@ const Forgot = () => {
 		},
 		showSuccess: false,
 		onSuccess: (data) => {
-			console.log(data)
 			const result = data?.data
 			setShowEnter(result)
 			setShowErr(!result)
@@ -74,7 +83,8 @@ const Forgot = () => {
 				data: values,
 			});
 		},
-		onSuccess: (data) => {
+		showSuccess: false,
+		onSuccess: async (data) => {
 			console.log(data)
 			if (sessionLocal) {
 				navigate(routePath.changePass.path + `?s=${sessionLocal?.session}&account=${sessionLocal?.account}`)
@@ -133,7 +143,7 @@ const Forgot = () => {
 							</div>
 						</m.div>
 
-						{!showEnter ? <ForgotForm handleForgotPassword={handleForgotPassword} methods={methodsForgot}/> :
+						{!showEnter ? <ForgotForm setEmail={setEmail} handleForgotPassword={handleForgotPassword} methods={methodsForgot}/> :
 
 							<EnterCode methods={methodsEnter} handleEnterCode={handleEnterCode}/>}
 					</div> :

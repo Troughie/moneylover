@@ -16,18 +16,20 @@ const AddFriend = () => {
 	const queryClient = useQueryClient()
 	const valueDebounce = useDebounce(valueSearch, 300)
 	const searchUser = () => {
-		return get({url: `user/search/${valueSearch}`})
+		return get({url: `user/search/${valueDebounce}`})
 	}
 
 	const {data, isFetching} = useQuery({
 		queryKey: [nameQueryKey.friendsSearch, valueDebounce],
 		queryFn: searchUser,
-		enabled: !!valueSearch
+		enabled: !!valueDebounce
 	})
 
 	useEffect(() => {
 		const result: User[] = data?.data || []
-		setUserFound(result)
+		if (valueSearch) {
+			setUserFound(result)
+		}
 	}, [data?.data]);
 
 	const {mutate: addFriend} = useRequest({
